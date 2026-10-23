@@ -3,6 +3,9 @@
 ## Datos
 
 Esquema en Postgres (Supabase), con migraciones versionadas en `supabase/migrations/`.
+Se aplican con la Supabase CLI (`supabase link` + `supabase db push`) sobre un
+**proyecto de Supabase de desarrollo en la nube**. El proyecto de producción es otro
+y se crea en la spec 9.
 Nombres de tablas y columnas en español, sin tildes y en snake_case.
 
 ### Enums
@@ -91,7 +94,10 @@ Vista que lee el cliente (con `security_invoker = false`, dueña `postgres`, y s
 `select` para `anon`). Devuelve una fila por añada visible, con los datos del producto,
 la sección y la bodega. Condiciones (CA-8):
 - `productos.visible` y `secciones.visible`, y producto con sección asignada;
-- `anadas.en_stock` y `anadas.precio is not null`.
+- `anadas.en_stock`.
+
+Las añadas sin precio sí se incluyen, con `precio` en null; la pantalla muestra
+"Consultar precio".
 
 Como la vista solo incluye añadas visibles, un producto sin añadas visibles
 directamente no aparece. **No expone** `codigo_tango`, `descripcion_tango` ni datos
@@ -132,7 +138,7 @@ lib/
 supabase/
   config.toml
   migrations/           # una migración por tarea de datos
-  seed.sql              # datos de ejemplo para desarrollo y tests
+  seed.sql              # datos de ejemplo para desarrollo
 tests/
   unit/                 # Vitest
   db/                   # Vitest contra el Supabase local (RLS, vista, restricciones)
@@ -142,8 +148,10 @@ marca/                  # logo (ya existe)
 ```
 
 ## Componentes
-- `formatearPrecio(valor: number): string` en `lib/formato.ts`, con
+- `formatearPrecio(valor: number | null): string` en `lib/formato.ts`, con
   `Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 })`.
+  Con `null` devuelve "Consultar precio". Ese texto vive en un único módulo,
+  `lib/textos.ts`, hasta que la spec 6 lo haga editable desde el panel.
   Si en el futuro hay centavos, se revisa en la spec que lo necesite.
 - Clientes de Supabase en `lib/supabase/`. Las claves salen de `.env.local`
   (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`).
@@ -151,9 +159,12 @@ marca/                  # logo (ya existe)
 
 ## Tests
 - **Unit (Vitest):** `formatearPrecio` y configuración de tokens.
-- **Base de datos (Vitest + Supabase local):** cada test arranca de un estado conocido
-  (`supabase db reset` con `seed.sql`, o limpieza por transacción). Se prueba como
-  `anon`, como usuario del personal y como usuario autenticado que no es personal.
+- **Base de datos (Vitest + proyecto de Supabase de desarrollo):** cada test crea sus
+  propios datos con la clave `service_role` y los borra al terminar. Para no chocar
+  con otros datos, los nombres y códigos de prueba llevan un prefijo único por
+  ejecución (ej.: `test-<id>-`). Se prueba como `anon`, como usuario del personal y
+  como usuario autenticado que no es personal. Los usuarios de prueba se crean y se
+  borran con la API de administración de Auth.
 - **E2E (Playwright):** la página de inicio carga en un viewport de celular, sin
   errores en la consola y con las tipografías y colores de marca.
 - `npm run test` corre unit + base de datos; `npm run test:e2e` corre Playwright.
@@ -172,12 +183,17 @@ marca/                  # logo (ya existe)
   hace falta la cantidad, se agrega una columna.
 - **Vista pública en lugar de abrir las tablas a `anon`:** garantiza por diseño que el
   cliente nunca vea datos internos ni productos ocultos.
-- **Supabase local con Docker para desarrollo y tests:** reproduce exactamente
-  Postgres, RLS y Auth. Se descartó simular la base en memoria porque no prueba RLS.
+- **Proyecto de Supabase de desarrollo en la nube para desarrollo y tests:** es el
+  mismo Postgres, RLS y Auth que en producción, y no depende de Docker. Se descartaron
+  Supabase local (necesita Docker, que no está disponible en todos los entornos) y
+  simular la base en memoria (no prueba RLS).
 
 ## Riesgos
-- **Docker:** los tests de base de datos necesitan Docker para el Supabase local. Si
-  algún entorno no lo tiene, esos tests no corren ahí. Se documenta en el README.
+- **Tests sobre una base compartida:** si dos personas corren los tests a la vez sobre
+  el mismo proyecto de desarrollo, los prefijos únicos evitan choques. El proyecto de
+  desarrollo no debe tener datos reales que importen.
+- **Claves:** `SUPABASE_SERVICE_ROLE_KEY` saltea RLS. Vive solo en `.env.local` y en
+  los secretos del entorno, nunca en el código, y no se usa en el código de la app.
 - **Agrupación incorrecta:** si en la importación (spec 8) dos vinos distintos quedan
   en un mismo producto, el `unique (producto_id, anio)` puede chocar. Es deseable,
   porque fuerza la revisión humana.

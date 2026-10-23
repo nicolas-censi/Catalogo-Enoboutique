@@ -1,6 +1,6 @@
 # 001 – Modelo de datos Vino → Añadas y proyecto base
 
-**Estado:** Borrador
+**Estado:** Aprobada (2026-10-23)
 
 ## Objetivo
 Dejar armada la base sobre la que se construyen todas las demás specs: el proyecto
@@ -25,7 +25,8 @@ visibilidad y las herramientas de trabajo.
 ## Criterios de aceptación
 
 ### CA-1: Proyecto base funcionando
-- **Dado** el repositorio recién clonado y con `.env.local` completo según `.env.example`
+- **Dado** el repositorio recién clonado, con `.env.local` completo según `.env.example`
+  y apuntando al proyecto de Supabase de desarrollo
 - **Cuando** corro `npm install` y después `npm run dev`, `npm run test`,
   `npm run test:e2e`, `npm run lint` y `npm run typecheck`
 - **Entonces** todos funcionan y dan verde, y la página de inicio carga en un viewport
@@ -78,7 +79,8 @@ visibilidad y las herramientas de trabajo.
   - un producto sin ninguna añada con stock no aparece;
   - un producto oculto no aparece, aunque tenga stock;
   - un producto de una sección oculta no aparece;
-  - las añadas sin precio no aparecen. ⚠️ Ver la pregunta abierta 1.
+  - las añadas con stock pero sin precio **sí aparecen**, sin precio (la pantalla
+    muestra "Consultar precio").
 - Y la carta pública muestra "Disponible", nunca la cantidad de stock.
 
 ### CA-9: Secciones configurables
@@ -99,12 +101,15 @@ visibilidad y las herramientas de trabajo.
 - **Dado** un precio de 47000
 - **Cuando** se formatea para mostrar
 - **Entonces** se ve como `$ 47.000` (formato `es-AR`, sin decimales cuando son cero).
+- Y si la añada no tiene precio, se muestra "Consultar precio".
 
 ## Fuera de alcance
 - Pantallas de la carta pública y del buscador (spec 2).
 - Escaneo con la cámara (spec 3).
 - Login y pantallas del panel admin (spec 4). En esta spec los usuarios del personal se
   dan de alta a mano desde el panel de Supabase.
+- El proyecto de Supabase de producción (se crea en la spec 9). En esta spec se usa
+  solo un proyecto de desarrollo.
 - Ordenamiento con arrastrar y soltar (spec 5).
 - Textos editables de la carta y logo en pantalla (spec 6).
 - Descripciones por IA (spec 7).
@@ -112,15 +117,14 @@ visibilidad y las herramientas de trabajo.
   stock (spec 8).
 - Deploy en Vercel, dominio y QR (spec 9).
 
-## Preguntas abiertas
-- [ ] 1. **Añadas sin precio** (58 artículos en el export): ¿se esconden de la carta
-  (propuesta) o se muestran como "Consultar precio"?
-- [ ] 2. **Cuentas:** ¿ya tienen cuentas de Supabase y Vercel? ¿Quién debería ser el
-  dueño (por ejemplo, una cuenta con un mail del negocio)? Para esta spec alcanza con
-  Supabase local, pero conviene definirlo antes de la spec 4.
-- [ ] 3. **Bodega:** el export de Tango no trae la bodega como dato aparte (solo hay
-  una abreviatura en el código, como `sal` = Salentein). ¿Está bien que la bodega sea
-  un dato propio de la carta, que se completa en la importación o a mano?
+## Decisiones tomadas en la revisión
+- **Añadas sin precio:** aparecen en la carta con la leyenda "Consultar precio".
+- **Cuentas:** el dueño de las cuentas de Supabase y Vercel es Nicolás Censi
+  (todavía no están creadas).
+- **Bodega:** es un dato propio de la carta y se completa en la importación (spec 8),
+  usando el Excel de abreviaturas que tiene el negocio.
+- **Base de datos para desarrollo y tests:** un proyecto de Supabase en la nube,
+  exclusivo para desarrollo. No se usa Docker.
 
 ## Ideas para más adelante
 - Historial de cambios de precio por añada (útil para ver cómo impactó cada

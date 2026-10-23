@@ -4,8 +4,9 @@
 
 ## El problema
 En la vinoteca, especialmente en la cava, una misma etiqueta existe en varias añadas
-con precios distintos pero con el **mismo código de barras**. Hoy el cliente no tiene
-una forma simple de ver qué añadas hay y cuánto cuesta cada una.
+con precios distintos. En Tango cada añada es un artículo aparte, y la mayoría no tiene
+código de barras propio. Hoy el cliente no tiene una forma simple de ver qué añadas hay
+y cuánto cuesta cada una.
 
 ## La solución
 Una carta virtual que el cliente abre escaneando un QR en el local. Desde ahí puede
