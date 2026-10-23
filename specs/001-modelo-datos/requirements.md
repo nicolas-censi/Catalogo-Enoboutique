@@ -119,7 +119,7 @@ visibilidad y las herramientas de trabajo.
 
 ## Decisiones tomadas en la revisión
 - **Añadas sin precio:** aparecen en la carta con la leyenda "Consultar precio".
-- **Cuentas:** el dueño de las cuentas de Supabase y Vercel es Nicolás Censi
+- **Cuentas:** el dueño de las cuentas de Supabase y Vercel es el responsable del proyecto en el negocio
   (todavía no están creadas).
 - **Bodega:** es un dato propio de la carta y se completa en la importación (spec 8),
   usando el Excel de abreviaturas que tiene el negocio.
