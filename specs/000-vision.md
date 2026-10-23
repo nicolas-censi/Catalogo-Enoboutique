@@ -1,6 +1,6 @@
 # 000 – Visión del producto
 
-**Estado:** Borrador (quedan 3 puntos marcados con ⚠️)
+**Estado:** Aprobada (2026-10-23)
 
 ## El problema
 En la vinoteca, especialmente en la cava, una misma etiqueta existe en varias añadas
@@ -57,20 +57,19 @@ Venta online, carrito, pagos, gestión de stock contable, maridajes automáticos
 - **Añadas sin stock:** se esconden. Si un vino se queda sin ninguna añada con stock,
   se esconde el vino entero.
 - **Familias en la carta:** vinos (`VI`), destilados (`BA`), aceites (`AC`) y
-  almacén (`AL`). Las otras familias (carnes, comidas, gift cards, etc.) no entran.
-  Los productos que no son vino no tienen añadas: se muestran con un único precio.
-  ⚠️ ¿Los acetos (`AB`) cuentan como almacén?
+  almacén (`AL`, incluye los acetos `AB`). Las otras familias (carnes, comidas, gift
+  cards, etc.) no entran. Los productos que no son vino no tienen añadas: se muestran
+  con un único precio.
 - **Dominio:** `enoboutique.lehonor.com`. El DNS de `lehonor.com` lo gestiona el
   propio negocio.
 - **Marca** (tomada de https://www.lehonor.com/enoboutique):
   - Color primario: negro `#000000`.
   - Fondo secundario: `#F7F8FB`.
-  - Acento dorado de los botones: `#A9873E`.
+  - Dorado del logo: `#B19750`. Dorado de los botones de la web: `#A9873E`.
   - Tipografías (Google Fonts): **Inknut Antiqua** para títulos y **Cabin** para el
     texto.
-  - Logo: "LEHONOR" en dorado. La web solo tiene un PNG de 180×48 px.
-    ⚠️ Hace falta el logo en alta calidad (SVG o PNG grande). ¿Hay un logo propio de
-    Enoboutique?
+  - Logo: "LEHONOR / ENO boutique" en dorado, en `marca/logo-enoboutique.png`
+    (PNG de 1920×1080 con fondo transparente).
 
 ## Integración con Tango
 - **El código de artículo de Tango (`Cód. artículo`) es la clave** que une cada
@@ -83,7 +82,7 @@ Venta online, carrito, pagos, gestión de stock contable, maridajes automáticos
   pisa al del panel**. Los códigos nuevos que no existen en la carta quedan como
   pendientes de revisión, y no se publican solos.
 - **Actualización de stock:** con otro reporte de Tango que trae stock por código de
-  artículo. ⚠️ Necesitamos un archivo de ejemplo de ese reporte.
+  artículo. El archivo de ejemplo de ese reporte llega con la spec 8.
 
 ## Lo que muestra el export de Tango (impacta la regla de dominio)
 - **Cada añada es un artículo distinto en Tango**, con código y precio propios. La

@@ -5,9 +5,12 @@ Carta digital pública (se abre escaneando un QR en el local) + panel de adminis
 para el personal, que NO programa. Ver `specs/000-vision.md` antes de cualquier tarea.
 
 ## Regla de dominio clave
-- Un **Vino** (etiqueta) tiene N **Añadas**. Cada añada tiene su propio precio y stock.
-- El **código de barras pertenece al Vino**, NO es único por añada.
-- Buscar o escanear un código devuelve el Vino con TODAS sus añadas visibles.
+- Un **Vino** (etiqueta) tiene N **Añadas**. Cada añada corresponde a un artículo de
+  Tango (por `Cód. artículo`), con su propio precio y stock.
+- El **código de artículo de Tango** es la clave para importar y actualizar precios y stock.
+- El **código de barras se asocia al Vino**. Escanearlo devuelve el Vino con TODAS sus
+  añadas disponibles.
+- Los productos que no son vino (destilados, aceites, almacén) no tienen añadas.
 
 ## Stack (no cambiar sin aprobación)
 Next.js (App Router) + TypeScript estricto · Tailwind · Supabase (Postgres, Auth, Storage)
