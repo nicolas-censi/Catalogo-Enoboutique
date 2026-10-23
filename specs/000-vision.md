@@ -1,6 +1,6 @@
 # 000 – Visión del producto
 
-**Estado:** Borrador (quedan puntos marcados con ⚠️)
+**Estado:** Borrador (quedan 3 puntos marcados con ⚠️)
 
 ## El problema
 En la vinoteca, especialmente en la cava, una misma etiqueta existe en varias añadas
@@ -26,7 +26,8 @@ y una descripción. El personal administra todo desde un panel simple, sin tocar
 5. Orden visual de secciones y vinos (arrastrar y soltar)
 6. Identidad de marca y textos editables de la carta
 7. Descripciones sugeridas por IA con búsqueda web → borrador → aprobación humana
-8. Importación masiva desde CSV/Excel, agrupando por código de barras
+8. Importación masiva desde CSV/Excel de Tango (agrupando añadas por nombre) y
+   actualización masiva de precios y stock por código de artículo
 9. Deploy, dominio y QR imprimible
 
 ## Principios
@@ -55,10 +56,34 @@ Venta online, carrito, pagos, gestión de stock contable, maridajes automáticos
 - **Stock al cliente:** se muestra solo "Disponible" o "Sin stock", nunca la cantidad.
 - **Añadas sin stock:** se esconden. Si un vino se queda sin ninguna añada con stock,
   se esconde el vino entero.
-- **Dominio:** un subdominio de `lehonor.com`. ⚠️ Falta definir el nombre del
-  subdominio y quién gestiona el DNS.
-- ⚠️ Colores de marca (hex), tipografías y logo: la web
-  https://www.lehonor.com/enoboutique no se pudo consultar desde el entorno de trabajo.
+- **Familias en la carta:** vinos (`VI`), destilados (`BA`), aceites (`AC`) y
+  almacén (`AL`). Las otras familias (carnes, comidas, gift cards, etc.) no entran.
+  Los productos que no son vino no tienen añadas: se muestran con un único precio.
+  ⚠️ ¿Los acetos (`AB`) cuentan como almacén?
+- **Dominio:** `enoboutique.lehonor.com`. El DNS de `lehonor.com` lo gestiona el
+  propio negocio.
+- **Marca** (tomada de https://www.lehonor.com/enoboutique):
+  - Color primario: negro `#000000`.
+  - Fondo secundario: `#F7F8FB`.
+  - Acento dorado de los botones: `#A9873E`.
+  - Tipografías (Google Fonts): **Inknut Antiqua** para títulos y **Cabin** para el
+    texto.
+  - Logo: "LEHONOR" en dorado. La web solo tiene un PNG de 180×48 px.
+    ⚠️ Hace falta el logo en alta calidad (SVG o PNG grande). ¿Hay un logo propio de
+    Enoboutique?
+
+## Integración con Tango
+- **El código de artículo de Tango (`Cód. artículo`) es la clave** que une cada
+  añada/producto de la carta con Tango. Todos los cruces se hacen por ese código.
+- **Importación inicial:** desde el reporte "Precios por artículo" (CSV o Excel). La
+  importación agrupa las añadas por nombre y expande las abreviaturas; el personal
+  revisa ambas cosas antes de publicar.
+- **Actualización masiva de precios:** periódicamente se sube el mismo reporte de
+  precios. Los precios se actualizan por código de artículo, y **el precio de Tango
+  pisa al del panel**. Los códigos nuevos que no existen en la carta quedan como
+  pendientes de revisión, y no se publican solos.
+- **Actualización de stock:** con otro reporte de Tango que trae stock por código de
+  artículo. ⚠️ Necesitamos un archivo de ejemplo de ese reporte.
 
 ## Lo que muestra el export de Tango (impacta la regla de dominio)
 - **Cada añada es un artículo distinto en Tango**, con código y precio propios. La
@@ -73,20 +98,14 @@ Venta online, carrito, pagos, gestión de stock contable, maridajes automáticos
   `ZUCCARDI Q MAL` sin año, dos veces).
 - 58 artículos tienen precio vacío o en cero.
 
-## Preguntas abiertas
-- ⚠️ ¿Qué familias entran en la carta? ¿Solo vinos (`VI`), o también destilados,
-  aceites, almacén, etc.?
-- ⚠️ **Stock:** este export no trae stock. ¿Tango puede exportar stock por artículo
-  (otro reporte)? Si no, ¿la disponibilidad se marca a mano en el panel?
-- ⚠️ **Código de barras:** ¿al escanear una botella, el cliente debería ver todas las
-  añadas del vino aunque solo la añada actual tenga el código cargado en Tango?
-  (Propuesta: sí. El código queda en el Vino y las añadas sin código se asocian por
-  nombre.)
-- ⚠️ **Nombres:** ¿la carta muestra un nombre "lindo" editable (ej.: "Rutini Malbec")
-  mientras el nombre de Tango queda solo como referencia interna? ¿Querés que la
-  importación expanda las abreviaturas automáticamente (`MAL` → Malbec), con revisión?
-- ⚠️ **Sincronización con Tango:** ¿la importación es solo una vez al inicio, o se
-  repite periódicamente para actualizar precios? Si se repite, ¿Tango manda sobre los
-  precios, o los cambios hechos en el panel se respetan?
-- ⚠️ **Artículos sin año en la descripción** (ej.: `ZUCCARDI Q MAL`): ¿son la añada
-  actual, o una añada sin especificar ("NV")?
+## Decisiones sobre los datos de Tango
+- **Escaneo:** al escanear el código de una botella se ve el vino con todas sus
+  añadas disponibles, aunque solo una añada tenga código de barras en Tango. El código
+  de barras queda asociado al Vino.
+- **Nombres:** la carta muestra un nombre editable y legible (ej.: "Rutini Malbec").
+  La descripción de Tango queda como referencia interna. La importación expande las
+  abreviaturas (`MAL` → Malbec) con un diccionario editable, y el personal revisa el
+  resultado.
+- **Artículos sin año en la descripción:** se importan como añada "sin especificar",
+  marcados para revisión. El personal les asigna el año o los deja como "sin añada"
+  (ej.: espumantes, destilados).
