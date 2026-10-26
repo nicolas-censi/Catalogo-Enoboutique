@@ -29,7 +29,8 @@ Next.js (App Router) + TypeScript estricto · Tailwind · Supabase (Postgres, Au
 
 ## Reglas de código
 - Todo dato visible en la carta debe ser editable desde el panel admin. Nada hardcodeado.
-- Colores, tipografías y espaciados solo desde los tokens de marca (`tailwind.config`).
+- Colores, tipografías y espaciados solo desde los tokens de marca (`@theme` en
+  `app/globals.css`, Tailwind 4).
 - Textos de la interfaz en español (rioplatense, tuteo con "vos").
 - Precios en ARS, formateados con `Intl.NumberFormat('es-AR')`.
 - Claves y secretos solo en `.env.local`. Nunca en el código ni en commits.

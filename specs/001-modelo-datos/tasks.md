@@ -8,7 +8,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   Nota: `test` y `test:e2e` se agregan en la T2, junto con Vitest y Playwright.
 - [x] T2 — Configurar Vitest y Playwright con un test e2e que abra `/` en un viewport
   de 390×844 y verifique que no hay errores en la consola. (CA-1)
-- [ ] T3 — Tokens de marca en Tailwind (`negro`, `fondo`, `dorado`) y tipografías
+- [x] T3 — Tokens de marca en Tailwind (`negro`, `fondo`, `dorado`) y tipografías
   Inknut Antiqua y Cabin con `next/font`; página provisoria que los usa; test que
   verifica los tokens y la tipografía aplicada. (CA-2)
 - [ ] T4 — `formatearPrecio()` en `lib/formato.ts` y el texto "Consultar precio" en

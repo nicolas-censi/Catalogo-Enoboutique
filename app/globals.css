@@ -1,3 +1,16 @@
-body {
-  margin: 0;
+@import "tailwindcss";
+
+/* Tokens de marca: los únicos colores y tipografías permitidos en la app. */
+@theme inline {
+  --color-negro: #000000;
+  --color-fondo: #F7F8FB;
+  --color-dorado: #B19750;
+  --font-titulos: var(--font-inknut-antiqua), serif;
+  --font-texto: var(--font-cabin), sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-fondo text-negro font-texto;
+  }
 }
