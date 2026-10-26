@@ -130,3 +130,5 @@ visibilidad y las herramientas de trabajo.
 - Historial de cambios de precio por añada (útil para ver cómo impactó cada
   actualización desde Tango).
 - Marca "requiere revisión" en productos y añadas, para la importación (spec 8).
+- En la importación (spec 8), tratar los precios en 0 de Tango como "sin precio", para
+  que muestren "Consultar precio" en vez de "$ 0".

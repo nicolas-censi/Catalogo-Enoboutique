@@ -11,7 +11,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T3 — Tokens de marca en Tailwind (`negro`, `fondo`, `dorado`) y tipografías
   Inknut Antiqua y Cabin con `next/font`; página provisoria que los usa; test que
   verifica los tokens y la tipografía aplicada. (CA-2)
-- [ ] T4 — `formatearPrecio()` en `lib/formato.ts` y el texto "Consultar precio" en
+- [x] T4 — `formatearPrecio()` en `lib/formato.ts` y el texto "Consultar precio" en
   `lib/textos.ts`, con tests unitarios (47000 → `$ 47.000`, 0, millones, null →
   "Consultar precio"). (CA-11)
 - [ ] T5 — Inicializar Supabase (`supabase init` + `supabase link` al proyecto de
