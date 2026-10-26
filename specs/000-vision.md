@@ -90,6 +90,8 @@ Venta online, carrito, pagos, gestión de stock contable, maridajes automáticos
   subir un reporte de stock de Tango y actualizar la disponibilidad por código de
   artículo (capacidad 10). El modelo de datos ya lo permite. El archivo de ejemplo de
   ese reporte llega con esa spec.
+- **Stock al importar:** la importación inicial (spec 8) carga todas las añadas como
+  "Disponible", y el personal marca a mano las que no hay.
 
 ## Lo que muestra el export de Tango (impacta la regla de dominio)
 - **Cada añada es un artículo distinto en Tango**, con código y precio propios. La

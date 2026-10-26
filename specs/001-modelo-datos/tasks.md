@@ -39,7 +39,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   varias añadas, un destilado, un aceite, una sección oculta) para el proyecto de
   desarrollo, y generación de `lib/tipos-db.ts`; test de que el typecheck pasa con los
   tipos generados. (CA-1, CA-3)
-- [ ] T14 — README con la puesta en marcha (requisitos, crear el proyecto de Supabase
+- [x] T14 — README con la puesta en marcha (requisitos, crear el proyecto de Supabase
   de desarrollo, `supabase link` y `db push`, `.env.local`, alta manual de personal) y
   verificación final de todos los comandos en verde. Documentar
   `PLAYWRIGHT_CHROMIUM_EXECUTABLE` para usar un Chromium ya instalado, `npm run db:migrar`
