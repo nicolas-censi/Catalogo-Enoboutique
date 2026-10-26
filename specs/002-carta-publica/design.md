@@ -20,9 +20,11 @@ Función pública `buscar_carta(texto text, limite int default 30)`:
   año descendente. Máximo `limite` productos.
 - Textos de menos de 2 caracteres devuelven vacío.
 
-Índice GIN de trigramas sobre una función inmutable `texto_busqueda_producto(...)`
-(nombre + bodega + varietal normalizados) para que la búsqueda sea rápida con
-~2.400 productos.
+Función inmutable `normalizar_busqueda(texto)` (minúsculas, sin tildes, espacios
+simples) e índices GIN de trigramas sobre `productos` (nombre + varietal) y `bodegas`
+(nombre). Son dos índices porque un índice no puede combinar columnas de dos tablas.
+`authenticated` puede ejecutar `normalizar_busqueda`, porque los índices la evalúan
+al guardar con el usuario del personal; `anon` no.
 
 ### Lectura de la carta
 - Inicio: secciones visibles con al menos un producto disponible, desde

@@ -1,6 +1,6 @@
 # 002 – Carta pública con buscador
 
-**Estado:** Borrador
+**Estado:** Aprobada (2026-10-26)
 
 ## Objetivo
 Que el cliente, desde su celular y dentro del local, encuentre rápido el vino (o el
