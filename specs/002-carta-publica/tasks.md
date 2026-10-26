@@ -8,7 +8,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T2 — Función `buscar_carta()`: búsqueda difusa por nombre, bodega y varietal,
   ordenada por relevancia; tests con errores de tipeo, tildes y partes del nombre.
   (CA-5)
-- [ ] T3 — `buscar_carta()`: búsqueda por código de barras completo, textos cortos y
+- [x] T3 — `buscar_carta()`: búsqueda por código de barras completo, textos cortos y
   productos no disponibles; tests. (CA-6, CA-8)
 - [ ] T4 — `lib/carta.ts`: lectura de secciones, sección y producto agrupando filas por
   producto; etiquetas de añadas; tests unitarios y de base de datos. (CA-2, CA-3, CA-4)

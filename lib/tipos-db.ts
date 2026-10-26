@@ -258,6 +258,27 @@ export type Database = {
       }
     }
     Functions: {
+      buscar_carta: {
+        Args: { limite?: number; texto: string }
+        Returns: {
+          anada_id: string
+          anada_tipo: Database["public"]["Enums"]["tipo_anada"]
+          anio: number
+          bodega_nombre: string
+          descripcion: string
+          foto_path: string
+          precio: number
+          producto_id: string
+          producto_nombre: string
+          producto_orden: number
+          producto_tipo: Database["public"]["Enums"]["tipo_producto"]
+          relevancia: number
+          seccion_id: string
+          seccion_nombre: string
+          seccion_orden: number
+          varietal: string
+        }[]
+      }
       buscar_por_codigo_barras: {
         Args: { codigo: string }
         Returns: {
@@ -285,6 +306,7 @@ export type Database = {
         }
       }
       es_personal: { Args: never; Returns: boolean }
+      normalizar_busqueda: { Args: { texto: string }; Returns: string }
     }
     Enums: {
       tipo_anada: "con_anio" | "sin_especificar" | "sin_anada"
