@@ -106,6 +106,12 @@ la sección y la bodega. Condiciones (CA-8):
 Las añadas sin precio sí se incluyen, con `precio` en null; la pantalla muestra
 "Consultar precio".
 
+Columnas: `seccion_id`, `seccion_nombre`, `seccion_orden`, `producto_id`, `producto_tipo`,
+`producto_nombre`, `bodega_nombre`, `varietal`, `descripcion`, `foto_path`,
+`producto_orden`, `anada_id`, `anada_tipo`, `anio` y `precio`. Una vista no garantiza
+orden: quien la lee ordena por `seccion_orden`, `producto_orden` y `anio` descendente
+(sin año al final).
+
 Como la vista solo incluye añadas visibles, un producto sin añadas visibles
 directamente no aparece. **No expone** `codigo_tango`, `descripcion_tango` ni datos
 internos.

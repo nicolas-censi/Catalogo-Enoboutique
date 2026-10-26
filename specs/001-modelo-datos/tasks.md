@@ -29,7 +29,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T10 — Migración: `personal`, `es_personal()` y políticas RLS en todas las tablas;
   tests como `anon`, personal y autenticado no personal. Incluir que el personal puede
   cargar añadas y presentaciones con los triggers de T8 activos. (CA-10)
-- [ ] T11 — Vista `carta_publica` con las reglas de visibilidad; tests de cada regla
+- [x] T11 — Vista `carta_publica` con las reglas de visibilidad; tests de cada regla
   (sin stock, sin precio que sí aparece, producto oculto, sección oculta, producto sin
   añadas visibles) y orden de añadas. (CA-3, CA-8, CA-9)
 - [ ] T12 — Función `buscar_por_codigo_barras()`; tests: devuelve todas las añadas
