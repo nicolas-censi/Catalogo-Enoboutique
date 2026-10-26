@@ -17,6 +17,6 @@ Implementá la **siguiente tarea pendiente** de `specs/$ARGUMENTS/tasks.md`.
    en `.env.local`.
 7. Corré `npm run test`, `npm run typecheck` y `npm run lint`. Todo tiene que dar verde.
 8. Marcá la tarea como `[x]` en `tasks.md`.
-9. Mostrá qué cambió y qué quedó verificado, y **proponé** un mensaje de commit.
-   No hagas commit hasta que te lo pidan. Después frená: la próxima tarea arranca con
-   otro `/implement`.
+9. Hacé commit y push a la rama de trabajo, con el número de tarea en el mensaje
+   (ej.: `T3: tokens de marca`). Mostrá qué cambió y qué quedó verificado. Después
+   frená: la próxima tarea arranca con otro `/implement`.

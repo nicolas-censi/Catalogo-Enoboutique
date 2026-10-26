@@ -24,7 +24,8 @@ Next.js (App Router) + TypeScript estricto · Tailwind · Supabase (Postgres, Au
 4. Cada criterio de aceptación tiene al menos un test. Test primero, código después.
 5. No agregar funcionalidades que no estén en la spec. Si surge una idea, anotarla
    en la sección "Ideas para más adelante" de la spec y seguir.
-6. Al cerrar una tarea: tests y typecheck en verde, después proponer mensaje de commit.
+6. Al cerrar una tarea: tests, typecheck y lint en verde, después commit y push a la rama de
+   trabajo, con el número de tarea en el mensaje (ej.: `T3: tokens de marca`).
 
 ## Reglas de código
 - Todo dato visible en la carta debe ser editable desde el panel admin. Nada hardcodeado.

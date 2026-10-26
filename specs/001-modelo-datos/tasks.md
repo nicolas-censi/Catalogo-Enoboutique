@@ -6,7 +6,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   scripts `dev`, `test`, `test:e2e`, `lint` y `typecheck`; fijar la versión de Node
   (`.nvmrc` y `engines`). (CA-1)
   Nota: `test` y `test:e2e` se agregan en la T2, junto con Vitest y Playwright.
-- [ ] T2 — Configurar Vitest y Playwright con un test e2e que abra `/` en un viewport
+- [x] T2 — Configurar Vitest y Playwright con un test e2e que abra `/` en un viewport
   de 390×844 y verifique que no hay errores en la consola. (CA-1)
 - [ ] T3 — Tokens de marca en Tailwind (`negro`, `fondo`, `dorado`) y tipografías
   Inknut Antiqua y Cabin con `next/font`; página provisoria que los usa; test que
@@ -40,4 +40,5 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   tipos generados. (CA-1, CA-3)
 - [ ] T14 — README con la puesta en marcha (requisitos, crear el proyecto de Supabase
   de desarrollo, `supabase link` y `db push`, `.env.local`, alta manual de personal) y
-  verificación final de todos los comandos en verde. (CA-1)
+  verificación final de todos los comandos en verde. Documentar
+  `PLAYWRIGHT_CHROMIUM_EXECUTABLE` para usar un Chromium ya instalado. (CA-1)
