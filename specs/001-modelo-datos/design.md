@@ -3,8 +3,15 @@
 ## Datos
 
 Esquema en Postgres (Supabase), con migraciones versionadas en `supabase/migrations/`.
-Se aplican con la Supabase CLI (`supabase link` + `supabase db push`) sobre un
-**proyecto de Supabase de desarrollo en la nube**. El proyecto de producción es otro
+Se aplican sobre un **proyecto de Supabase de desarrollo en la nube**, de dos formas
+equivalentes:
+- con la Supabase CLI (`supabase link` + `supabase db push`), si hay conexión directa
+  a Postgres;
+- con `npm run db:migrar` (`scripts/migrar.mjs`), que ejecuta las migraciones por la API
+  de administración de Supabase (HTTPS). Sirve en entornos donde el puerto de Postgres
+  está bloqueado, como el entorno en la nube de Claude Code. Registra cada migración en
+  `supabase_migrations.schema_migrations`, igual que la CLI.
+ El proyecto de producción es otro
 y se crea en la spec 9.
 Nombres de tablas y columnas en español, sin tildes y en snake_case.
 
@@ -154,7 +161,7 @@ marca/                  # logo (ya existe)
   `lib/textos.ts`, hasta que la spec 6 lo haga editable desde el panel.
   Si en el futuro hay centavos, se revisa en la spec que lo necesite.
 - Clientes de Supabase en `lib/supabase/`. Las claves salen de `.env.local`
-  (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`).
+  (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`).
   `SUPABASE_SERVICE_ROLE_KEY` se usa solo en los tests.
 
 ## Tests

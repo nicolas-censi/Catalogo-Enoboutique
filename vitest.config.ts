@@ -7,6 +7,10 @@ export default defineConfig({
   },
   test: {
     include: ["tests/unit/**/*.test.ts", "tests/db/**/*.test.ts"],
+    setupFiles: ["tests/setup-env.ts"],
+    // Los tests de base de datos comparten el proyecto de desarrollo: de a un archivo por vez.
+    fileParallelism: false,
+    testTimeout: 30_000,
     passWithNoTests: true,
   },
 });
