@@ -26,7 +26,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   presentación `sin_anada`; tests. (CA-6)
 - [x] T9 — Migración: `codigos_barras`; test de que un código no se repite entre
   productos. (CA-5)
-- [ ] T10 — Migración: `personal`, `es_personal()` y políticas RLS en todas las tablas;
+- [x] T10 — Migración: `personal`, `es_personal()` y políticas RLS en todas las tablas;
   tests como `anon`, personal y autenticado no personal. Incluir que el personal puede
   cargar añadas y presentaciones con los triggers de T8 activos. (CA-10)
 - [ ] T11 — Vista `carta_publica` con las reglas de visibilidad; tests de cada regla

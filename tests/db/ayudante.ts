@@ -26,8 +26,15 @@ export function clienteAdmin(): SupabaseClient {
 
 const usuariosCreados: string[] = [];
 
-/** Crea un usuario de prueba y devuelve un cliente con su sesión iniciada. */
-export async function crearUsuario(): Promise<{ cliente: SupabaseClient; usuario: User }> {
+export type Rol = "encargado" | "vendedor";
+
+/**
+ * Crea un usuario de prueba y devuelve un cliente con su sesión iniciada.
+ * Con `rol`, además lo da de alta en `personal`.
+ */
+export async function crearUsuario(
+  rol?: Rol,
+): Promise<{ cliente: SupabaseClient; usuario: User }> {
   const email = `${prefijo}-${usuariosCreados.length + 1}@example.com`;
   const password = randomUUID();
   const { data, error } = await clienteAdmin().auth.admin.createUser({
@@ -37,6 +44,11 @@ export async function crearUsuario(): Promise<{ cliente: SupabaseClient; usuario
   });
   if (error) throw error;
   usuariosCreados.push(data.user.id);
+
+  if (rol) {
+    const alta = await clienteAdmin().from("personal").insert({ user_id: data.user.id, rol });
+    if (alta.error) throw alta.error;
+  }
 
   const cliente = clienteAnon();
   const sesion = await cliente.auth.signInWithPassword({ email, password });
