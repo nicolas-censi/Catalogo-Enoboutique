@@ -71,3 +71,8 @@ for (const migracion of pendientes) {
   `);
   console.log(`Aplicada: ${migracion.archivo}`);
 }
+
+if (pendientes.length > 0) {
+  // Avisa a la API de Supabase (PostgREST) que recargue el esquema.
+  await sql("notify pgrst, 'reload schema'");
+}

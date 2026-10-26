@@ -18,7 +18,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   desarrollo), `.env.example`, clientes de Supabase en `lib/supabase/` y un helper de
   tests de base de datos (datos con prefijo único y limpieza, clientes `anon`, personal
   y no personal). (CA-1, CA-10)
-- [ ] T6 — Migración: enums, `secciones`, `bodegas`, `productos` y el trigger
+- [x] T6 — Migración: enums, `secciones`, `bodegas`, `productos` y el trigger
   `actualizado_en`; tests de inserción y de orden de secciones. (CA-9)
 - [ ] T7 — Migración: `anadas`, con `codigo_tango` único, `unique (producto_id, anio)`
   y el check de `tipo`/`anio`; tests de cada restricción. (CA-4, CA-7)
