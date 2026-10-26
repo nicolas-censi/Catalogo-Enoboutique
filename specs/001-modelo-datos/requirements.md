@@ -132,3 +132,5 @@ visibilidad y las herramientas de trabajo.
 - Marca "requiere revisión" en productos y añadas, para la importación (spec 8).
 - En la importación (spec 8), tratar los precios en 0 de Tango como "sin precio", para
   que muestren "Consultar precio" en vez de "$ 0".
+- En la importación (spec 8), detectar los combos y kits que Tango tiene con prefijo `VI`
+  (ej.: `VIkit0027 COMBO SEPT 01 NOV`), que no son vinos, para excluirlos o revisarlos.

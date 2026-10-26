@@ -1,11 +1,12 @@
 import { createServerClient } from "@supabase/ssr";
+import type { Database } from "@/lib/tipos-db";
 import { cookies } from "next/headers";
 
 /** Cliente de Supabase para Server Components, Server Actions y Route Handlers. */
 export async function crearClienteServidor() {
   const almacen = await cookies();
 
-  return createServerClient(
+  return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     {

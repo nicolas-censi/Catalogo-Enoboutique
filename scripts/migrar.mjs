@@ -6,34 +6,8 @@
 // Uso: npm run db:migrar   (requiere SUPABASE_ACCESS_TOKEN y SUPABASE_PROJECT_REF)
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import nextEnv from "@next/env";
+import { ejecutarSql as sql } from "./api-sql.mjs";
 import { migracionesPendientes } from "./migraciones.mjs";
-
-nextEnv.loadEnvConfig(process.cwd());
-
-const { SUPABASE_ACCESS_TOKEN, SUPABASE_PROJECT_REF } = process.env;
-if (!SUPABASE_ACCESS_TOKEN || !SUPABASE_PROJECT_REF) {
-  console.error("Faltan SUPABASE_ACCESS_TOKEN o SUPABASE_PROJECT_REF.");
-  process.exit(1);
-}
-
-/** @param {string} query */
-async function sql(query) {
-  const respuesta = await fetch(
-    `https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_REF}/database/query`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${SUPABASE_ACCESS_TOKEN}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ query }),
-    },
-  );
-  const cuerpo = await respuesta.text();
-  if (!respuesta.ok) throw new Error(`Error ${respuesta.status}: ${cuerpo}`);
-  return JSON.parse(cuerpo);
-}
 
 /** @param {string} texto */
 const literal = (texto) => `'${texto.replaceAll("'", "''")}'`;

@@ -147,11 +147,11 @@ lib/
   supabase/server.ts    # cliente para Server Components (@supabase/ssr)
   supabase/client.ts    # cliente para el navegador
   formato.ts            # formatearPrecio() (CA-11)
-  tipos-db.ts           # tipos generados con `supabase gen types`
+  tipos-db.ts           # tipos generados con `npm run db:tipos`
 supabase/
   config.toml
   migrations/           # una migración por tarea de datos
-  seed.sql              # datos de ejemplo para desarrollo
+  seed.sql              # datos de ejemplo reales del export de Tango (npm run db:seed)
 tests/
   unit/                 # Vitest
   db/                   # Vitest contra el Supabase local (RLS, vista, restricciones)

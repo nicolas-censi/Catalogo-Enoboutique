@@ -35,7 +35,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T12 — Función `buscar_por_codigo_barras()`; tests: devuelve todas las añadas
   visibles del producto, y nada para un código inexistente o de un producto oculto.
   (CA-5)
-- [ ] T13 — `seed.sql` con datos de ejemplo reales del export (Rutini Malbec con
+- [x] T13 — `seed.sql` con datos de ejemplo reales del export (Rutini Malbec con
   varias añadas, un destilado, un aceite, una sección oculta) para el proyecto de
   desarrollo, y generación de `lib/tipos-db.ts`; test de que el typecheck pasa con los
   tipos generados. (CA-1, CA-3)
