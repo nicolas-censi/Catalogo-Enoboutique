@@ -24,7 +24,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   y el check de `tipo`/`anio`; tests de cada restricción. (CA-4, CA-7)
 - [x] T8 — Trigger que valida que los productos que no son vino tengan una única
   presentación `sin_anada`; tests. (CA-6)
-- [ ] T9 — Migración: `codigos_barras`; test de que un código no se repite entre
+- [x] T9 — Migración: `codigos_barras`; test de que un código no se repite entre
   productos. (CA-5)
 - [ ] T10 — Migración: `personal`, `es_personal()` y políticas RLS en todas las tablas;
   tests como `anon`, personal y autenticado no personal. Incluir que el personal puede
