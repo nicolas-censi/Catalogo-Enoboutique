@@ -14,7 +14,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T4 — `formatearPrecio()` en `lib/formato.ts` y el texto "Consultar precio" en
   `lib/textos.ts`, con tests unitarios (47000 → `$ 47.000`, 0, millones, null →
   "Consultar precio"). (CA-11)
-- [ ] T5 — Inicializar Supabase (`supabase init` + `supabase link` al proyecto de
+- [x] T5 — Inicializar Supabase (`supabase init` + `supabase link` al proyecto de
   desarrollo), `.env.example`, clientes de Supabase en `lib/supabase/` y un helper de
   tests de base de datos (datos con prefijo único y limpieza, clientes `anon`, personal
   y no personal). (CA-1, CA-10)
@@ -41,4 +41,5 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [ ] T14 — README con la puesta en marcha (requisitos, crear el proyecto de Supabase
   de desarrollo, `supabase link` y `db push`, `.env.local`, alta manual de personal) y
   verificación final de todos los comandos en verde. Documentar
-  `PLAYWRIGHT_CHROMIUM_EXECUTABLE` para usar un Chromium ya instalado. (CA-1)
+  `PLAYWRIGHT_CHROMIUM_EXECUTABLE` para usar un Chromium ya instalado, `npm run db:migrar`
+  y `NODE_USE_ENV_PROXY=1` para entornos con proxy. (CA-1)
