@@ -2,9 +2,10 @@
 
 Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un criterio (CA-n).
 
-- [ ] T1 — Crear el proyecto Next.js (App Router, TypeScript estricto, ESLint) con los
+- [x] T1 — Crear el proyecto Next.js (App Router, TypeScript estricto, ESLint) con los
   scripts `dev`, `test`, `test:e2e`, `lint` y `typecheck`; fijar la versión de Node
   (`.nvmrc` y `engines`). (CA-1)
+  Nota: `test` y `test:e2e` se agregan en la T2, junto con Vitest y Playwright.
 - [ ] T2 — Configurar Vitest y Playwright con un test e2e que abra `/` en un viewport
   de 390×844 y verifique que no hay errores en la consola. (CA-1)
 - [ ] T3 — Tokens de marca en Tailwind (`negro`, `fondo`, `dorado`) y tipografías
