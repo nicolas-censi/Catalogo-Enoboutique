@@ -28,8 +28,9 @@ y una descripción. El personal administra todo desde un panel simple, sin tocar
 6. Identidad de marca y textos editables de la carta
 7. Descripciones sugeridas por IA con búsqueda web → borrador → aprobación humana
 8. Importación masiva desde CSV/Excel de Tango (agrupando añadas por nombre) y
-   actualización masiva de precios y stock por código de artículo
+   actualización masiva de precios por código de artículo
 9. Deploy, dominio y QR imprimible
+10. (Más adelante) Actualización masiva de stock desde un reporte de Tango
 
 ## Principios
 - **Lo humano manda**: todo dato es editable desde el panel; la IA solo sugiere.
@@ -82,8 +83,13 @@ Venta online, carrito, pagos, gestión de stock contable, maridajes automáticos
   precios. Los precios se actualizan por código de artículo, y **el precio de Tango
   pisa al del panel**. Los códigos nuevos que no existen en la carta quedan como
   pendientes de revisión, y no se publican solos.
-- **Actualización de stock:** con otro reporte de Tango que trae stock por código de
-  artículo. El archivo de ejemplo de ese reporte llega con la spec 8.
+- **Stock: manual por ahora.** El stock de Tango hoy no refleja la realidad, así que la
+  disponibilidad ("Disponible" / "Sin stock") de cada añada la marca el personal a mano
+  desde el panel (spec 4).
+- **Stock desde Tango (más adelante):** cuando el stock de Tango esté ajustado, se podrá
+  subir un reporte de stock de Tango y actualizar la disponibilidad por código de
+  artículo (capacidad 10). El modelo de datos ya lo permite. El archivo de ejemplo de
+  ese reporte llega con esa spec.
 
 ## Lo que muestra el export de Tango (impacta la regla de dominio)
 - **Cada añada es un artículo distinto en Tango**, con código y precio propios. La
