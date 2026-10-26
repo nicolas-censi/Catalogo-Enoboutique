@@ -51,7 +51,9 @@ personal, y el buscador tolera errores de tipeo y tildes.
   - una añada "con año" muestra el año;
   - un producto "sin añada" (espumantes, destilados, aceites, almacén) muestra solo el
     precio;
-  - una añada "sin especificar" se muestra según la pregunta abierta 2.
+  - una añada "sin especificar" se muestra igual que "sin añada": solo el precio, sin
+    año. El personal le puede cargar el año más adelante desde el panel (spec 4).
+- Y no se escribe "Disponible" en cada añada: lo agotado directamente no aparece.
 
 ### CA-5: Búsqueda tolerante a errores
 - **Dado** los datos de ejemplo (seed)
@@ -90,7 +92,7 @@ personal, y el buscador tolera errores de tipeo y tildes.
 ### CA-10: Cambios del personal visibles
 - **Dado** un cambio hecho por el personal (precio, stock, orden u ocultar)
 - **Cuando** pasa como máximo 1 minuto
-- **Entonces** la carta lo refleja. (Ver la pregunta abierta 4.)
+- **Entonces** la carta lo refleja.
 
 ### CA-11: Marca y accesibilidad
 - **Dado** cualquier pantalla de la carta
@@ -107,18 +109,12 @@ personal, y el buscador tolera errores de tipeo y tildes.
 - Favoritos, compartir o cualquier interacción que no sea ver y buscar.
 - Idiomas además del español.
 
-## Preguntas abiertas
-- [ ] 1. **Inicio:** ¿la carta arranca con la lista de secciones (propuesta, porque con
-  ~2.400 productos una lista única sería muy larga) o con todos los productos en una
-  sola página?
-- [ ] 2. **Añadas "sin especificar"** (pendientes de revisión, como los Zuccardi Q sin
-  año): ¿se muestran al cliente sin año (propuesta) o se esconden hasta que alguien les
-  ponga el año?
-- [ ] 3. **Leyenda "Disponible":** como la carta solo muestra lo que hay, ¿hace falta
-  escribir "Disponible" en cada añada, o alcanza con que lo agotado no aparezca
-  (propuesta)?
-- [ ] 4. **Demora de los cambios:** ¿está bien que un cambio del personal tarde hasta
-  1 minuto en verse en la carta? Permite que la carta cargue más rápido.
+## Decisiones tomadas en la revisión
+- **Inicio:** arranca con la lista de secciones.
+- **Añadas "sin especificar":** se muestran sin año. Cargarles el año a mano es parte
+  del panel (spec 4).
+- **Leyenda "Disponible":** no se muestra; lo agotado no aparece.
+- **Demora de los cambios:** hasta 1 minuto está bien.
 
 ## Ideas para más adelante
 - Mostrar las añadas agotadas como "Agotada" (hoy se esconden).
