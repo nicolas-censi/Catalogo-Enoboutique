@@ -22,12 +22,13 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   `actualizado_en`; tests de inserción y de orden de secciones. (CA-9)
 - [x] T7 — Migración: `anadas`, con `codigo_tango` único, `unique (producto_id, anio)`
   y el check de `tipo`/`anio`; tests de cada restricción. (CA-4, CA-7)
-- [ ] T8 — Trigger que valida que los productos que no son vino tengan una única
+- [x] T8 — Trigger que valida que los productos que no son vino tengan una única
   presentación `sin_anada`; tests. (CA-6)
 - [ ] T9 — Migración: `codigos_barras`; test de que un código no se repite entre
   productos. (CA-5)
 - [ ] T10 — Migración: `personal`, `es_personal()` y políticas RLS en todas las tablas;
-  tests como `anon`, personal y autenticado no personal. (CA-10)
+  tests como `anon`, personal y autenticado no personal. Incluir que el personal puede
+  cargar añadas y presentaciones con los triggers de T8 activos. (CA-10)
 - [ ] T11 — Vista `carta_publica` con las reglas de visibilidad; tests de cada regla
   (sin stock, sin precio que sí aparece, producto oculto, sección oculta, producto sin
   añadas visibles) y orden de añadas. (CA-3, CA-8, CA-9)
