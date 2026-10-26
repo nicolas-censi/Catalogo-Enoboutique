@@ -79,8 +79,10 @@ implementar.
   accesibilidad. No cambia el stack.
 
 ## Riesgos
-- **Calidad de la búsqueda:** el umbral de similitud se ajusta con los casos de CA-5 y
-  con nombres reales del seed. Puede necesitar ajuste con los datos de la importación
-  (spec 8).
+- **Calidad de la búsqueda:** umbral de `word_similarity` en **0,5**, calibrado con los
+  ~3.200 nombres reales del export de Tango. Con 0,4 aparecen falsos positivos
+  (`cabernet` → Fernet Branca, `primus` → J. Rubio Privado); 0,45 da lo mismo que 0,5.
+  `rutni` → Rutini queda justo en 0,5. Revisar con los nombres ya expandidos de la
+  importación (spec 8).
 - **Caché:** con `cacheComponents` de Next.js 16 hay que confirmar que `revalidate`
   funcione como se espera; si no, se usa la API de caché que indique la documentación.

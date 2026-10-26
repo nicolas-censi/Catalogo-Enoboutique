@@ -5,7 +5,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T1 — Migración: extensiones `pg_trgm` y `unaccent`, función de texto de búsqueda
   e índice de trigramas; tests de que el índice existe y la normalización saca tildes y
   mayúsculas. (CA-5)
-- [ ] T2 — Función `buscar_carta()`: búsqueda difusa por nombre, bodega y varietal,
+- [x] T2 — Función `buscar_carta()`: búsqueda difusa por nombre, bodega y varietal,
   ordenada por relevancia; tests con errores de tipeo, tildes y partes del nombre.
   (CA-5)
 - [ ] T3 — `buscar_carta()`: búsqueda por código de barras completo, textos cortos y
