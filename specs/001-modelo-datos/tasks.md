@@ -20,7 +20,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   y no personal). (CA-1, CA-10)
 - [x] T6 — Migración: enums, `secciones`, `bodegas`, `productos` y el trigger
   `actualizado_en`; tests de inserción y de orden de secciones. (CA-9)
-- [ ] T7 — Migración: `anadas`, con `codigo_tango` único, `unique (producto_id, anio)`
+- [x] T7 — Migración: `anadas`, con `codigo_tango` único, `unique (producto_id, anio)`
   y el check de `tipo`/`anio`; tests de cada restricción. (CA-4, CA-7)
 - [ ] T8 — Trigger que valida que los productos que no son vino tengan una única
   presentación `sin_anada`; tests. (CA-6)
