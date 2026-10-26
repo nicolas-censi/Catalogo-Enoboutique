@@ -5,9 +5,12 @@ Carta digital pública (se abre escaneando un QR en el local) + panel de adminis
 para el personal, que NO programa. Ver `specs/000-vision.md` antes de cualquier tarea.
 
 ## Regla de dominio clave
-- Un **Vino** (etiqueta) tiene N **Añadas**. Cada añada tiene su propio precio y stock.
-- El **código de barras pertenece al Vino**, NO es único por añada.
-- Buscar o escanear un código devuelve el Vino con TODAS sus añadas visibles.
+- Un **Vino** (etiqueta) tiene N **Añadas**. Cada añada corresponde a un artículo de
+  Tango (por `Cód. artículo`), con su propio precio y stock.
+- El **código de artículo de Tango** es la clave para importar y actualizar precios y stock.
+- El **código de barras se asocia al Vino**. Escanearlo devuelve el Vino con TODAS sus
+  añadas disponibles.
+- Los productos que no son vino (destilados, aceites, almacén) no tienen añadas.
 
 ## Stack (no cambiar sin aprobación)
 Next.js (App Router) + TypeScript estricto · Tailwind · Supabase (Postgres, Auth, Storage)
@@ -21,11 +24,13 @@ Next.js (App Router) + TypeScript estricto · Tailwind · Supabase (Postgres, Au
 4. Cada criterio de aceptación tiene al menos un test. Test primero, código después.
 5. No agregar funcionalidades que no estén en la spec. Si surge una idea, anotarla
    en la sección "Ideas para más adelante" de la spec y seguir.
-6. Al cerrar una tarea: tests y typecheck en verde, después proponer mensaje de commit.
+6. Al cerrar una tarea: tests, typecheck y lint en verde, después commit y push a la rama de
+   trabajo, con el número de tarea en el mensaje (ej.: `T3: tokens de marca`).
 
 ## Reglas de código
 - Todo dato visible en la carta debe ser editable desde el panel admin. Nada hardcodeado.
-- Colores, tipografías y espaciados solo desde los tokens de marca (`tailwind.config`).
+- Colores, tipografías y espaciados solo desde los tokens de marca (`@theme` en
+  `app/globals.css`, Tailwind 4).
 - Textos de la interfaz en español (rioplatense, tuteo con "vos").
 - Precios en ARS, formateados con `Intl.NumberFormat('es-AR')`.
 - Claves y secretos solo en `.env.local`. Nunca en el código ni en commits.
