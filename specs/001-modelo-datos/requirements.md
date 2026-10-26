@@ -1,6 +1,6 @@
 # 001 – Modelo de datos Vino → Añadas y proyecto base
 
-**Estado:** Aprobada (2026-10-23)
+**Estado:** Implementada (2026-10-26)
 
 ## Objetivo
 Dejar armada la base sobre la que se construyen todas las demás specs: el proyecto
