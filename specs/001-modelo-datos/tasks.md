@@ -32,7 +32,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T11 — Vista `carta_publica` con las reglas de visibilidad; tests de cada regla
   (sin stock, sin precio que sí aparece, producto oculto, sección oculta, producto sin
   añadas visibles) y orden de añadas. (CA-3, CA-8, CA-9)
-- [ ] T12 — Función `buscar_por_codigo_barras()`; tests: devuelve todas las añadas
+- [x] T12 — Función `buscar_por_codigo_barras()`; tests: devuelve todas las añadas
   visibles del producto, y nada para un código inexistente o de un producto oculto.
   (CA-5)
 - [ ] T13 — `seed.sql` con datos de ejemplo reales del export (Rutini Malbec con
