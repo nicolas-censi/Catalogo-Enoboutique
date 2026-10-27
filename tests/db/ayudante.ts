@@ -1,6 +1,7 @@
 // Herramientas para los tests de base de datos contra el proyecto de Supabase de
 // desarrollo. Cada ejecución usa un prefijo único y borra lo que crea.
 import { randomUUID } from "node:crypto";
+import { createServerClient } from "@supabase/ssr";
 import { createClient, type SupabaseClient, type User } from "@supabase/supabase-js";
 
 function variable(nombre: string): string {
@@ -54,6 +55,42 @@ export async function crearUsuario(
   const sesion = await cliente.auth.signInWithPassword({ email, password });
   if (sesion.error) throw sesion.error;
   return { cliente, usuario: data.user };
+}
+
+export type CookieSesion = { name: string; value: string };
+
+/**
+ * Crea un usuario de prueba (con rol, si se indica) y devuelve las cookies de sesión
+ * tal como las guarda @supabase/ssr en el navegador. Sirve para entrar al panel en los
+ * tests e2e sin pasar por el formulario de ingreso.
+ */
+export async function crearUsuarioConSesion(
+  rol?: Rol,
+): Promise<{ usuario: User; email: string; password: string; cookies: CookieSesion[] }> {
+  const email = `${prefijo}-${usuariosCreados.length + 1}@example.com`;
+  const password = randomUUID();
+  const { data, error } = await clienteAdmin().auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+  });
+  if (error) throw error;
+  usuariosCreados.push(data.user.id);
+  if (rol) {
+    const alta = await clienteAdmin().from("personal").insert({ user_id: data.user.id, rol });
+    if (alta.error) throw alta.error;
+  }
+
+  const frasco = new Map<string, string>();
+  const cliente = createServerClient(url(), variable("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"), {
+    cookies: {
+      getAll: () => [...frasco].map(([name, value]) => ({ name, value })),
+      setAll: (lista) => lista.forEach(({ name, value }) => frasco.set(name, value)),
+    },
+  });
+  const sesion = await cliente.auth.signInWithPassword({ email, password });
+  if (sesion.error) throw sesion.error;
+  return { usuario: data.user, email, password, cookies: [...frasco].map(([name, value]) => ({ name, value })) };
 }
 
 export async function limpiarUsuarios(): Promise<void> {

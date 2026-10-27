@@ -2,7 +2,7 @@
 
 Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un criterio (CA-n).
 
-- [ ] T1 — Ayudante e2e para iniciar sesión como personal (crea el usuario, guarda la
+- [x] T1 — Ayudante e2e para iniciar sesión como personal (crea el usuario, guarda la
   sesión) y `proxy.ts` que refresca la sesión en `/admin/*`. (CA-1)
 - [ ] T2 — `/admin/ingresar` con login, errores y redirección; protección de `/admin/*`
   (sin sesión, no personal); cerrar sesión; e2e. (CA-1)
