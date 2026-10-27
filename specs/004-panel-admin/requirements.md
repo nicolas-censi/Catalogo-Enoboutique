@@ -1,6 +1,6 @@
 # 004 – Panel de administración (backoffice)
 
-**Estado:** Aprobada (2026-10-27)
+**Estado:** Implementada (2026-10-28)
 
 ## Objetivo
 Que el personal (encargado y vendedor) mantenga la carta sin tocar código ni la base de
