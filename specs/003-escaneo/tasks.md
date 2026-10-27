@@ -6,8 +6,8 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   error de cámara; tests unitarios. (CA-2, CA-4)
 - [ ] T2 — Videos `.y4m` de prueba con códigos de barras y configuración de Playwright
   con cámara simulada; test que verifica que el video llega. (CA-2)
-- [ ] T3 — `BotonEscanear` en el inicio y en "sin resultados"; página `/escanear` sin JS
-  con ingreso manual; e2e. (CA-1, CA-4)
+- [ ] T3 — `BotonEscanear` circular con ícono al costado del buscador del inicio; página
+  `/escanear` sin JS con ingreso manual; e2e. (CA-1, CA-4)
 - [ ] T4 — `Escaner`: cámara trasera, guía de encuadre, lectura con `BarcodeDetector`
   nativo; al leer, vibra y navega al detalle; e2e con cámara simulada. (CA-2)
 - [ ] T5 — Ponyfill `barcode-detector` con el `.wasm` servido desde el sitio y carga

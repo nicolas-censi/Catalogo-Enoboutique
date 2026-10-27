@@ -1,6 +1,6 @@
 # 003 – Escaneo de código de barras con la cámara
 
-**Estado:** Borrador
+**Estado:** Aprobada (2026-10-28)
 
 ## Objetivo
 Que el cliente, en el local, apunte la cámara del celular al código de barras de la
@@ -20,7 +20,9 @@ disponibles y sus precios, sin tener que escribir nada.
 ### CA-1: Botón para escanear
 - **Dado** un cliente en el inicio de la carta, en un celular
 - **Cuando** mira el buscador
-- **Entonces** ve un botón "Escanear código" junto al buscador.
+- **Entonces** ve, al costado del buscador, un botón circular con un ícono de escáner
+  de código de barras, cuyo nombre accesible es "Escanear código".
+- Y el botón aparece solo en el inicio.
 
 ### CA-2: Escanear y ver el producto
 - **Dado** un código de barras asociado a un producto disponible (por ejemplo, el de
@@ -77,15 +79,11 @@ disponibles y sus precios, sin tener que escribir nada.
   adelante).
 - Linterna, zoom o elegir otra cámara.
 
-## Preguntas abiertas
-- [ ] 1. **Librería nueva:** el navegador de los iPhone (Safari) no trae un lector de
-  códigos de barras. Propuesta: usar el lector del navegador cuando existe (Chrome en
-  Android) y, si no, la librería `barcode-detector` (código abierto, basada en ZXing),
-  servida desde nuestro propio sitio y cargada solo al abrir el escáner. Es una
-  dependencia nueva del stack: ¿la aprobás?
-- [ ] 2. **Dónde va el botón:** propuesta: en el inicio, junto al buscador, y en la
-  página de resultados "sin resultados". ¿Lo querés también en la página de cada
-  sección?
+## Decisiones tomadas en la revisión
+- **Librería:** aprobada. Se usa el lector del navegador cuando existe y, si no,
+  `barcode-detector` (ZXing), servida desde el propio sitio.
+- **Botón:** solo en el inicio, al costado del buscador, circular y con un ícono de
+  escáner.
 
 ## Ideas para más adelante
 - Escanear desde el panel para cargar el código de barras de un producto.

@@ -15,7 +15,9 @@ página explica que hace falta JavaScript para usar la cámara y ofrece escribir
 número, que va a `/buscar?q=<número>`).
 
 ## Componentes
-- `BotonEscanear`: enlace con ícono junto al buscador del inicio y en "sin resultados".
+- `BotonEscanear`: enlace circular (44×44 px o más) al costado del buscador del inicio,
+  con un ícono SVG de escáner de código de barras en dorado y `aria-label="Escanear
+  código"`.
 - `Escaner` (Client Component, cargado con `next/dynamic` solo en `/escanear`):
   1. Pide la cámara trasera con `getUserMedia({ video: { facingMode: "environment" } })`.
   2. Muestra el video con una guía para encuadrar.
