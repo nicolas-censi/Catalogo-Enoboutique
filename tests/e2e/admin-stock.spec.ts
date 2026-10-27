@@ -48,10 +48,17 @@ test("CA-3: el interruptor cambia el stock al toque y queda guardado", async ({ 
   await s2019.click();
   await expect(s2019).toBeChecked();
 
-  // Quedó guardado en la base (sin apretar otro botón).
+  // Quedó guardado en la base (sin apretar otro botón). Se esperan las dos antes de
+  // recargar: recargar mientras se guarda cortaría el guardado.
   await expect
-    .poll(async () => (await admin.from("anadas").select("en_stock").eq("id", ids.a2021).single()).data?.en_stock)
-    .toBe(false);
+    .poll(async () => {
+      const { data } = await admin.from("anadas").select("anio, en_stock").eq("producto_id", ids.producto).order("anio");
+      return data;
+    })
+    .toEqual([
+      { anio: 2019, en_stock: true },
+      { anio: 2021, en_stock: false },
+    ]);
   await page.reload();
   await expect(page.getByRole("switch", { name: "Stock de 2021" })).not.toBeChecked();
   await expect(page.getByRole("switch", { name: "Stock de 2019" })).toBeChecked();

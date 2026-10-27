@@ -10,6 +10,9 @@ const puerto = 3200;
 export default defineConfig({
   testDir: "tests/e2e-produccion",
   timeout: 180_000,
+  // De a un test por vez: comparten el caché de la carta (uno lo invalida desde el panel
+  // y otro mide el minuto de caché).
+  workers: 1,
   use: {
     baseURL: `http://localhost:${puerto}`,
     ...devices["Desktop Chrome"],

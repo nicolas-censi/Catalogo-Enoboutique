@@ -33,7 +33,8 @@ async function producto(clave: string, nombre: string, extra: Record<string, unk
 }
 
 test.beforeAll(async () => {
-  seccionId = (await insertar("secciones", { nombre: `${prefijo} Tintos`, orden: 90 })).id;
+  // Oculta: al panel no le importa y así no aparece en la carta de otros tests en paralelo.
+  seccionId = (await insertar("secciones", { nombre: `${prefijo} Tintos`, orden: 90, visible: false })).id;
   await producto("disponible", "Altocedro Malbec", { seccion_id: seccionId }, [{}, {}]);
   await producto("oculto", "Bramare Cabernet", { seccion_id: seccionId, visible: false }, [{}]);
   await producto("agotado", "Catena Alta Chardonnay", {}, [{ en_stock: false }, { en_stock: false }]);
