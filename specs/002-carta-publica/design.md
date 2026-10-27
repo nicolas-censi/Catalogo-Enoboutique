@@ -92,10 +92,11 @@ JavaScript solo se vería el marcador de carga (CA-9). La carta usa un cliente d
   pesada; las secciones dividen la carta y el buscador cubre el resto.
 - **`@axe-core/playwright`:** dependencia de desarrollo nueva, solo para tests de
   accesibilidad. No cambia el stack.
-- **Token `dorado-texto` (`#84703B`):** axe marcó que el dorado de marca `#B19750` tiene
-  contraste 2,67:1 sobre el fondo, por debajo del mínimo (4,5:1 texto, 3:1 títulos
-  grandes). Para texto se usa el mismo tono más oscuro (4,53:1); el `#B19750` queda
-  para el logo, bordes y detalles.
+- **Tema oscuro (opción 2B):** axe marcó que el dorado `#B19750` sobre el fondo claro
+  original tenía contraste 2,67:1. Se generaron 4 previews con fondo oscuro y se eligió
+  la 2B: fondo `#111111`, dorado del logo para títulos, nombres y precios (6,7:1) y
+  crema `#F3EDE0` para texto secundario. Los colores van en tokens por función en
+  `app/globals.css`.
 
 ## Riesgos
 - **Calidad de la búsqueda:** umbral de `word_similarity` en **0,5**, calibrado con los
