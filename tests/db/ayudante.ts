@@ -95,9 +95,13 @@ export async function crearUsuarioConSesion(
 
 export async function limpiarUsuarios(): Promise<void> {
   const admin = clienteAdmin();
-  for (const id of usuariosCreados.splice(0)) {
+  // También los creados por la app durante el test (por ejemplo, invitaciones): se
+  // reconocen por el prefijo en el email.
+  const { data } = await admin.auth.admin.listUsers({ perPage: 1000 });
+  const delPrefijo = (data?.users ?? []).filter((u) => u.email?.startsWith(prefijo)).map((u) => u.id);
+  for (const id of new Set([...usuariosCreados.splice(0), ...delPrefijo])) {
     const { error } = await admin.auth.admin.deleteUser(id);
-    if (error) throw error;
+    if (error && error.status !== 404) throw error;
   }
 }
 

@@ -34,7 +34,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T16 — Migración `es_encargado()`, políticas y trigger de `personal` (nadie se quita
   el rol ni se da de baja a sí mismo, así no queda sin encargados); tests de base de
   datos. (CA-12)
-- [ ] T17 — `/admin/personal`: lista con estado de activación, invitar, cambiar rol y
+- [x] T17 — `/admin/personal`: lista con estado de activación, invitar, cambiar rol y
   dar de baja con la API de administración solo en el servidor; e2e. (CA-12)
 - [ ] T18 — SMTP de Google Workspace (`@lehonor.com`) en Supabase y plantillas de mail
   en español;
