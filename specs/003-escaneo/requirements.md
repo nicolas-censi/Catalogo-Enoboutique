@@ -1,0 +1,92 @@
+# 003 – Escaneo de código de barras con la cámara
+
+**Estado:** Borrador
+
+## Objetivo
+Que el cliente, en el local, apunte la cámara del celular al código de barras de la
+botella que tiene en la mano y vea al instante ese vino con todas sus añadas
+disponibles y sus precios, sin tener que escribir nada.
+
+## Historias de usuario
+- Como **cliente**, quiero escanear el código de la botella con la cámara, para ver
+  sus añadas y precios sin buscarla por nombre.
+- Como **cliente**, si el código no está en la carta, quiero que me lo diga y me
+  ofrezca buscar por nombre, para no quedarme trabado.
+- Como **cliente**, si no di permiso a la cámara o mi celular no puede escanear,
+  quiero una alternativa (escribir el número), para poder encontrar la botella igual.
+
+## Criterios de aceptación
+
+### CA-1: Botón para escanear
+- **Dado** un cliente en el inicio de la carta, en un celular
+- **Cuando** mira el buscador
+- **Entonces** ve un botón "Escanear código" junto al buscador.
+
+### CA-2: Escanear y ver el producto
+- **Dado** un código de barras asociado a un producto disponible (por ejemplo, el de
+  Salentein Primus Malbec)
+- **Cuando** el cliente toca "Escanear código", da permiso a la cámara y la apunta al
+  código
+- **Entonces** ve la imagen de la cámara con una guía para encuadrar el código y, al
+  reconocerlo, la carta lo lleva sola al detalle de ese producto con todas sus añadas
+  disponibles.
+- Y el celular vibra brevemente al reconocerlo (si lo permite).
+- Y se reconocen los códigos de las botellas: EAN-13, EAN-8, UPC-A y UPC-E.
+
+### CA-3: Código que no está en la carta
+- **Dado** un código que no está en la carta (o es de un producto oculto o sin stock)
+- **Cuando** el cliente lo escanea
+- **Entonces** ve "No encontramos ese código en la carta" con el número leído, y puede
+  volver a escanear o buscar por nombre.
+- Y no se revela si el producto existe pero está oculto o sin stock.
+
+### CA-4: Sin permiso de cámara o sin cámara
+- **Dado** un cliente que no da permiso a la cámara, o un dispositivo sin cámara
+- **Cuando** toca "Escanear código"
+- **Entonces** ve una explicación de cómo habilitar la cámara (según el navegador) y un
+  campo para escribir el número del código, que lo lleva al mismo resultado.
+
+### CA-5: Cerrar el escáner
+- **Dado** el escáner abierto
+- **Cuando** el cliente toca "Cerrar" o vuelve atrás
+- **Entonces** la cámara se apaga (se libera, se apaga la luz de la cámara) y vuelve a
+  la carta.
+
+### CA-6: No pesa en la carta
+- **Dado** un cliente que nunca toca "Escanear código"
+- **Cuando** usa la carta
+- **Entonces** no descarga nada del escáner: el lector de códigos se carga recién al
+  abrirlo (CA-9 de la spec 002 se sigue cumpliendo).
+
+### CA-7: Privacidad
+- **Dado** el escáner abierto
+- **Cuando** lee la imagen de la cámara
+- **Entonces** todo se procesa en el celular: no se manda ninguna imagen a ningún
+  servidor, solo el número leído para buscarlo.
+
+### CA-8: Accesible
+- **Dado** el escáner
+- **Cuando** se usa con un lector de pantalla
+- **Entonces** los botones tienen nombre, el resultado se anuncia ("Encontramos Rutini
+  Malbec") y axe no reporta errores graves.
+
+## Fuera de alcance
+- Escanear el QR de la mesa o del local (el QR que abre la carta lo lee la cámara del
+  celular por su cuenta; spec 9).
+- Escanear desde el panel de administración para cargar códigos (se puede sumar más
+  adelante).
+- Linterna, zoom o elegir otra cámara.
+
+## Preguntas abiertas
+- [ ] 1. **Librería nueva:** el navegador de los iPhone (Safari) no trae un lector de
+  códigos de barras. Propuesta: usar el lector del navegador cuando existe (Chrome en
+  Android) y, si no, la librería `barcode-detector` (código abierto, basada en ZXing),
+  servida desde nuestro propio sitio y cargada solo al abrir el escáner. Es una
+  dependencia nueva del stack: ¿la aprobás?
+- [ ] 2. **Dónde va el botón:** propuesta: en el inicio, junto al buscador, y en la
+  página de resultados "sin resultados". ¿Lo querés también en la página de cada
+  sección?
+
+## Ideas para más adelante
+- Escanear desde el panel para cargar el código de barras de un producto.
+- Recordar los últimos productos escaneados en el celular del cliente.
