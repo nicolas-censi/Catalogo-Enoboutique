@@ -44,14 +44,17 @@ No hacen falta tablas nuevas; solo la vista `carta_secciones`.
 | `/producto/[id]` | cliente | detalle del producto (CA-3); destino del escaneo (spec 3) |
 | `/buscar?q=...` | cliente | resultados de búsqueda; también funciona sin JavaScript (CA-5, CA-6, CA-7) |
 
-Las páginas son Server Components y se regeneran como máximo cada 60 segundos
-(`revalidate = 60`) (CA-10). Se revisa en la documentación de Next.js 16 incluida en
-`node_modules/next/dist/docs/` cómo se combina con `cacheComponents: true` antes de
-implementar.
+Las páginas son Server Components. Con `cacheComponents: true` (Next.js 16), las
+lecturas de la carta se cachean en `lib/carta-cache.ts` con `"use cache"` y un
+`cacheLife` propio de `{ stale: 60, revalidate: 60, expire: 3600 }` (CA-10). No se usa
+el perfil `minutes` porque su `stale` de 5 minutos dejaría al celular mostrar datos
+viejos más de 1 minuto. Las lecturas se envuelven en `<Suspense>` para que la
+navegación sea instantánea. La carta usa un cliente de Supabase sin cookies
+(`lib/supabase/publico.ts`) para poder cachearse.
 
 ## Componentes
-- `Encabezado`: logo (`marca/logo-enoboutique.png` servido optimizado con
-  `next/image`) y nombre; vuelve al inicio.
+- `Encabezado`: logo (`public/logo-enoboutique.png`, recortado del original de
+  `marca/`, servido con `next/image`); vuelve al inicio.
 - `Buscador` (Client Component): campo de texto con debounce de 250 ms que consulta
   `buscar_carta` por la API de Supabase con el cliente del navegador y muestra los
   resultados debajo. Es un `<form>` que hace GET a `/buscar`, así funciona sin JS.

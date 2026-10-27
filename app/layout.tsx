@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cabin, Inknut_Antiqua } from "next/font/google";
+import { textos } from "@/lib/textos";
 import "./globals.css";
 
 const inknutAntiqua = Inknut_Antiqua({
@@ -14,7 +15,7 @@ const cabin = Cabin({
 });
 
 export const metadata: Metadata = {
-  title: "Lehonor Enoboutique",
+  title: textos.nombreCarta,
 };
 
 export default function RootLayout({
