@@ -103,5 +103,10 @@ export const textos = {
     fotoNoImagen: "Elegí una imagen (JPG, PNG, WebP o HEIC).",
     fotoMuyPesada: "La foto pesa más de 10 MB.",
     fotoAyuda: "Opcional. Elegí una imagen guardada en la computadora o el celular; se achica sola antes de subirse.",
+    borrarProducto: "Borrar producto",
+    confirmarBorrarProducto: (nombre: string, anadas: number) =>
+      `¿Borrar ${nombre}${anadas > 0 ? ` y sus ${anadas} ${anadas === 1 ? "añada" : "añadas"}` : ""}? No se puede deshacer.`,
+    productoBorrado: (nombre: string) => `Se borró ${nombre}.`,
+    zonaPeligro: "Borrar",
   },
 } as const;

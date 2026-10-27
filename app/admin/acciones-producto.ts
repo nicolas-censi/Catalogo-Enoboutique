@@ -64,3 +64,16 @@ export async function guardarProducto(
   invalidarCarta();
   redirect(`/admin/productos/${data.id}`);
 }
+
+export async function borrarProducto(productoId: string): Promise<{ error: string | null }> {
+  await exigirPersonal();
+  const supabase = await crearClienteServidor();
+  const producto = await supabase.from("productos").select("nombre, foto_path").eq("id", productoId).single();
+  if (producto.error) return { error: traducirError(producto.error) };
+  // Las añadas y los códigos de barras se borran en cascada.
+  const { error } = await supabase.from("productos").delete().eq("id", productoId);
+  if (error) return { error: traducirError(error) };
+  if (producto.data.foto_path) await supabase.storage.from("fotos").remove([producto.data.foto_path]);
+  invalidarCarta();
+  redirect(`/admin?borrado=${encodeURIComponent(producto.data.nombre)}`);
+}

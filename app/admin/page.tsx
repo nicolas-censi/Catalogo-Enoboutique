@@ -19,7 +19,9 @@ function enlacePagina(filtros: Filtros, pagina: number) {
 }
 
 async function ListaProductos({ searchParams }: { searchParams: Parametros }) {
-  const filtros = leerFiltros(await searchParams);
+  const parametros = await searchParams;
+  const filtros = leerFiltros(parametros);
+  const borrado = typeof parametros.borrado === "string" ? parametros.borrado : null;
   const cliente = await crearClienteServidor();
   const [{ productos, total }, secciones] = await Promise.all([
     listarProductosAdmin(cliente, filtros),
@@ -31,6 +33,11 @@ async function ListaProductos({ searchParams }: { searchParams: Parametros }) {
 
   return (
     <>
+      {borrado && (
+        <p role="status" className="mb-4 rounded-md border border-dorado/60 px-4 py-3">
+          {textos.admin.productoBorrado(borrado)}
+        </p>
+      )}
       <FiltrosProductos filtros={filtros} secciones={secciones} />
       <div className="mt-6">
         <TablaProductos productos={productos} />

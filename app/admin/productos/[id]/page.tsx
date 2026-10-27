@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
+import { BorrarProducto } from "@/components/admin/BorrarProducto";
 import { ConSesion } from "@/components/admin/ConSesion";
 import { FormularioProducto } from "@/components/admin/FormularioProducto";
 import { EditorAnadas } from "@/components/admin/EditorAnadas";
@@ -55,6 +56,8 @@ async function Ficha({ params }: { params: Promise<{ id: string }> }) {
       <EditorAnadas productoId={producto.id} esVino={producto.tipo === "vino"} anadas={producto.anadas} />
       <h2 className="mt-8 mb-3 text-lg font-semibold text-destacado">{textos.admin.codigosBarras}</h2>
       <EditorCodigos productoId={producto.id} codigos={producto.codigos_barras.map((c) => c.codigo)} />
+      <h2 className="mt-10 mb-3 text-lg font-semibold text-destacado">{textos.admin.zonaPeligro}</h2>
+      <BorrarProducto productoId={producto.id} nombre={producto.nombre} anadas={producto.anadas.length} />
     </>
   );
 }
