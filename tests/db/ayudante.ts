@@ -102,13 +102,15 @@ export async function limpiarUsuarios(): Promise<void> {
 }
 
 /**
- * Borra los datos de prueba de esta ejecución (los que empiezan con el prefijo).
- * Los productos se borran antes que las secciones y bodegas a las que apuntan.
+ * Borra los datos de prueba de esta ejecución: los que llevan el prefijo en cualquier
+ * parte del nombre (algunos tests lo ponen al final para no afectar la búsqueda).
+ * Los productos se borran antes que las secciones y bodegas a las que apuntan; sus
+ * añadas y códigos de barras se borran en cascada.
  */
 export async function limpiarDatos(): Promise<void> {
   const admin = clienteAdmin();
   for (const tabla of ["productos", "secciones", "bodegas"]) {
-    const { error } = await admin.from(tabla).delete().like("nombre", `${prefijo}%`);
+    const { error } = await admin.from(tabla).delete().like("nombre", `%${prefijo}%`);
     if (error) throw error;
   }
 }
