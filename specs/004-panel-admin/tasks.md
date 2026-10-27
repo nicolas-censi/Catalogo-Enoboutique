@@ -28,7 +28,16 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [ ] T13 — Ocultar/mostrar producto y borrar con confirmación; e2e. (CA-8)
 - [ ] T14 — `/admin/secciones`: crear al final, renombrar, ocultar/mostrar, no borrar
   con productos; e2e. (CA-9)
-- [ ] T15 — Accesibilidad (axe) y tamaños tocables en todas las pantallas del panel;
-  ajustes. (CA-10)
-- [ ] T16 — README: cómo entra el personal y cómo se da de alta (sigue a mano en
-  Supabase); verificación final. (CA-1)
+- [ ] T15 — Contraseña olvidada: `/admin/olvide` y `/admin/restablecer`; e2e con el
+  enlace generado por la API. (CA-1b)
+- [ ] T16 — Migración `es_encargado()`, políticas y trigger de `personal` (no quedar sin
+  encargados); tests de base de datos. (CA-12)
+- [ ] T17 — `/admin/personal`: lista con estado de activación, invitar, cambiar rol y
+  dar de baja con la API de administración solo en el servidor; e2e. (CA-12)
+- [ ] T18 — SMTP propio en Supabase (Resend u otro) y plantillas de mail en español;
+  prueba manual de invitación y de contraseña olvidada con un mail real. (CA-1b, CA-12)
+- [ ] T19 — Diseño para computadora (tabla, teclado) y adaptación a celular;
+  accesibilidad (axe) y tamaños en todas las pantallas del panel, en ambos tamaños.
+  (CA-10)
+- [ ] T20 — README: cómo entra el personal, alta desde el panel y configuración de
+  mails; verificación final. (CA-1, CA-12)

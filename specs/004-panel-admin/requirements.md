@@ -7,7 +7,8 @@ Que el personal (encargado y vendedor) mantenga la carta sin tocar código ni la
 datos: dar de alta y editar productos y añadas, marcar a mano qué hay en stock, subir
 fotos, ocultar o mostrar productos y administrar secciones. Es la herramienta del día a
 día: lo más frecuente (marcar sin stock, cambiar un precio) tiene que hacerse en
-segundos y desde el celular.
+segundos. Se usa principalmente desde la **computadora** del local, y también tiene que
+funcionar desde el celular.
 
 ## Historias de usuario
 - Como **personal**, quiero entrar con mi email y contraseña, para que nadie de afuera
@@ -17,8 +18,11 @@ segundos y desde el celular.
 - Como **personal**, quiero cambiar el precio de una añada, para corregirlo al momento.
 - Como **personal**, quiero dar de alta un vino con sus añadas, bodega, varietal,
   sección y códigos de barras, para que aparezca en la carta.
-- Como **personal**, quiero sacarle una foto a la botella con el celular y subirla,
-  para que el cliente la vea en el detalle.
+- Como **personal**, quiero subir una foto de la botella (desde la computadora o
+  sacándola con el celular), para que el cliente la vea en el detalle.
+- Como **personal**, quiero recuperar mi contraseña por mail si me la olvido.
+- Como **encargado**, quiero dar de alta, cambiar el rol y dar de baja a las personas
+  del personal desde el panel, para no depender de Supabase.
 - Como **personal**, quiero ponerle el año a las añadas "sin especificar", para
   ordenar lo que vino de Tango sin año.
 - Como **personal**, quiero ocultar un producto o una sección sin borrarlos, para
@@ -36,6 +40,14 @@ segundos y desde el celular.
 - Y un usuario que inicia sesión pero **no es del personal** ve "No tenés acceso al
   panel" y no puede ver ni cambiar nada.
 - Y el personal puede cerrar sesión.
+
+### CA-1b: Contraseña olvidada
+- **Dado** una persona del personal que olvidó su contraseña
+- **Cuando** toca "Olvidé mi contraseña" y escribe su email
+- **Entonces** recibe un mail con un enlace para elegir una contraseña nueva, y con
+  ella puede ingresar.
+- Y el mensaje en pantalla es el mismo exista o no el email ("Si el email es del
+  personal, te mandamos un enlace"), para no revelar quién tiene cuenta.
 
 ### CA-2: Lista y búsqueda de productos
 - **Dado** el personal en el panel
@@ -80,7 +92,8 @@ segundos y desde el celular.
 
 ### CA-7: Fotos
 - **Dado** un producto
-- **Cuando** el personal sube una foto (desde la cámara o la galería del celular)
+- **Cuando** el personal sube una foto (un archivo desde la computadora, o la cámara o
+  la galería del celular)
 - **Entonces** la foto se guarda, se ve en el panel y en el detalle de la carta.
 - Y puede reemplazarla o quitarla.
 - Y se rechazan archivos que no son imágenes o que pesan más de 10 MB, con un mensaje
@@ -92,7 +105,8 @@ segundos y desde el celular.
 - **Entonces** desaparece de la carta pública pero sigue en el panel, y se puede volver
   a mostrar.
 - Y para borrar un producto se pide confirmación ("¿Borrar Rutini Malbec y sus 6
-  añadas? No se puede deshacer.").
+  añadas? No se puede deshacer."). Lo borrado se puede volver a crear (a mano o con la
+  importación de la spec 8).
 
 ### CA-9: Secciones
 - **Dado** el personal en el panel
@@ -101,11 +115,25 @@ segundos y desde el celular.
   queda al final de la carta. (El orden con arrastrar y soltar es la spec 5.)
 - Y una sección con productos no se puede borrar: se ofrece ocultarla.
 
-### CA-10: Pensado para el celular
-- **Dado** el panel en un celular (390×844)
+### CA-10: Pensado para la computadora, usable en el celular
+- **Dado** el panel en una computadora (1366×768 o más)
 - **Cuando** el personal lo usa
-- **Entonces** todo se puede hacer con una mano: elementos tocables de al menos 44×44
-  px, formularios en una columna, y axe no reporta errores graves.
+- **Entonces** la lista de productos aprovecha el ancho (tabla con columnas), se puede
+  usar con teclado (buscar, recorrer y guardar con Enter) y axe no reporta errores
+  graves.
+- Y en un celular (390×844) todo sigue funcionando: la tabla pasa a tarjetas, los
+  formularios a una columna y los elementos tocables miden al menos 44×44 px.
+
+### CA-12: Alta y baja de personal
+- **Dado** un **encargado** en el panel (ver la pregunta abierta 1)
+- **Cuando** abre "Personal"
+- **Entonces** ve la lista del personal (email, rol y si ya activó su cuenta).
+- Y puede **invitar** a alguien con su email y rol (encargado o vendedor): la persona
+  recibe un mail con un enlace para elegir su contraseña y entrar.
+- Y puede **cambiar el rol** o **dar de baja** a alguien (con confirmación). Quien es
+  dado de baja no puede volver a entrar.
+- Y nadie puede darse de baja ni quitarse el rol de encargado a sí mismo, para que
+  siempre quede al menos un encargado.
 
 ### CA-11: Los cambios se ven en la carta al instante
 - **Dado** un cambio guardado desde el panel (precio, stock, producto, sección, foto)
@@ -119,23 +147,27 @@ segundos y desde el celular.
 - Descripciones con IA (spec 7).
 - Importación desde Tango y actualización masiva de precios (spec 8).
 - Historial de cambios o quién cambió qué.
-- Roles con permisos distintos (encargado y vendedor tienen los mismos).
+- Otros permisos distintos entre roles: fuera de la gestión del personal (CA-12),
+  encargado y vendedor pueden lo mismo.
+
+## Decisiones tomadas en la revisión
+- **Dispositivo:** principalmente la computadora; también usable en el celular.
+- **Contraseña olvidada:** sí, por mail.
+- **Alta de personal:** desde el panel (CA-12).
+- **Borrar productos:** con confirmación; lo borrado se puede volver a crear.
+- **Cambios al instante:** sí (CA-11).
 
 ## Preguntas abiertas
-- [ ] 1. **Dispositivo:** ¿el personal va a usar el panel sobre todo desde el
-  **celular** (propuesta: diseño pensado para celular, que también funciona en la
-  computadora) o desde una computadora del local?
-- [ ] 2. **Contraseña olvidada:** ¿agregamos "Olvidé mi contraseña" por mail
-  (propuesta: sí, es simple con Supabase) o por ahora la resetea alguien desde
-  Supabase?
-- [ ] 3. **Alta de personal:** ¿el encargado tiene que poder invitar a un vendedor
-  desde el panel, o por ahora las altas siguen a mano en Supabase (propuesta: a mano;
-  son pocas personas)?
-- [ ] 4. **Borrar productos:** ¿se permite borrar (con confirmación, propuesta) o solo
-  ocultar? Tené en cuenta que la importación de Tango (spec 8) puede volver a crear lo
-  borrado.
-- [ ] 5. **Cambios al instante (CA-11):** ¿te parece bien que lo cambiado desde el
-  panel se vea en la carta en el momento (propuesta)?
+- [ ] 1. **¿Quién gestiona el personal?** Propuesta: **solo el encargado** puede
+  invitar, cambiar roles y dar de baja (si no, un vendedor podría dar de baja al
+  encargado). Para todo lo demás, encargado y vendedor siguen pudiendo lo mismo.
+- [ ] 2. **Mails de invitación y de contraseña:** el servicio de mail incluido en
+  Supabase solo manda a los emails del equipo de Supabase y unos pocos por hora: no
+  sirve para el personal real. Hace falta conectar un servicio de envío a Supabase
+  (SMTP). ¿Lehonor ya tiene correo con dominio propio (por ejemplo Google Workspace con
+  `@lehonor.com`)? Propuesta: usar **Resend** (gratis hasta 3.000 mails por mes),
+  enviando desde `no-responder@lehonor.com`; requiere agregar 3 registros en el DNS de
+  `lehonor.com`, que manejan ustedes. Te guío paso a paso cuando lleguemos a esa tarea.
 
 ## Ideas para más adelante
 - Invitar personal desde el panel.

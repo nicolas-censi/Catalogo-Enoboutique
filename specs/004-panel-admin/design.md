@@ -15,8 +15,34 @@ foto se borra el archivo anterior. `productos.foto_path` guarda la ruta.
 
 ### Sin tablas nuevas
 El panel usa las tablas de la spec 001 con el usuario del personal: las políticas RLS
-ya le permiten leer y modificar todo (CA-10 de la spec 001). No se usa la clave
-secreta en la app.
+ya le permiten leer y modificar todo (CA-10 de la spec 001).
+
+### Gestión del personal (CA-12)
+- Función `es_encargado()` (como `es_personal()`).
+- Políticas nuevas en `personal`: el encargado puede actualizar el rol y borrar filas;
+  un trigger impide que alguien se quite a sí mismo el rol de encargado o se borre, y
+  que quede cero encargados.
+- **Invitar** y **dar de baja** necesitan la API de administración de Supabase Auth
+  (`auth.admin.inviteUserByEmail`, `auth.admin.deleteUser`), que requiere la clave
+  secreta. Se usa **solo** en `lib/admin/personal-servidor.ts`, marcado
+  `import "server-only"`, dentro de Server Actions que primero verifican con la sesión
+  del usuario que es encargado. Es la única excepción a "la app no usa la clave
+  secreta"; en Vercel la variable `SUPABASE_SERVICE_ROLE_KEY` va solo en el servidor
+  (nunca con `NEXT_PUBLIC_`).
+- La lista muestra si la persona ya activó su cuenta (`auth.users.last_sign_in_at`),
+  leída con la misma API de administración.
+
+### Mails (CA-1b, CA-12)
+- Invitación y contraseña olvidada usan los mails de Supabase Auth, con plantillas en
+  español (Supabase → Authentication → Email Templates).
+- Ambos enlaces llevan a `/admin/restablecer`, donde la persona elige su contraseña
+  (`auth.updateUser`).
+- **SMTP propio** configurado en Supabase (ver pregunta abierta 2): el servicio
+  incluido solo envía al equipo de Supabase. Los tests e2e no mandan mails reales:
+  generan el enlace con `auth.admin.generateLink` y lo abren directo.
+- En Supabase → Authentication → URL Configuration se agregan como URLs de
+  redirección: `http://localhost:3000`, los enlaces de Vercel (`*.vercel.app`) y el
+  dominio final `enoboutique.lehonor.com`.
 
 ## Rutas y pantallas
 | Ruta | Quién la usa | Qué muestra |
@@ -26,6 +52,9 @@ secreta en la app.
 | `/admin/productos/nuevo` | personal | alta de producto (CA-4) |
 | `/admin/productos/[id]` | personal | ficha: datos, añadas, códigos, foto, ocultar, borrar (CA-4 a CA-8) |
 | `/admin/secciones` | personal | secciones: crear, renombrar, ocultar (CA-9) |
+| `/admin/olvide` | personal | pedir el mail para restablecer la contraseña (CA-1b) |
+| `/admin/restablecer` | personal | elegir contraseña nueva, desde el enlace del mail (CA-1b, CA-12) |
+| `/admin/personal` | encargado | lista, invitar, cambiar rol, dar de baja (CA-12) |
 
 Todas las rutas `/admin/*` (salvo `ingresar`) verifican la sesión en el servidor y
 que el usuario sea del personal; si no, redirigen a `/admin/ingresar` o muestran "No
@@ -64,7 +93,10 @@ pedido. El `cacheLife` de 1 minuto se mantiene para cambios hechos por fuera del
 - `InterruptorStock` (Client Component, optimista).
 - `FormularioProducto` (alta y edición), `SelectorBodega` (elegir o crear).
 - `EditorAnadas` (tabla editable en una columna en celular), `EditorCodigos`.
-- `SubirFoto`: `<input type="file" accept="image/*" capture="environment">`; reduce la
+- Diseño **para computadora** (la lista es una tabla con columnas; atajos de teclado
+  para buscar) que en pantallas angostas pasa a tarjetas y una columna.
+- `SubirFoto`: `<input type="file" accept="image/*">` (en el celular ofrece la cámara);
+  reduce la
   imagen en el navegador a 1600 px de lado mayor y la convierte a WebP antes de subirla
   (las fotos de celular pesan varios MB y la señal es mala).
 - `ConfirmarBorrado` (diálogo accesible).
@@ -80,8 +112,10 @@ visibles), y además busca coincidencia exacta por `codigo_tango` y código de b
   resultante).
 - **Base de datos (Vitest):** políticas del bucket `fotos` (personal sube y borra;
   público lee; anónimo y no-personal no suben), `buscar_admin`.
-- **E2E (Playwright):** con un usuario del personal creado en el test (ayudante de la
-  spec 001) y datos con prefijo: ingreso y rechazo (CA-1), lista/filtros (CA-2),
+- **E2E (Playwright, en viewport de computadora y de celular):** con un usuario del
+  personal creado en el test (ayudante de la spec 001) y datos con prefijo: ingreso y
+  rechazo (CA-1), contraseña olvidada con el enlace generado (CA-1b), invitar, cambiar
+  rol y dar de baja (CA-12), lista/filtros (CA-2),
   interruptor de stock y su efecto en la carta (CA-3, CA-11), alta/edición de producto
   y añadas con errores (CA-4, CA-5), códigos (CA-6), subir una foto de prueba y verla
   en el detalle de la carta (CA-7; cierra el pendiente del CA-3 de la spec 002),
@@ -92,8 +126,8 @@ visibles), y además busca coincidencia exacta por `codigo_tango` y código de b
 
 ## Decisiones y alternativas descartadas
 - **Server Actions con el cliente del usuario (RLS) en vez de la clave secreta:** la
-  seguridad queda en la base (ya probada en la spec 001) y no hay una clave que saltea
-  RLS en el servidor de la app.
+  seguridad queda en la base (ya probada en la spec 001). La clave secreta se usa
+  solo para invitar y dar de baja personal, que Supabase no permite de otra forma.
 - **Panel dentro de la misma app (`/admin`)** en vez de una app aparte: comparte
   modelo, tipos y despliegue.
 - **Reducir la foto en el navegador:** sube rápido con mala señal y ocupa menos en
