@@ -67,7 +67,11 @@ Venta online, carrito, pagos, gestión de stock contable, maridajes automáticos
 - **Marca** (tomada de https://www.lehonor.com/enoboutique):
   - Color primario: negro `#000000`.
   - Fondo secundario: `#F7F8FB`.
-  - Dorado de marca (el del logo): `#B19750`. Es el dorado que usa la carta.
+  - Dorado de marca (el del logo): `#B19750`. Es el dorado que usa la carta en el logo,
+    bordes y detalles.
+  - Dorado para texto: `#84703B`, el mismo tono más oscuro. El `#B19750` tiene poco
+    contraste sobre el fondo claro (2,7:1) para leer texto; este cumple el mínimo de
+    accesibilidad (4,5:1). Se usa en títulos y enlaces.
   - Tipografías (Google Fonts): **Inknut Antiqua** para títulos y **Cabin** para el
     texto.
   - Logo: "LEHONOR / ENO boutique" en dorado, en `marca/logo-enoboutique.png`

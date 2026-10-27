@@ -18,6 +18,7 @@ describe("tokens de marca", () => {
     ["--color-negro", "#000000"],
     ["--color-fondo", "#f7f8fb"],
     ["--color-dorado", "#b19750"],
+    ["--color-dorado-texto", "#84703b"],
   ])("define %s = %s", (token, valor) => {
     expect(bloqueTheme.toLowerCase()).toContain(`${token}: ${valor};`);
   });

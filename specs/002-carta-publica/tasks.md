@@ -22,5 +22,5 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   revalidar. (CA-10)
 - [x] T11 — Red lenta: e2e con 3G simulado que verifica contenido sin JS y que el
   buscador no descarga la carta entera. (CA-9)
-- [ ] T12 — Accesibilidad y tamaños tocables con `@axe-core/playwright`; ajustes de
+- [x] T12 — Accesibilidad y tamaños tocables con `@axe-core/playwright`; ajustes de
   estilos con tokens. (CA-11)

@@ -30,7 +30,7 @@ export default function Inicio() {
       <main className="mx-auto max-w-xl px-4 pb-10">
         <Buscador />
         <nav aria-labelledby="titulo-secciones" className="mt-8">
-          <h2 id="titulo-secciones" className="font-titulos text-xl text-dorado">
+          <h2 id="titulo-secciones" className="font-titulos text-xl text-dorado-texto">
             {textos.secciones}
           </h2>
           <Suspense fallback={<div className="mt-3 h-48 animate-pulse rounded bg-dorado/10" />}>
