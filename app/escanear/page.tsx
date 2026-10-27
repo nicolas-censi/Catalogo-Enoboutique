@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Encabezado } from "@/components/Encabezado";
+import { EscanerDiferido } from "@/components/EscanerDiferido";
 import { Volver } from "@/components/Volver";
 import { textos } from "@/lib/textos";
 
@@ -40,6 +41,7 @@ export default function PaginaEscanear() {
         <Volver />
         <h1 className="mt-2 font-titulos text-2xl text-titulo">{t.titulo}</h1>
         <p className="mt-1 text-texto-suave">{t.ayuda}</p>
+        <EscanerDiferido />
         <IngresoManual />
       </main>
     </>
