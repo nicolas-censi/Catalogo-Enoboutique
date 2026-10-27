@@ -36,9 +36,9 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   datos. (CA-12)
 - [x] T17 — `/admin/personal`: lista con estado de activación, invitar, cambiar rol y
   dar de baja con la API de administración solo en el servidor; e2e. (CA-12)
-- [ ] T18 — SMTP de Google Workspace (`@lehonor.com`) en Supabase y plantillas de mail
-  en español;
-  prueba manual de invitación y de contraseña olvidada con un mail real. (CA-1b, CA-12)
+- [x] T18 — SMTP de Google Workspace (`@lehonor.com`) en Supabase y plantillas de mail
+  en español (`npm run db:mails`). Prueba manual con mail real: "Olvidé mi contraseña"
+  llegó y permitió entrar (2026-10-27). (CA-1b, CA-12)
 - [ ] T19 — Diseño para computadora (tabla, teclado) y adaptación a celular;
   accesibilidad (axe) y tamaños en todas las pantallas del panel, en ambos tamaños.
   (CA-10)

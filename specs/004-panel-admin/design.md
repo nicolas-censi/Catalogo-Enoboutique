@@ -36,7 +36,9 @@ ya le permiten leer y modificar todo (CA-10 de la spec 001).
 
 ### Mails (CA-1b, CA-12)
 - Invitación y contraseña olvidada usan los mails de Supabase Auth, con plantillas en
-  español (Supabase → Authentication → Email Templates).
+  español (`supabase/plantillas/`, se aplican con `npm run db:mails`). El enlace usa
+  `{{ .RedirectTo }}`, que la app arma con la dirección desde la que se pidió (local,
+  Vercel o el dominio final), así funciona en todos los entornos.
 - Ambos enlaces van a `/admin/restablecer/confirmar?token_hash=…&type=recovery|invite`
   (Route Handler que valida con `verifyOtp` e inicia la sesión) y de ahí a
   `/admin/restablecer`, donde la persona elige su contraseña (`auth.updateUser`). Se usa
