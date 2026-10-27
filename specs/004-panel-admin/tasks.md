@@ -42,5 +42,5 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T19 — Diseño para computadora (tabla, teclado) y adaptación a celular;
   accesibilidad (axe) y tamaños en todas las pantallas del panel, en ambos tamaños.
   (CA-10)
-- [ ] T20 — README: cómo entra el personal, alta desde el panel y configuración de
+- [x] T20 — README: cómo entra el personal, alta desde el panel y configuración de
   mails; verificación final. (CA-1, CA-12)

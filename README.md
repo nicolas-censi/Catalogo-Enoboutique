@@ -65,6 +65,7 @@ No hace falta Docker: el desarrollo y los tests usan el proyecto de Supabase en 
 | `npm run db:migrar` | Aplica las migraciones pendientes de `supabase/migrations/`. |
 | `npm run db:seed` | Carga `supabase/seed.sql` (datos de ejemplo). |
 | `npm run db:tipos` | Regenera `lib/tipos-db.ts` desde la base. Correrlo después de cada migración. |
+| `npm run db:mails` | Aplica en Supabase las plantillas de mail en español (`supabase/plantillas/`) y las direcciones permitidas para los enlaces. |
 
 ### Tests
 
@@ -79,6 +80,8 @@ No hace falta Docker: el desarrollo y los tests usan el proyecto de Supabase en 
   tests o los scripts `db:*`.
   Además, `IMAGENES_SIN_OPTIMIZAR=1` hace que las fotos se sirvan sin pasar por el
   optimizador de Next.js, que no puede salir por ese proxy (en Vercel no hace falta).
+- Los e2e levantan la app con `MAILS_DE_PRUEBA=1`: las invitaciones crean la cuenta sin
+  mandar el mail. No definir esa variable en ningún otro lado.
 
 ## Base de datos
 
@@ -91,22 +94,53 @@ El esquema está en `supabase/migrations/` y el diseño en
 - **`codigos_barras`**: asociados al producto, nunca a una añada.
 - **`carta_publica`** (vista) y **`buscar_por_codigo_barras()`** (función): lo único que
   puede leer el público. Muestran solo lo visible y disponible, sin datos internos.
-- **`personal`**: usuarios del panel (encargado o vendedor, con los mismos permisos).
+- **`personal`**: usuarios del panel. Encargado y vendedor pueden lo mismo, salvo
+  gestionar el personal, que es solo del encargado.
+- **Bucket `fotos`** (Storage): fotos de los productos; lectura pública, escritura solo
+  del personal.
 
-### Dar de alta a alguien del personal
+## Panel de administración
 
-Hasta que exista el panel (spec 4), las altas se hacen a mano en Supabase:
+El panel está en **`/admin`** y se usa principalmente desde la computadora (también
+funciona en el celular). Ahí el personal:
 
-1. **Authentication → Users → Add user → Create new user**: email y contraseña, con
-   "Auto Confirm User" marcado.
-2. **SQL Editor**, reemplazando el email y el rol (`encargado` o `vendedor`):
+- busca y filtra productos (también ocultos, sin stock, sin foto o "a revisar");
+- marca cada añada **Disponible / Sin stock** con un toque;
+- da de alta y edita productos, añadas, códigos de barras y la foto (opcional);
+- oculta, muestra o borra productos, y administra las secciones.
 
-   ```sql
-   insert into public.personal (user_id, rol)
-   select id, 'encargado' from auth.users where email = 'persona@lehonor.com';
-   ```
+Los cambios hechos desde el panel se ven en la carta al instante.
 
-Para darla de baja alcanza con borrar el usuario en Authentication.
+### Personal
+
+- **El encargado** invita a las personas desde **Personal**: les llega un mail para
+  elegir su contraseña. Desde ahí también cambia roles y da de baja.
+- **Cualquiera del personal** puede recuperar su contraseña con "Olvidé mi contraseña".
+- **El primer encargado** se crea a mano en Supabase (después ya se invita desde el
+  panel): **Authentication → Users → Add user → Create new user** (con "Auto Confirm
+  User") y en el **SQL Editor**:
+
+  ```sql
+  insert into public.personal (user_id, rol)
+  select id, 'encargado' from auth.users where email = 'persona@lehonor.com';
+  ```
+
+### Mails
+
+Las invitaciones y los enlaces de contraseña salen por **SMTP de Google Workspace**
+(`@lehonor.com`), configurado en Supabase → Authentication → Emails → SMTP Settings
+(`smtp.gmail.com`, puerto 587, con una contraseña de aplicación de esa cuenta). El
+envío incluido en Supabase solo llega al equipo de Supabase, por eso hace falta. Las
+plantillas en español se aplican con `npm run db:mails`.
+
+### Variables en Vercel
+
+En el proyecto de Vercel (Settings → Environment Variables), marcadas para
+**Production y Preview**:
+
+- `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (carta y panel).
+- `SUPABASE_SERVICE_ROLE_KEY`: solo para invitar y dar de baja personal. La usa
+  únicamente `lib/admin/personal-servidor.ts`, en el servidor.
 
 ## Cómo trabajamos
 
