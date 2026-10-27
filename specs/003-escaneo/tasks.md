@@ -2,7 +2,7 @@
 
 Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un criterio (CA-n).
 
-- [ ] T1 — `lib/escaneo.ts`: dígito verificador EAN/UPC, normalización y mensajes de
+- [x] T1 — `lib/escaneo.ts`: dígito verificador EAN/UPC, normalización y mensajes de
   error de cámara; tests unitarios. (CA-2, CA-4)
 - [ ] T2 — Videos `.y4m` de prueba con códigos de barras y configuración de Playwright
   con cámara simulada; test que verifica que el video llega. (CA-2)

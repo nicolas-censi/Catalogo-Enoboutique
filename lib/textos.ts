@@ -14,6 +14,14 @@ export const textos = {
   resultados: "Resultados",
   sinResultados: (busqueda: string) => `No encontramos nada para “${busqueda}”.`,
   sinResultadosAyuda: "Probá con otro nombre o consultá al personal.",
+  escaner: {
+    boton: "Escanear código",
+    sinPermiso:
+      "No tenemos permiso para usar la cámara. Habilitalo en la configuración del navegador (el ícono al lado de la dirección) y volvé a intentar, o escribí el número del código.",
+    sinCamara: "No encontramos una cámara en este dispositivo. Escribí el número del código.",
+    camaraOcupada: "La cámara está siendo usada por otra aplicación. Cerrala y volvé a intentar, o escribí el número del código.",
+    sinSoporte: "Este navegador no permite usar la cámara. Escribí el número del código.",
+  },
   admin: {
     titulo: "Panel",
     ingresar: "Ingresar al panel",
