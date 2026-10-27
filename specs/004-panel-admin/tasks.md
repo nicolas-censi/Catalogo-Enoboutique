@@ -10,9 +10,9 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   Tango y código de barras; tests de base de datos. (CA-2)
 - [x] T4 — `/admin`: lista con estado (oculto, sin stock, a revisar), búsqueda y
   filtros en la URL; e2e. (CA-2)
-- [ ] T5 — Etiquetar el caché de la carta con `cacheTag` y helper `invalidarCarta()`;
+- [x] T5 — Etiquetar el caché de la carta con `cacheTag` y helper `invalidarCarta()`;
   test en modo producción de que un cambio desde una acción se ve al instante. (CA-11)
-- [ ] T6 — `InterruptorStock` optimista y su acción; e2e que lo cambia y verifica la
+- [x] T6 — `InterruptorStock` optimista y su acción; e2e que lo cambia y verifica la
   carta pública. (CA-3, CA-11)
 - [ ] T7 — Validaciones y traducción de errores de Postgres a mensajes; tests
   unitarios. (CA-4, CA-5, CA-6)
