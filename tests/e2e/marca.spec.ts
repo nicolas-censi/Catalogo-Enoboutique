@@ -8,7 +8,7 @@ test("la página de inicio usa los colores y tipografías de marca", async ({ pa
   await expect(cuerpo).toHaveCSS("color", "rgb(0, 0, 0)");
   await expect(cuerpo).toHaveCSS("font-family", /Cabin/);
 
-  const titulo = page.getByRole("heading", { level: 1 });
+  const titulo = page.getByRole("heading", { level: 2, name: "Secciones" });
   await expect(titulo).toHaveCSS("color", "rgb(177, 151, 80)");
   await expect(titulo).toHaveCSS("font-family", /Inknut Antiqua/);
 
