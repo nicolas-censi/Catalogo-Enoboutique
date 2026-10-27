@@ -4,7 +4,7 @@ export const textos = {
   nombreCarta: "Lehonor Enoboutique",
   consultarPrecio: "Consultar precio",
   buscadorEtiqueta: "Buscá por vino, bodega, varietal o código",
-  buscadorAyuda: "Vino, bodega, varietal o código",
+  buscadorAyuda: "Vino, bodega o código",
   buscadorBoton: "Buscar",
   secciones: "Secciones",
   volverACarta: "Volver a la carta",
