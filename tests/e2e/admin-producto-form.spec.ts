@@ -33,13 +33,13 @@ test("CA-4: da de alta un vino con una bodega nueva", async ({ page }) => {
   await page.getByRole("link", { name: "Nuevo producto" }).click();
   await expect(page).toHaveURL(/\/admin\/productos\/nuevo$/);
 
-  await page.getByLabel("Tipo").selectOption("vino");
-  await page.getByLabel("Nombre").fill(`Iscay Syrah ${prefijo}`);
-  await page.getByLabel("Bodega").fill(`Trapiche ${prefijo}`);
-  await page.getByLabel("Varietal").fill("Syrah - Malbec");
+  await page.getByLabel("Tipo", { exact: true }).selectOption("vino");
+  await page.getByLabel("Nombre", { exact: true }).fill(`Iscay Syrah ${prefijo}`);
+  await page.getByLabel("Bodega", { exact: true }).fill(`Trapiche ${prefijo}`);
+  await page.getByLabel("Varietal", { exact: true }).fill("Syrah - Malbec");
   // getByRole ignora la página anterior que Next.js 16 deja oculta (tiene otro "Sección").
   await page.getByRole("combobox", { name: "Sección" }).selectOption({ label: `${prefijo} Tintos` });
-  await page.getByLabel("Descripción").fill("Blend de Valle de Uco.");
+  await page.getByLabel("Descripción", { exact: true }).fill("Blend de Valle de Uco.");
   await page.getByRole("button", { name: "Guardar" }).click();
 
   await expect(page).toHaveURL(/\/admin\/productos\/[0-9a-f-]{36}$/);
@@ -62,25 +62,25 @@ test("CA-4: da de alta un vino con una bodega nueva", async ({ page }) => {
 
 test("CA-4: sin tipo ni nombre muestra los errores junto a los campos y no guarda", async ({ page }) => {
   await page.goto("/admin/productos/nuevo");
-  await page.getByLabel("Bodega").fill(`No debería crearse ${prefijo}`);
+  await page.getByLabel("Bodega", { exact: true }).fill(`No debería crearse ${prefijo}`);
   await page.getByRole("button", { name: "Guardar" }).click();
 
-  await expect(page.getByLabel("Tipo")).toHaveAccessibleDescription("Elegí el tipo de producto.");
-  await expect(page.getByLabel("Nombre")).toHaveAccessibleDescription("Escribí el nombre.");
-  await expect(page.getByLabel("Nombre")).toHaveAttribute("aria-invalid", "true");
+  await expect(page.getByLabel("Tipo", { exact: true })).toHaveAccessibleDescription("Elegí el tipo de producto.");
+  await expect(page.getByLabel("Nombre", { exact: true })).toHaveAccessibleDescription("Escribí el nombre.");
+  await expect(page.getByLabel("Nombre", { exact: true })).toHaveAttribute("aria-invalid", "true");
   await expect(page).toHaveURL(/\/admin\/productos\/nuevo$/);
   // Lo que se escribió no se pierde.
-  await expect(page.getByLabel("Bodega")).toHaveValue(`No debería crearse ${prefijo}`);
+  await expect(page.getByLabel("Bodega", { exact: true })).toHaveValue(`No debería crearse ${prefijo}`);
   const { data } = await admin.from("bodegas").select("id").eq("nombre", `No debería crearse ${prefijo}`);
   expect(data).toEqual([]);
 });
 
 test("CA-4 y CA-8: edita un producto, elige una bodega existente y lo oculta", async ({ page }) => {
   await page.goto(`/admin/productos/${ids.vino}`);
-  await expect(page.getByLabel("Nombre")).toHaveValue(`Nicasia Malbec ${prefijo}`);
-  await page.getByLabel("Nombre").fill(`Nicasia Red Blend ${prefijo}`);
-  await page.getByLabel("Bodega").fill(`Catena Zapata ${prefijo}`);
-  await page.getByLabel("Visible en la carta").uncheck();
+  await expect(page.getByLabel("Nombre", { exact: true })).toHaveValue(`Nicasia Malbec ${prefijo}`);
+  await page.getByLabel("Nombre", { exact: true }).fill(`Nicasia Red Blend ${prefijo}`);
+  await page.getByLabel("Bodega", { exact: true }).fill(`Catena Zapata ${prefijo}`);
+  await page.getByLabel("Visible en la carta", { exact: true }).uncheck();
   await page.getByRole("button", { name: "Guardar" }).click();
   await expect(page.getByRole("status")).toHaveText("Cambios guardados.");
 
@@ -90,13 +90,13 @@ test("CA-4 y CA-8: edita un producto, elige una bodega existente y lo oculta", a
   expect(bodegas.data).toHaveLength(1);
 
   await page.reload();
-  await expect(page.getByLabel("Nombre")).toHaveValue(`Nicasia Red Blend ${prefijo}`);
-  await expect(page.getByLabel("Visible en la carta")).not.toBeChecked();
+  await expect(page.getByLabel("Nombre", { exact: true })).toHaveValue(`Nicasia Red Blend ${prefijo}`);
+  await expect(page.getByLabel("Visible en la carta", { exact: true })).not.toBeChecked();
 });
 
 test("CA-4: un cambio que choca con las reglas muestra un mensaje claro", async ({ page }) => {
   await page.goto(`/admin/productos/${ids.vino}`);
-  await page.getByLabel("Tipo").selectOption("aceite");
+  await page.getByLabel("Tipo", { exact: true }).selectOption("aceite");
   await page.getByRole("button", { name: "Guardar" }).click();
   await expect(page.getByRole("alert").filter({ hasText: "presentación" })).toHaveText(
     "Un aceite tiene una sola presentación, sin año.",

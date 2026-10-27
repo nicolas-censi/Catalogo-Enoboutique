@@ -27,9 +27,9 @@ export function FiltrosProductos({
           className={control}
         />
       </label>
-      <label className="flex flex-col gap-1">
-        <span className="text-sm text-texto-suave">{textos.admin.seccion}</span>
-        <select name="seccion" defaultValue={filtros.seccion} className={control}>
+      <div className="flex flex-col gap-1">
+        <label htmlFor="filtro-seccion" className="text-sm text-texto-suave">{textos.admin.seccion}</label>
+        <select id="filtro-seccion" name="seccion" defaultValue={filtros.seccion} className={control}>
           <option value="">{textos.admin.todasLasSecciones}</option>
           {secciones.map((s) => (
             <option key={s.id} value={s.id}>
@@ -37,10 +37,10 @@ export function FiltrosProductos({
             </option>
           ))}
         </select>
-      </label>
-      <label className="flex flex-col gap-1">
-        <span className="text-sm text-texto-suave">{textos.admin.estado}</span>
-        <select name="estado" defaultValue={filtros.estado} className={control}>
+      </div>
+      <div className="flex flex-col gap-1">
+        <label htmlFor="filtro-estado" className="text-sm text-texto-suave">{textos.admin.estado}</label>
+        <select id="filtro-estado" name="estado" defaultValue={filtros.estado} className={control}>
           <option value="">{textos.admin.todos}</option>
           {ESTADOS.map((e) => (
             <option key={e} value={e}>
@@ -48,7 +48,7 @@ export function FiltrosProductos({
             </option>
           ))}
         </select>
-      </label>
+      </div>
       <button type="submit" className="min-h-11 rounded-md bg-boton px-5 font-semibold text-boton-texto">
         {textos.admin.filtrar}
       </button>

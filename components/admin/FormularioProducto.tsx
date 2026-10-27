@@ -52,9 +52,10 @@ export function FormularioProducto({
 
   return (
     <form action={accion} className="grid max-w-3xl gap-4 md:grid-cols-2" noValidate>
-      <label className="flex flex-col gap-1">
-        <span>{t.tipo}</span>
+      <div className="flex flex-col gap-1">
+        <label htmlFor="producto-tipo">{t.tipo}</label>
         <select
+          id="producto-tipo"
           name="tipo"
           defaultValue={v.tipo}
           key={`tipo-${v.tipo}`}
@@ -70,10 +71,11 @@ export function FormularioProducto({
           ))}
         </select>
         <ErrorCampo id="error-tipo" mensaje={e.tipo} />
-      </label>
-      <label className="flex flex-col gap-1">
-        <span>{t.nombre}</span>
+      </div>
+      <div className="flex flex-col gap-1">
+        <label htmlFor="producto-nombre">{t.nombre}</label>
         <input
+          id="producto-nombre"
           name="nombre"
           defaultValue={v.nombre}
           aria-invalid={!!e.nombre}
@@ -81,23 +83,23 @@ export function FormularioProducto({
           className={control}
         />
         <ErrorCampo id="error-nombre" mensaje={e.nombre} />
-      </label>
-      <label className="flex flex-col gap-1">
-        <span>{t.bodega}</span>
-        <input name="bodega" defaultValue={v.bodega} list="bodegas" autoComplete="off" placeholder={t.bodegaAyuda} className={control} />
+      </div>
+      <div className="flex flex-col gap-1">
+        <label htmlFor="producto-bodega">{t.bodega}</label>
+        <input id="producto-bodega" name="bodega" defaultValue={v.bodega} list="bodegas" autoComplete="off" placeholder={t.bodegaAyuda} className={control} />
         <datalist id="bodegas">
           {bodegas.map((b) => (
             <option key={b} value={b} />
           ))}
         </datalist>
-      </label>
-      <label className="flex flex-col gap-1">
-        <span>{t.varietal}</span>
-        <input name="varietal" defaultValue={v.varietal} className={control} />
-      </label>
-      <label className="flex flex-col gap-1">
-        <span>{t.seccion}</span>
-        <select name="seccion" defaultValue={v.seccion} key={`seccion-${v.seccion}`} className={control}>
+      </div>
+      <div className="flex flex-col gap-1">
+        <label htmlFor="producto-varietal">{t.varietal}</label>
+        <input id="producto-varietal" name="varietal" defaultValue={v.varietal} className={control} />
+      </div>
+      <div className="flex flex-col gap-1">
+        <label htmlFor="producto-seccion">{t.seccion}</label>
+        <select id="producto-seccion" name="seccion" defaultValue={v.seccion} key={`seccion-${v.seccion}`} className={control}>
           <option value="">{t.sinSeccionOpcion}</option>
           {secciones.map((s) => (
             <option key={s.id} value={s.id}>
@@ -105,15 +107,15 @@ export function FormularioProducto({
             </option>
           ))}
         </select>
-      </label>
+      </div>
       <label className="flex min-h-11 items-center gap-3 self-end">
         <input type="checkbox" name="visible" defaultChecked={v.visible} key={`visible-${v.visible}`} className="size-5 accent-dorado" />
         <span>{t.visibleEnCarta}</span>
       </label>
-      <label className="flex flex-col gap-1 md:col-span-2">
-        <span>{t.descripcion}</span>
-        <textarea name="descripcion" defaultValue={v.descripcion} rows={4} className={`${control} py-2`} />
-      </label>
+      <div className="flex flex-col gap-1 md:col-span-2">
+        <label htmlFor="producto-descripcion">{t.descripcion}</label>
+        <textarea id="producto-descripcion" name="descripcion" defaultValue={v.descripcion} rows={4} className={`${control} py-2`} />
+      </div>
       <div className="flex items-center gap-4 md:col-span-2">
         <button type="submit" disabled={enviando} className="min-h-11 rounded-md bg-boton px-6 font-semibold text-boton-texto disabled:opacity-60">
           {enviando ? t.guardando : t.guardar}

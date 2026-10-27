@@ -2,16 +2,10 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { ConSesion } from "@/components/admin/ConSesion";
 import { FormularioProducto } from "@/components/admin/FormularioProducto";
-import { InterruptorStock } from "@/components/admin/InterruptorStock";
-import { leerFichaProducto, listarBodegas, listarSeccionesAdmin, type AnadaAdmin } from "@/lib/admin/productos";
-import { formatearPrecio } from "@/lib/formato";
+import { EditorAnadas } from "@/components/admin/EditorAnadas";
+import { leerFichaProducto, listarBodegas, listarSeccionesAdmin } from "@/lib/admin/productos";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
-
-function etiqueta(anada: AnadaAdmin) {
-  if (anada.tipo === "con_anio") return String(anada.anio);
-  return anada.tipo === "sin_especificar" ? textos.admin.aRevisarAnio : textos.admin.sinAnio;
-}
 
 async function Ficha({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -34,7 +28,6 @@ async function Ficha({ params }: { params: Promise<{ id: string }> }) {
       </>
     );
   }
-  const c = textos.admin.columnasAnadas;
   return (
     <>
       {volver}
@@ -55,28 +48,7 @@ async function Ficha({ params }: { params: Promise<{ id: string }> }) {
         bodegas={bodegas}
       />
       <h2 className="mt-8 text-lg font-semibold text-destacado">{textos.admin.anadas}</h2>
-      <table className="mt-2 w-full border-collapse text-left">
-        <thead className="border-b border-dorado/40 text-sm text-texto-suave">
-          <tr>
-            <th scope="col" className="py-2 pr-4">{c.anada}</th>
-            <th scope="col" className="py-2 pr-4">{c.codigo}</th>
-            <th scope="col" className="py-2 pr-4 text-right">{c.precio}</th>
-            <th scope="col" className="py-2">{c.stock}</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-dorado/20">
-          {producto.anadas.map((anada) => (
-            <tr key={anada.id}>
-              <td className="py-1 pr-4">{etiqueta(anada)}</td>
-              <td className="py-1 pr-4 font-mono text-sm">{anada.codigo_tango}</td>
-              <td className="py-1 pr-4 text-right tabular-nums">{formatearPrecio(anada.precio)}</td>
-              <td className="py-1">
-                <InterruptorStock anadaId={anada.id} etiqueta={etiqueta(anada)} enStock={anada.en_stock} />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <EditorAnadas productoId={producto.id} esVino={producto.tipo === "vino"} anadas={producto.anadas} />
     </>
   );
 }

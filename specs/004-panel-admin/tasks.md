@@ -18,7 +18,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   unitarios. (CA-4, CA-5, CA-6)
 - [x] T8 — Alta y edición de producto con `SelectorBodega`; e2e con errores de campos
   obligatorios. (CA-4)
-- [ ] T9 — `EditorAnadas`: agregar, editar (incluido pasar "sin especificar" a "con
+- [x] T9 — `EditorAnadas`: agregar, editar (incluido pasar "sin especificar" a "con
   año"), borrar; mensajes de reglas; e2e. (CA-5)
 - [ ] T10 — `EditorCodigos`: agregar y quitar códigos, mensaje si el código ya es de
   otro producto; e2e. (CA-6)

@@ -11,16 +11,32 @@ function valorRepetido(detalle: string | null | undefined): string[] {
   return m ? m[1].split(",").map((v) => v.trim()) : [];
 }
 
-export function traducirError(error: ErrorBase, contexto: { productoDelCodigo?: string } = {}): string {
+/**
+ * Lo que se intentó guardar. Hace falta porque, en tablas con seguridad por filas
+ * (RLS), Postgres no incluye en el error el valor repetido para no filtrar datos.
+ */
+export type ContextoError = {
+  codigoTango?: string;
+  anio?: number | null;
+  codigoBarras?: string;
+  bodega?: string;
+  productoDelCodigo?: string;
+};
+
+export function traducirError(error: ErrorBase, contexto: ContextoError = {}): string {
   const mensaje = error.message ?? "";
   if (error.code === "23505") {
     const valores = valorRepetido(error.details);
-    if (mensaje.includes("anadas_codigo_tango_key")) return `Ya existe una añada con el código ${valores[0]}.`;
-    if (mensaje.includes("anadas_producto_anio_unico")) return `Este vino ya tiene la añada ${valores[1]}.`;
-    if (mensaje.includes("codigos_barras_pkey")) {
-      return `El código ${valores[0]} ya es de ${contexto.productoDelCodigo ?? "otro producto"}.`;
+    if (mensaje.includes("anadas_codigo_tango_key")) {
+      return `Ya existe una añada con el código ${valores[0] ?? contexto.codigoTango}.`;
     }
-    if (mensaje.includes("bodegas_nombre_key")) return `Ya existe la bodega ${valores[0]}.`;
+    if (mensaje.includes("anadas_producto_anio_unico")) {
+      return `Este vino ya tiene la añada ${valores[1] ?? contexto.anio}.`;
+    }
+    if (mensaje.includes("codigos_barras_pkey")) {
+      return `El código ${valores[0] ?? contexto.codigoBarras} ya es de ${contexto.productoDelCodigo ?? "otro producto"}.`;
+    }
+    if (mensaje.includes("bodegas_nombre_key")) return `Ya existe la bodega ${valores[0] ?? contexto.bodega}.`;
   }
   if (error.code === "23514") {
     const tipo = mensaje.match(/Un producto de tipo (\w+)/)?.[1] as TipoProducto | undefined;

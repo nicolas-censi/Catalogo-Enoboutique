@@ -27,7 +27,7 @@ async function resolverBodega(supabase: Cliente, nombre: string): Promise<{ id: 
   const existente = await supabase.from("bodegas").select("id").ilike("nombre", escaparLike(nombre)).limit(1).maybeSingle();
   if (existente.data) return { id: existente.data.id, error: null };
   const nueva = await supabase.from("bodegas").insert({ nombre }).select("id").single();
-  if (nueva.error) return { id: null, error: traducirError(nueva.error) };
+  if (nueva.error) return { id: null, error: traducirError(nueva.error, { bodega: nombre }) };
   return { id: nueva.data.id, error: null };
 }
 
