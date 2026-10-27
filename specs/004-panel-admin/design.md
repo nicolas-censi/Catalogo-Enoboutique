@@ -19,9 +19,11 @@ ya le permiten leer y modificar todo (CA-10 de la spec 001).
 
 ### Gestión del personal (CA-12)
 - Función `es_encargado()` (como `es_personal()`).
-- Políticas nuevas en `personal`: el encargado puede actualizar el rol y borrar filas;
-  un trigger impide que alguien se quite a sí mismo el rol de encargado o se borre, y
-  que quede cero encargados.
+- Políticas nuevas en `personal`: el encargado puede dar de alta, cambiar el rol y dar de
+  baja. Un trigger impide que alguien se quite a sí mismo el rol de encargado o se dé de
+  baja. Con eso siempre queda al menos un encargado (el que hace el cambio), sin
+  necesidad de contar encargados; y no bloquea arreglos de emergencia desde el panel de
+  Supabase.
 - **Invitar** y **dar de baja** necesitan la API de administración de Supabase Auth
   (`auth.admin.inviteUserByEmail`, `auth.admin.deleteUser`), que requiere la clave
   secreta. Se usa **solo** en `lib/admin/personal-servidor.ts`, marcado

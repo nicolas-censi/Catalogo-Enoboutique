@@ -38,6 +38,7 @@ export function traducirError(error: ErrorBase, contexto: ContextoError = {}): s
     }
     if (mensaje.includes("bodegas_nombre_key")) return `Ya existe la bodega ${valores[0] ?? contexto.bodega}.`;
   }
+  if (error.code === "23514" && /^No podés /.test(mensaje)) return mensaje;
   if (error.code === "23514") {
     const tipo = mensaje.match(/Un producto de tipo (\w+)/)?.[1] as TipoProducto | undefined;
     if (tipo) return `${unProducto(tipo)} tiene una sola presentación, sin año.`;
