@@ -1,13 +1,21 @@
+import type { ChangeEventHandler } from "react";
 import { textos } from "@/lib/textos";
 
 /** Buscador. Funciona sin JavaScript: envía a /buscar?q=... */
-export function FormularioBusqueda({ valor = "" }: { valor?: string }) {
+export function FormularioBusqueda({
+  valor = "",
+  onChange,
+}: {
+  valor?: string;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+}) {
   return (
     <form role="search" action="/buscar" method="get" className="flex gap-2">
       <input
         type="search"
         name="q"
         defaultValue={valor}
+        onChange={onChange}
         aria-label={textos.buscadorEtiqueta}
         placeholder={textos.buscadorAyuda}
         autoComplete="off"

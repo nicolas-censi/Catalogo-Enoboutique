@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { Encabezado } from "@/components/Encabezado";
-import { FormularioBusqueda } from "@/components/FormularioBusqueda";
+import { Buscador } from "@/components/Buscador";
 import { seccionesCarta } from "@/lib/carta-cache";
 import { textos } from "@/lib/textos";
 
@@ -28,7 +28,7 @@ export default function Inicio() {
     <>
       <Encabezado />
       <main className="mx-auto max-w-xl px-4 pb-10">
-        <FormularioBusqueda />
+        <Buscador />
         <nav aria-labelledby="titulo-secciones" className="mt-8">
           <h2 id="titulo-secciones" className="font-titulos text-xl text-dorado">
             {textos.secciones}

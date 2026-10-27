@@ -1,9 +1,8 @@
 import { Encabezado } from "@/components/Encabezado";
 import { FormularioBusqueda } from "@/components/FormularioBusqueda";
-import { TarjetaProducto } from "@/components/TarjetaProducto";
+import { ResultadosBusqueda } from "@/components/ResultadosBusqueda";
 import { Volver } from "@/components/Volver";
 import { busquedaCarta } from "@/lib/carta-cache";
-import { textos } from "@/lib/textos";
 
 type Parametros = Promise<{ [clave: string]: string | string[] | undefined }>;
 
@@ -18,18 +17,7 @@ async function Resultados({ searchParams }: { searchParams: Parametros }) {
   return (
     <>
       <FormularioBusqueda valor={q} />
-      {q && (
-        <section aria-label={textos.resultados} className="mt-6 flex flex-col gap-3">
-          {productos.length > 0 ? (
-            productos.map((producto) => <TarjetaProducto key={producto.id} producto={producto} />)
-          ) : (
-            <div className="py-6 text-center">
-              <p className="text-lg">{textos.sinResultados(q)}</p>
-              <p className="mt-1 text-negro/70">{textos.sinResultadosAyuda}</p>
-            </div>
-          )}
-        </section>
-      )}
+      {q && <ResultadosBusqueda busqueda={q} productos={productos} />}
     </>
   );
 }
