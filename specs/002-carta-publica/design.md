@@ -94,7 +94,8 @@ JavaScript solo se vería el marcador de carga (CA-9). La carta usa un cliente d
   accesibilidad. No cambia el stack.
 - **Tema oscuro (opción 2B):** axe marcó que el dorado `#B19750` sobre el fondo claro
   original tenía contraste 2,67:1. Se generaron 4 previews con fondo oscuro y se eligió
-  la 2B: fondo `#111111`, dorado del logo para títulos, nombres y precios (6,7:1) y
+  la 2B con fondo negro puro `#000000` (el `#111111` se veía verdoso en Samsung),
+  dorado del logo para títulos, nombres y precios (7,4:1) y
   crema `#F3EDE0` para texto secundario. Los colores van en tokens por función en
   `app/globals.css`.
 

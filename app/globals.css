@@ -3,7 +3,7 @@
 /*
  * Tokens de marca: los únicos colores y tipografías permitidos en la app.
  * Los colores van por función (fondo, texto, etc.), así el tema se cambia acá.
- * Tema elegido (opción 2B): fondo casi negro, dorado del logo para títulos, nombres
+ * Tema elegido (opción 2B con fondo negro puro): dorado del logo para títulos, nombres
  * y precios, y crema para el texto secundario.
  */
 @theme inline {
@@ -11,14 +11,14 @@
   --color-dorado: #B19750; /* el del logo: logo, bordes y detalles */
 
   /* Colores por función */
-  --color-fondo: #111111; /* fondo de la página */
+  --color-fondo: #000000; /* fondo de la página: negro puro (en Samsung #111111 se veía verdoso) */
   --color-superficie: #1C1C1C; /* tarjetas y buscador */
   --color-texto: #F3EDE0; /* texto general */
   --color-destacado: #B19750; /* nombres de vinos, secciones y precios */
   --color-texto-suave: #F3EDE0; /* bodega · varietal, años, ayudas */
   --color-titulo: #B19750; /* títulos y enlaces */
   --color-boton: #B19750;
-  --color-boton-texto: #111111;
+  --color-boton-texto: #000000;
 
   --font-titulos: var(--font-inknut-antiqua), serif;
   --font-texto: var(--font-cabin), sans-serif;

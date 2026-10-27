@@ -65,10 +65,11 @@ Venta online, carrito, pagos, gestión de stock contable, maridajes automáticos
 - **Dominio:** `enoboutique.lehonor.com`. El DNS de `lehonor.com` lo gestiona el
   propio negocio.
 - **Marca** (tomada de https://www.lehonor.com/enoboutique):
-  - **Tema oscuro** (elegido entre 4 previews, opción 2B):
-    - Fondo casi negro `#111111`; tarjetas y buscador `#1C1C1C`.
+  - **Tema oscuro** (elegido entre 4 previews, opción 2B, con fondo negro puro):
+    - Fondo negro `#000000`; tarjetas y buscador `#1C1C1C`. Se descartó el casi negro
+      `#111111` porque en pantallas Samsung se veía verdoso.
     - Dorado de marca (el del logo) `#B19750`: logo, títulos, nombres de vinos,
-      secciones, precios, enlaces y botones. Sobre el fondo oscuro tiene contraste 6,7:1.
+      secciones, precios, enlaces y botones. Sobre el fondo negro tiene contraste 7,4:1.
     - Crema `#F3EDE0`: texto secundario (bodega · varietal, años, ayudas).
   - Tipografías (Google Fonts): **Inknut Antiqua** para títulos y **Cabin** para el
     texto.

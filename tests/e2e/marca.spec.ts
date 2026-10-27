@@ -4,7 +4,7 @@ test("la página de inicio usa los colores y tipografías de marca", async ({ pa
   await page.goto("/");
 
   const cuerpo = page.locator("body");
-  await expect(cuerpo).toHaveCSS("background-color", "rgb(17, 17, 17)");
+  await expect(cuerpo).toHaveCSS("background-color", "rgb(0, 0, 0)");
   await expect(cuerpo).toHaveCSS("color", "rgb(243, 237, 224)");
   await expect(cuerpo).toHaveCSS("font-family", /Cabin/);
 
