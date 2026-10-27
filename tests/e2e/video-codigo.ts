@@ -28,9 +28,10 @@ export function videoConCodigo(codigo: string, ancho = 640, alto = 480): string 
   if (existsSync(ruta)) return ruta;
   mkdirSync(carpeta, { recursive: true });
 
-  const modulos = modulosEan13(codigo);
+  // "sin-codigo": una imagen sin barras, para que el escáner quede buscando.
+  const modulos = codigo === "sin-codigo" ? "" : modulosEan13(codigo);
   const escala = 4; // px por módulo: 95 módulos → 380 px
-  const margenX = Math.floor((ancho - modulos.length * escala) / 2);
+  const margenX = Math.floor((ancho - 95 * escala) / 2);
   const y = Buffer.alloc(ancho * alto, 235); // fondo blanco (luma)
   for (let fila = Math.floor(alto * 0.25); fila < Math.floor(alto * 0.75); fila++) {
     for (let i = 0; i < modulos.length; i++) {

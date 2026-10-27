@@ -12,10 +12,10 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   nativo; al leer, vibra y navega al detalle; e2e con cámara simulada. (CA-2)
 - [x] T5 — Ponyfill `barcode-detector` con el `.wasm` servido desde el sitio y carga
   solo al abrir el escáner; e2e forzando el ponyfill. (CA-2, CA-6)
-- [ ] T6 — Código inexistente: mensaje, reintentar y buscar por nombre; e2e. (CA-3)
-- [ ] T7 — Permiso denegado / sin cámara: explicación e ingreso manual; e2e. (CA-4)
-- [ ] T8 — Cerrar y salir apagan la cámara; e2e que verifica la pista `ended`. (CA-5)
-- [ ] T9 — Carga diferida y privacidad: e2e de pedidos de red (sin archivos del lector
+- [x] T6 — Código inexistente: mensaje, reintentar y buscar por nombre; e2e. (CA-3)
+- [x] T7 — Permiso denegado / sin cámara: explicación e ingreso manual; e2e. (CA-4)
+- [x] T8 — Cerrar y salir apagan la cámara; e2e que verifica la pista `ended`. (CA-5)
+- [x] T9 — Carga diferida y privacidad: e2e de pedidos de red (sin archivos del lector
   en la carta, sin imágenes enviadas). (CA-6, CA-7)
 - [ ] T10 — Accesibilidad: anuncios, nombres y axe; prueba manual en iPhone y Android
   reales. (CA-8)
