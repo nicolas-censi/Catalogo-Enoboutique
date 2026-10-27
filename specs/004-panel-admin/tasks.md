@@ -29,7 +29,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T13 — Ocultar/mostrar producto y borrar con confirmación; e2e. (CA-8)
 - [x] T14 — `/admin/secciones`: crear al final, renombrar, ocultar/mostrar, no borrar
   con productos; e2e. (CA-9)
-- [ ] T15 — Contraseña olvidada: `/admin/olvide` y `/admin/restablecer`; e2e con el
+- [x] T15 — Contraseña olvidada: `/admin/olvide` y `/admin/restablecer`; e2e con el
   enlace generado por la API. (CA-1b)
 - [ ] T16 — Migración `es_encargado()`, políticas y trigger de `personal` (no quedar sin
   encargados); tests de base de datos. (CA-12)

@@ -35,8 +35,13 @@ ya le permiten leer y modificar todo (CA-10 de la spec 001).
 ### Mails (CA-1b, CA-12)
 - Invitación y contraseña olvidada usan los mails de Supabase Auth, con plantillas en
   español (Supabase → Authentication → Email Templates).
-- Ambos enlaces llevan a `/admin/restablecer`, donde la persona elige su contraseña
-  (`auth.updateUser`).
+- Ambos enlaces van a `/admin/restablecer/confirmar?token_hash=…&type=recovery|invite`
+  (Route Handler que valida con `verifyOtp` e inicia la sesión) y de ahí a
+  `/admin/restablecer`, donde la persona elige su contraseña (`auth.updateUser`). Se usa
+  `token_hash` y no el código PKCE para que el enlace funcione aunque se abra en otro
+  dispositivo. Para eso las plantillas de mail de Supabase tienen que armar el enlace
+  así: `{{ .SiteURL }}/admin/restablecer/confirmar?token_hash={{ .TokenHash }}&type=recovery`
+  (se configura en la T18).
 - **SMTP propio** configurado en Supabase con la cuenta de **Google Workspace** de
   `@lehonor.com` (`smtp.gmail.com`, puerto 587, con una contraseña de aplicación de esa
   cuenta). El servicio incluido en Supabase solo envía al equipo de Supabase. Los tests e2e no mandan mails reales:

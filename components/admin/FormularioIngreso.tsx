@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState } from "react";
 import { ingresar, type EstadoIngreso } from "@/app/admin/acciones-sesion";
 import { textos } from "@/lib/textos";
@@ -31,6 +32,9 @@ export function FormularioIngreso() {
       >
         {textos.admin.botonIngresar}
       </button>
+      <Link href="/admin/olvide" className="inline-flex min-h-11 items-center text-titulo">
+        {textos.admin.olvideContrasena}
+      </Link>
     </form>
   );
 }

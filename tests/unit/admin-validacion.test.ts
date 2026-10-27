@@ -81,3 +81,17 @@ describe("validarCodigoBarras (CA-6)", () => {
     expect(validarCodigoBarras(codigo).error).toBe("El código de barras tiene que tener entre 8 y 14 números.");
   });
 });
+
+import { validarContrasena } from "@/lib/admin/validacion";
+
+describe("validarContrasena (CA-1b)", () => {
+  it("acepta una contraseña de 8 o más caracteres repetida igual", () => {
+    expect(validarContrasena("Malbec2026", "Malbec2026")).toEqual({});
+  });
+  it("rechaza contraseñas cortas", () => {
+    expect(validarContrasena("corta", "corta")).toEqual({ nueva: "Tiene que tener al menos 8 caracteres." });
+  });
+  it("rechaza si no coinciden", () => {
+    expect(validarContrasena("Malbec2026", "Malbec2025")).toEqual({ repetida: "Las contraseñas no coinciden." });
+  });
+});
