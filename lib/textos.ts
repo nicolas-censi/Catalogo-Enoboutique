@@ -9,4 +9,6 @@ export const textos = {
   secciones: "Secciones",
   volverACarta: "Volver a la carta",
   seccionNoEncontrada: "No encontramos esta sección.",
+  productoNoEncontrado: "No encontramos este producto. Puede que ya no esté disponible.",
+  volverA: (seccion: string) => `Volver a ${seccion}`,
 } as const;

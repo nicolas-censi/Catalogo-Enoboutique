@@ -14,7 +14,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   producto; etiquetas de añadas; tests unitarios y de base de datos. (CA-2, CA-3, CA-4)
 - [x] T5 — Encabezado con logo y página de inicio con secciones; e2e. (CA-1)
 - [x] T6 — Página de sección con tarjetas de producto y añadas; e2e. (CA-2, CA-4)
-- [ ] T7 — Página de detalle y "No encontramos este producto"; e2e. (CA-3, CA-8)
+- [x] T7 — Página de detalle y "No encontramos este producto"; e2e. (CA-3, CA-8)
 - [ ] T8 — Página `/buscar` (sin JS) con resultados y mensaje sin resultados; e2e. (CA-5,
   CA-6, CA-7)
 - [ ] T9 — Buscador con resultados mientras se escribe (debounce); e2e. (CA-5)

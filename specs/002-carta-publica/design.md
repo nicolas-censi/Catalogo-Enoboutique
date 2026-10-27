@@ -63,6 +63,9 @@ navegación sea instantánea. La carta usa un cliente de Supabase sin cookies
 - `lib/carta.ts`: funciones de lectura (`leerSecciones`, `leerSeccion`, `leerProducto`)
   que agrupan las filas de `carta_publica` por producto. Se testean con Vitest.
 - Textos nuevos en `lib/textos.ts` (sin resultados, placeholder del buscador, etc.).
+- Fotos: `lib/fotos.ts` arma la URL pública de Supabase Storage (bucket `fotos`) y
+  `next.config.ts` habilita ese dominio para `next/image`. El bucket y la subida se
+  hacen en la spec 4; ahí se agrega el e2e de un producto con foto.
 
 ## Tests
 - **Base de datos (Vitest):** `buscar_carta` con los casos de CA-5, CA-6 y CA-8 sobre
