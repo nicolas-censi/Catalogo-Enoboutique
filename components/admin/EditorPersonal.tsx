@@ -21,10 +21,10 @@ function FilaPersona({ persona }: { persona: Persona }) {
 
   return (
     <tr>
-      <td className="py-1 pr-4">
+      <td data-etiqueta={t.columnasPersonal.email} className="py-1 pr-4 break-all">
         {persona.email} {persona.soyYo && <span className="text-texto-suave">{t.vos}</span>}
       </td>
-      <td className="py-1 pr-4">
+      <td data-etiqueta={t.columnasPersonal.rol} className="py-1 pr-4">
         <select
           aria-label={t.rolDe(persona.email)}
           defaultValue={persona.rol}
@@ -45,8 +45,8 @@ function FilaPersona({ persona }: { persona: Persona }) {
         </select>
         {mensaje.guardado && <span role="status" className="ml-2 text-sm text-texto-suave">{t.guardado}</span>}
       </td>
-      <td className="py-1 pr-4">{persona.activa ? t.activa : t.invitacionPendiente}</td>
-      <td className="py-1">
+      <td data-etiqueta={t.columnasPersonal.estado} className="py-1 pr-4">{persona.activa ? t.activa : t.invitacionPendiente}</td>
+      <td data-etiqueta={t.acciones} className="py-1">
         {!persona.soyYo &&
           (confirmando ? (
             <span className="flex flex-wrap items-center gap-2">
@@ -95,7 +95,7 @@ export function EditorPersonal({ personas }: { personas: Persona[] }) {
   return (
     <>
       <p className="mb-4 text-texto-suave">{t.personalAyuda}</p>
-      <table aria-label={t.personal} className="w-full border-collapse text-left">
+      <table aria-label={t.personal} className="tabla-responsiva w-full border-collapse text-left">
         <thead className="border-b border-dorado/40 text-sm text-texto-suave">
           <tr>
             <th scope="col" className="py-2 pr-4">{c.email}</th>

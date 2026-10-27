@@ -27,7 +27,7 @@ export function TablaProductos({ productos }: { productos: ProductoAdmin[] }) {
   }
   const c = textos.admin.columnas;
   return (
-    <table className="w-full border-collapse text-left">
+    <table className="tabla-responsiva w-full border-collapse text-left">
       <thead className="border-b border-dorado/40 text-sm text-texto-suave">
         <tr>
           <th scope="col" className="py-2 pr-4">{c.producto}</th>
@@ -45,9 +45,9 @@ export function TablaProductos({ productos }: { productos: ProductoAdmin[] }) {
                 {p.nombre}
               </Link>
             </td>
-            <td className="py-1 pr-4">{p.bodega_nombre}</td>
-            <td className="py-1 pr-4">{p.seccion_nombre ?? <span className="text-texto-suave">{textos.admin.sinSeccion}</span>}</td>
-            <td className="py-1 pr-4 text-right tabular-nums">{p.cantidad_anadas}</td>
+            <td data-etiqueta={c.bodega} className="py-1 pr-4">{p.bodega_nombre}</td>
+            <td data-etiqueta={c.seccion} className="py-1 pr-4">{p.seccion_nombre ?? <span className="text-texto-suave">{textos.admin.sinSeccion}</span>}</td>
+            <td data-etiqueta={c.anadas} className="py-1 pr-4 tabular-nums md:text-right">{p.cantidad_anadas}</td>
             <td className="py-1"><Estado producto={p} /></td>
           </tr>
         ))}

@@ -166,13 +166,13 @@ function FilaAnada({ productoId, esVino, anada }: { productoId: string; esVino: 
 
   return (
     <tr>
-      <td className="py-1 pr-4">{etiqueta}</td>
-      <td className="py-1 pr-4 font-mono text-sm">{anada.codigo_tango}</td>
-      <td className="py-1 pr-4 text-right tabular-nums">{formatearPrecio(anada.precio)}</td>
-      <td className="py-1 pr-4">
+      <td data-etiqueta={t.columnasAnadas.anada} className="py-1 pr-4">{etiqueta}</td>
+      <td data-etiqueta={t.columnasAnadas.codigo} className="py-1 pr-4 font-mono text-sm">{anada.codigo_tango}</td>
+      <td data-etiqueta={t.columnasAnadas.precio} className="py-1 pr-4 tabular-nums md:text-right">{formatearPrecio(anada.precio)}</td>
+      <td data-etiqueta={t.columnasAnadas.stock} className="py-1 pr-4">
         <InterruptorStock key={`${anada.id}-${anada.en_stock}`} anadaId={anada.id} etiqueta={etiqueta} enStock={anada.en_stock} />
       </td>
-      <td className="py-1">
+      <td data-etiqueta={t.acciones} className="py-1">
         {modo === "borrar" ? (
           <span className="flex flex-wrap items-center gap-2">
             <span>{t.confirmarBorrarAnada(etiqueta)}</span>
@@ -218,7 +218,7 @@ export function EditorAnadas({ productoId, esVino, anadas }: { productoId: strin
   const c = t.columnasAnadas;
   return (
     <>
-      <table aria-label={t.anadas} className="mt-2 w-full border-collapse text-left">
+      <table aria-label={t.anadas} className="tabla-responsiva mt-2 w-full border-collapse text-left">
         <thead className="border-b border-dorado/40 text-sm text-texto-suave">
           <tr>
             <th scope="col" className="py-2 pr-4">{c.anada}</th>

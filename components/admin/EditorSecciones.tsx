@@ -69,7 +69,7 @@ function FilaSeccion({ seccion }: { seccion: SeccionAdmin }) {
 
   return (
     <tr>
-      <td className="py-1 pr-4">
+      <td data-etiqueta={t.columnasSecciones.seccion} className="py-1 pr-4">
         {modo === "renombrar" ? (
           <form
             className="flex flex-wrap gap-2"
@@ -97,11 +97,11 @@ function FilaSeccion({ seccion }: { seccion: SeccionAdmin }) {
           seccion.nombre
         )}
       </td>
-      <td className="py-1 pr-4 text-texto-suave">{t.cantidadProductos(seccion.productos)}</td>
-      <td className="py-1 pr-4">
+      <td data-etiqueta={t.columnasSecciones.productos} className="py-1 pr-4 text-texto-suave">{t.cantidadProductos(seccion.productos)}</td>
+      <td data-etiqueta={t.columnasSecciones.visible} className="py-1 pr-4">
         <InterruptorVisible seccion={seccion} />
       </td>
-      <td className="py-1">
+      <td data-etiqueta={t.acciones} className="py-1">
         {modo === "borrar" ? (
           <span className="flex flex-wrap items-center gap-2">
             <span>{t.confirmarBorrarSeccion(seccion.nombre)}</span>
@@ -155,7 +155,7 @@ export function EditorSecciones({ secciones }: { secciones: SeccionAdmin[] }) {
   return (
     <>
       <p className="mb-4 text-texto-suave">{t.ordenSecciones}</p>
-      <table aria-label={t.secciones} className="w-full border-collapse text-left">
+      <table aria-label={t.secciones} className="tabla-responsiva w-full border-collapse text-left">
         <thead className="border-b border-dorado/40 text-sm text-texto-suave">
           <tr>
             <th scope="col" className="py-2 pr-4">{c.seccion}</th>
