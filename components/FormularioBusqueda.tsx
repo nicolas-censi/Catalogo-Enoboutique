@@ -20,11 +20,11 @@ export function FormularioBusqueda({
         placeholder={textos.buscadorAyuda}
         autoComplete="off"
         enterKeyHint="search"
-        className="min-h-11 flex-1 rounded-full border border-dorado bg-white px-4 text-base text-negro placeholder:text-negro/60 focus:outline-2 focus:outline-dorado"
+        className="min-h-11 flex-1 rounded-full border border-dorado bg-superficie px-4 text-base text-texto placeholder:text-texto-suave focus:outline-2 focus:outline-dorado"
       />
       <button
         type="submit"
-        className="min-h-11 rounded-full bg-negro px-5 font-semibold text-fondo"
+        className="min-h-11 rounded-full bg-boton px-5 font-semibold text-boton-texto"
       >
         {textos.buscadorBoton}
       </button>

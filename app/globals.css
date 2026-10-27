@@ -1,18 +1,29 @@
 @import "tailwindcss";
 
-/* Tokens de marca: los únicos colores y tipografías permitidos en la app. */
+/*
+ * Tokens de marca: los únicos colores y tipografías permitidos en la app.
+ * Los colores van por función (fondo, texto, etc.), así el tema se cambia acá.
+ */
 @theme inline {
-  --color-negro: #000000;
-  --color-fondo: #F7F8FB;
-  --color-dorado: #B19750;
-  /* Dorado para texto: mismo tono, más oscuro, con contraste 4,5:1 sobre fondo y blanco. */
-  --color-dorado-texto: #84703B;
+  /* Colores de marca */
+  --color-dorado: #B19750; /* el del logo: logo, bordes y detalles */
+
+  /* Colores por función */
+  --color-fondo: #F7F8FB; /* fondo de la página */
+  --color-superficie: #FFFFFF; /* tarjetas y buscador */
+  --color-texto: #000000; /* texto general */
+  --color-destacado: #000000; /* nombres de vinos, secciones y precios */
+  --color-texto-suave: #4A4A4A; /* bodega · varietal, años, ayudas */
+  --color-titulo: #84703B; /* títulos y enlaces */
+  --color-boton: #000000;
+  --color-boton-texto: #F7F8FB;
+
   --font-titulos: var(--font-inknut-antiqua), serif;
   --font-texto: var(--font-cabin), sans-serif;
 }
 
 @layer base {
   body {
-    @apply bg-fondo text-negro font-texto;
+    @apply bg-fondo text-texto font-texto;
   }
 }

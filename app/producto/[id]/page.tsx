@@ -26,7 +26,7 @@ async function DetalleProducto({ params }: { params: Promise<{ id: string }> }) 
     <>
       <Link
         href={`/seccion/${producto.seccion.id}`}
-        className="inline-flex min-h-11 items-center text-dorado-texto before:mr-1 before:content-['‹']"
+        className="inline-flex min-h-11 items-center text-titulo before:mr-1 before:content-['‹']"
       >
         {textos.volverA(producto.seccion.nombre)}
       </Link>
@@ -42,10 +42,10 @@ async function DetalleProducto({ params }: { params: Promise<{ id: string }> }) 
             priority
           />
         )}
-        <h1 className="mt-4 font-titulos text-2xl leading-snug text-dorado-texto">{producto.nombre}</h1>
-        {subtitulo && <p className="mt-1 text-negro/70">{subtitulo}</p>}
+        <h1 className="mt-4 font-titulos text-2xl leading-snug text-titulo">{producto.nombre}</h1>
+        {subtitulo && <p className="mt-1 text-texto-suave">{subtitulo}</p>}
         {producto.descripcion && <p className="mt-4 leading-relaxed">{producto.descripcion}</p>}
-        <div className="mt-4 rounded-lg border border-dorado/30 bg-white px-4 py-2">
+        <div className="mt-4 rounded-lg border border-dorado/30 bg-superficie px-4 py-2">
           <ListaAnadas anadas={producto.anadas} />
         </div>
       </article>

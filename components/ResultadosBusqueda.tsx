@@ -10,7 +10,7 @@ export function ResultadosBusqueda({ busqueda, productos }: { busqueda: string; 
       ) : (
         <div className="py-6 text-center">
           <p className="text-lg">{textos.sinResultados(busqueda)}</p>
-          <p className="mt-1 text-negro/70">{textos.sinResultadosAyuda}</p>
+          <p className="mt-1 text-texto-suave">{textos.sinResultadosAyuda}</p>
         </div>
       )}
     </section>

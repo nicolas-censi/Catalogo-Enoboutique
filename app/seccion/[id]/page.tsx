@@ -14,7 +14,7 @@ async function ContenidoSeccion({ params }: { params: Promise<{ id: string }> })
 
   return (
     <>
-      <h1 className="mt-2 font-titulos text-2xl text-dorado-texto">{seccion.nombre}</h1>
+      <h1 className="mt-2 font-titulos text-2xl text-titulo">{seccion.nombre}</h1>
       <div className="mt-4 flex flex-col gap-3">
         {seccion.productos.map((producto) => (
           <TarjetaProducto key={producto.id} producto={producto} />
