@@ -71,15 +71,17 @@ export type AnadaAdmin = Database["public"]["Tables"]["anadas"]["Row"];
 export type FichaProducto = Database["public"]["Tables"]["productos"]["Row"] & {
   anadas: AnadaAdmin[];
   bodegas: { nombre: string } | null;
+  codigos_barras: { codigo: string }[];
 };
 
 export async function leerFichaProducto(cliente: Cliente, id: string): Promise<FichaProducto | null> {
   if (!UUID.test(id)) return null;
-  const { data, error } = await cliente.from("productos").select("*, anadas(*), bodegas(nombre)").eq("id", id).maybeSingle();
+  const { data, error } = await cliente.from("productos").select("*, anadas(*), bodegas(nombre), codigos_barras(codigo)").eq("id", id).maybeSingle();
   if (error) throw error;
   if (!data) return null;
   // Más nueva primero; sin año al final.
   data.anadas.sort((a, b) => (b.anio ?? -Infinity) - (a.anio ?? -Infinity));
+  data.codigos_barras.sort((a, b) => a.codigo.localeCompare(b.codigo));
   return data;
 }
 

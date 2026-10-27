@@ -20,7 +20,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   obligatorios. (CA-4)
 - [x] T9 — `EditorAnadas`: agregar, editar (incluido pasar "sin especificar" a "con
   año"), borrar; mensajes de reglas; e2e. (CA-5)
-- [ ] T10 — `EditorCodigos`: agregar y quitar códigos, mensaje si el código ya es de
+- [x] T10 — `EditorCodigos`: agregar y quitar códigos, mensaje si el código ya es de
   otro producto; e2e. (CA-6)
 - [ ] T11 — Migración del bucket `fotos` con políticas; tests de base de datos. (CA-7)
 - [ ] T12 — `SubirFoto` con reducción a 1600 px/WebP, reemplazar y quitar; e2e que

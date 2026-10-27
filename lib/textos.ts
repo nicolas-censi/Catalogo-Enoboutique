@@ -86,5 +86,11 @@ export const textos = {
     siBorrar: "Sí, borrar",
     confirmarBorrarAnada: (anada: string) => `¿Borrar la añada ${anada}?`,
     acciones: "Acciones",
+    codigosBarras: "Códigos de barras",
+    codigoBarras: "Código de barras",
+    agregarCodigo: "Agregar código de barras",
+    sinCodigos: "Todavía no tiene códigos de barras.",
+    quitar: "Quitar",
+    quitarCodigo: (codigo: string) => `Quitar ${codigo}`,
   },
 } as const;
