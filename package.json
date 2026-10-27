@@ -10,6 +10,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
+    "test:e2e:produccion": "playwright test --config playwright.produccion.config.ts",
     "db:migrar": "node scripts/migrar.mjs",
     "db:tipos": "supabase gen types typescript --project-id \"$SUPABASE_PROJECT_REF\" --schema public > lib/tipos-db.ts",
     "db:seed": "node scripts/seed.mjs"

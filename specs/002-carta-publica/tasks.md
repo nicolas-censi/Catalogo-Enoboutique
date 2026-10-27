@@ -18,7 +18,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T8 — Página `/buscar` (sin JS) con resultados y mensaje sin resultados; e2e. (CA-5,
   CA-6, CA-7)
 - [x] T9 — Buscador con resultados mientras se escribe (debounce); e2e. (CA-5)
-- [ ] T10 — Revalidación cada 60 segundos; test de que un cambio se ve después de
+- [x] T10 — Revalidación cada 60 segundos; test de que un cambio se ve después de
   revalidar. (CA-10)
 - [ ] T11 — Red lenta: e2e con 3G simulado que verifica contenido sin JS y que el
   buscador no descarga la carta entera. (CA-9)

@@ -6,7 +6,8 @@ Revisá la implementación de `specs/$ARGUMENTS/` contra sus criterios de acepta
 **No modifiques código** en esta revisión: solo informá.
 
 1. Leé `CLAUDE.md` y los tres archivos de `specs/$ARGUMENTS/`.
-2. Corré `npm run test`, `npm run test:e2e`, `npm run typecheck` y `npm run lint`,
+2. Corré `npm run test`, `npm run test:e2e`, `npm run test:e2e:produccion`, `npm run typecheck`
+   y `npm run lint`,
    y reportá el resultado real de cada uno.
 3. Armá una tabla con cada `CA-n`:
    | CA | Test(s) que lo cubren | Estado (✅ cumple / ⚠️ parcial / ❌ no cumple) | Nota |

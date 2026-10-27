@@ -79,6 +79,10 @@ JavaScript solo se vería el marcador de carga (CA-9). La carta usa un cliente d
   JS, sin resultados, producto no disponible (CA-1 a CA-8), red lenta (CA-9),
   tamaño de elementos tocables y `@axe-core/playwright` (CA-11). Los e2e usan el seed
   del proyecto de desarrollo.
+- **E2E en modo producción** (`npm run test:e2e:produccion`, config
+  `playwright.produccion.config.ts`): arma la app con `next build` + `next start`,
+  porque el caché no funciona en modo desarrollo. Verifica que un cambio del personal
+  se vea en ≤ 1 minuto (CA-10).
 
 ## Decisiones y alternativas descartadas
 - **Búsqueda en el servidor (pg_trgm) en vez de en el celular (ej.: Fuse.js):** con
