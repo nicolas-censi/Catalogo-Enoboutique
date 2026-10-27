@@ -98,6 +98,8 @@ funcionar desde el celular.
 - Y puede reemplazarla o quitarla.
 - Y se rechazan archivos que no son imágenes o que pesan más de 10 MB, con un mensaje
   claro.
+- Y la foto es **opcional**: un producto sin foto se ve bien en la carta (sin espacio
+  vacío ni imagen rota) y en el panel se marca "Sin foto" para saber a cuáles les falta.
 
 ### CA-8: Ocultar, mostrar y borrar
 - **Dado** un producto o una sección
