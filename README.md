@@ -59,6 +59,7 @@ No hace falta Docker: el desarrollo y los tests usan el proyecto de Supabase en 
 | `npm run dev` | Levanta la app en modo desarrollo. |
 | `npm run test` | Tests unitarios y de base de datos (Vitest). |
 | `npm run test:e2e` | Tests de punta a punta en un navegador con pantalla de celular (Playwright). |
+| `npm run test:e2e:produccion` | Tests que necesitan la app armada como en producción (ej.: caché de 1 minuto de la carta). Tardan un par de minutos. |
 | `npm run lint` | Revisa el código con ESLint. |
 | `npm run typecheck` | Verifica los tipos de TypeScript. |
 | `npm run db:migrar` | Aplica las migraciones pendientes de `supabase/migrations/`. |

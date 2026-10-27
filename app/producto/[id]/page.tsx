@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense } from "react";
 import { Encabezado } from "@/components/Encabezado";
 import { ListaAnadas } from "@/components/ListaAnadas";
 import { subtituloProducto } from "@/components/TarjetaProducto";
@@ -27,7 +26,7 @@ async function DetalleProducto({ params }: { params: Promise<{ id: string }> }) 
     <>
       <Link
         href={`/seccion/${producto.seccion.id}`}
-        className="inline-flex min-h-11 items-center text-dorado before:mr-1 before:content-['‹']"
+        className="inline-flex min-h-11 items-center text-titulo before:mr-1 before:content-['‹']"
       >
         {textos.volverA(producto.seccion.nombre)}
       </Link>
@@ -43,10 +42,10 @@ async function DetalleProducto({ params }: { params: Promise<{ id: string }> }) 
             priority
           />
         )}
-        <h1 className="mt-4 font-titulos text-2xl leading-snug text-dorado">{producto.nombre}</h1>
-        {subtitulo && <p className="mt-1 text-negro/70">{subtitulo}</p>}
+        <h1 className="mt-4 font-titulos text-2xl leading-snug text-titulo">{producto.nombre}</h1>
+        {subtitulo && <p className="mt-1 text-texto-suave">{subtitulo}</p>}
         {producto.descripcion && <p className="mt-4 leading-relaxed">{producto.descripcion}</p>}
-        <div className="mt-4 rounded-lg border border-dorado/30 bg-white px-4 py-2">
+        <div className="mt-4 rounded-lg border border-dorado/30 bg-superficie px-4 py-2">
           <ListaAnadas anadas={producto.anadas} />
         </div>
       </article>
@@ -54,14 +53,16 @@ async function DetalleProducto({ params }: { params: Promise<{ id: string }> }) 
   );
 }
 
+// La página se arma completa en el servidor antes de enviarse (sin Suspense), para
+// que se vea aunque el celular no ejecute JavaScript (CA-9).
+export const instant = false;
+
 export default function PaginaProducto({ params }: PageProps<"/producto/[id]">) {
   return (
     <>
       <Encabezado />
       <main className="mx-auto max-w-xl px-4 pb-10">
-        <Suspense fallback={<div className="mt-4 h-64 animate-pulse rounded bg-dorado/10" />}>
-          <DetalleProducto params={params} />
-        </Suspense>
+        <DetalleProducto params={params} />
       </main>
     </>
   );

@@ -48,8 +48,12 @@ Las páginas son Server Components. Con `cacheComponents: true` (Next.js 16), la
 lecturas de la carta se cachean en `lib/carta-cache.ts` con `"use cache"` y un
 `cacheLife` propio de `{ stale: 60, revalidate: 60, expire: 3600 }` (CA-10). No se usa
 el perfil `minutes` porque su `stale` de 5 minutos dejaría al celular mostrar datos
-viejos más de 1 minuto. Las lecturas se envuelven en `<Suspense>` para que la
-navegación sea instantánea. La carta usa un cliente de Supabase sin cookies
+viejos más de 1 minuto. El inicio (sin datos de la URL) va
+prearmado y su lista de secciones se envuelve en `<Suspense>`. Las páginas que leen la
+URL (`/seccion/[id]`, `/producto/[id]`, `/buscar`) **no** usan `<Suspense>` y exportan
+`instant = false`: se arman completas en el servidor antes de enviarse. Con
+`<Suspense>`, el contenido llega en streaming y lo reemplaza un script, así que sin
+JavaScript solo se vería el marcador de carga (CA-9). La carta usa un cliente de Supabase sin cookies
 (`lib/supabase/publico.ts`) para poder cachearse.
 
 ## Componentes
@@ -75,6 +79,10 @@ navegación sea instantánea. La carta usa un cliente de Supabase sin cookies
   JS, sin resultados, producto no disponible (CA-1 a CA-8), red lenta (CA-9),
   tamaño de elementos tocables y `@axe-core/playwright` (CA-11). Los e2e usan el seed
   del proyecto de desarrollo.
+- **E2E en modo producción** (`npm run test:e2e:produccion`, config
+  `playwright.produccion.config.ts`): arma la app con `next build` + `next start`,
+  porque el caché no funciona en modo desarrollo. Verifica que un cambio del personal
+  se vea en ≤ 1 minuto (CA-10).
 
 ## Decisiones y alternativas descartadas
 - **Búsqueda en el servidor (pg_trgm) en vez de en el celular (ej.: Fuse.js):** con
@@ -84,6 +92,12 @@ navegación sea instantánea. La carta usa un cliente de Supabase sin cookies
   pesada; las secciones dividen la carta y el buscador cubre el resto.
 - **`@axe-core/playwright`:** dependencia de desarrollo nueva, solo para tests de
   accesibilidad. No cambia el stack.
+- **Tema oscuro (opción 2B):** axe marcó que el dorado `#B19750` sobre el fondo claro
+  original tenía contraste 2,67:1. Se generaron 4 previews con fondo oscuro y se eligió
+  la 2B con fondo negro puro `#000000` (el `#111111` se veía verdoso en Samsung),
+  dorado del logo para títulos, nombres y precios (7,4:1) y
+  crema `#F3EDE0` para texto secundario. Los colores van en tokens por función en
+  `app/globals.css`.
 
 ## Riesgos
 - **Calidad de la búsqueda:** umbral de `word_similarity` en **0,5**, calibrado con los

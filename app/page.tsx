@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { Encabezado } from "@/components/Encabezado";
-import { FormularioBusqueda } from "@/components/FormularioBusqueda";
+import { Buscador } from "@/components/Buscador";
 import { seccionesCarta } from "@/lib/carta-cache";
 import { textos } from "@/lib/textos";
 
@@ -13,7 +13,7 @@ async function ListaSecciones() {
         <li key={seccion.id}>
           <Link
             href={`/seccion/${seccion.id}`}
-            className="flex min-h-12 items-center justify-between py-3 text-lg after:text-dorado after:content-['›']"
+            className="flex min-h-12 items-center justify-between py-3 text-lg text-destacado after:text-dorado after:content-['›']"
           >
             {seccion.nombre}
           </Link>
@@ -28,9 +28,9 @@ export default function Inicio() {
     <>
       <Encabezado />
       <main className="mx-auto max-w-xl px-4 pb-10">
-        <FormularioBusqueda />
+        <Buscador />
         <nav aria-labelledby="titulo-secciones" className="mt-8">
-          <h2 id="titulo-secciones" className="font-titulos text-xl text-dorado">
+          <h2 id="titulo-secciones" className="font-titulos text-xl text-titulo">
             {textos.secciones}
           </h2>
           <Suspense fallback={<div className="mt-3 h-48 animate-pulse rounded bg-dorado/10" />}>

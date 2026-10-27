@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { entornoSupabase } from "@/lib/supabase/entorno";
 import type { Database } from "@/lib/tipos-db";
 
 /**
@@ -6,9 +7,8 @@ import type { Database } from "@/lib/tipos-db";
  * No usa cookies, así sus lecturas se pueden cachear.
  */
 export function crearClientePublico() {
-  return createClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
-    { auth: { persistSession: false, autoRefreshToken: false } },
-  );
+  const { url, clave } = entornoSupabase();
+  return createClient<Database>(url, clave, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
 }
