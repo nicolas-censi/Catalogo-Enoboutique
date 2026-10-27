@@ -6,7 +6,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   sesión) y `proxy.ts` que refresca la sesión en `/admin/*`. (CA-1)
 - [x] T2 — `/admin/ingresar` con login, errores y redirección; protección de `/admin/*`
   (sin sesión, no personal); cerrar sesión; e2e. (CA-1)
-- [ ] T3 — `buscar_admin()` sobre todos los productos, por nombre, bodega, código de
+- [x] T3 — `buscar_admin()` sobre todos los productos, por nombre, bodega, código de
   Tango y código de barras; tests de base de datos. (CA-2)
 - [ ] T4 — `/admin`: lista con estado (oculto, sin stock, a revisar), búsqueda y
   filtros en la URL; e2e. (CA-2)

@@ -106,7 +106,9 @@ pedido. El `cacheLife` de 1 minuto se mantiene para cambios hechos por fuera del
 ### Búsqueda en el panel
 Función `buscar_admin(texto)` (`security invoker`, solo personal por RLS) que reutiliza
 `normalizar_busqueda` y `word_similarity` sobre **todos** los productos (no solo los
-visibles), y además busca coincidencia exacta por `codigo_tango` y código de barras.
+visibles), y además busca coincidencia exacta por `codigo_tango` y código de barras. Si
+el texto coincide exacto con un código, devuelve solo esos productos (quien escribe un
+código busca esa botella puntual).
 
 ## Tests
 - **Unit (Vitest):** validaciones, traducción de errores, reducción de imagen (tamaño

@@ -273,6 +273,13 @@ export type Database = {
       }
     }
     Functions: {
+      buscar_admin: {
+        Args: { limite?: number; texto: string }
+        Returns: {
+          producto_id: string
+          relevancia: number
+        }[]
+      }
       buscar_carta: {
         Args: { limite?: number; texto: string }
         Returns: {
