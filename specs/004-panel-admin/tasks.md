@@ -27,7 +27,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   sube una imagen y la ve en el detalle de la carta; aviso "Sin foto" en la lista y la
   ficha del panel. (CA-7)
 - [x] T13 — Ocultar/mostrar producto y borrar con confirmación; e2e. (CA-8)
-- [ ] T14 — `/admin/secciones`: crear al final, renombrar, ocultar/mostrar, no borrar
+- [x] T14 — `/admin/secciones`: crear al final, renombrar, ocultar/mostrar, no borrar
   con productos; e2e. (CA-9)
 - [ ] T15 — Contraseña olvidada: `/admin/olvide` y `/admin/restablecer`; e2e con el
   enlace generado por la API. (CA-1b)
