@@ -14,7 +14,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   test en modo producción de que un cambio desde una acción se ve al instante. (CA-11)
 - [x] T6 — `InterruptorStock` optimista y su acción; e2e que lo cambia y verifica la
   carta pública. (CA-3, CA-11)
-- [ ] T7 — Validaciones y traducción de errores de Postgres a mensajes; tests
+- [x] T7 — Validaciones y traducción de errores de Postgres a mensajes; tests
   unitarios. (CA-4, CA-5, CA-6)
 - [ ] T8 — Alta y edición de producto con `SelectorBodega`; e2e con errores de campos
   obligatorios. (CA-4)
