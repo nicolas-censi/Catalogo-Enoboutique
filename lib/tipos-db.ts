@@ -202,6 +202,13 @@ export type Database = {
             foreignKeyName: "productos_seccion_id_fkey"
             columns: ["seccion_id"]
             isOneToOne: false
+            referencedRelation: "carta_secciones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "productos_seccion_id_fkey"
+            columns: ["seccion_id"]
+            isOneToOne: false
             referencedRelation: "secciones"
             referencedColumns: ["id"]
           },
@@ -253,6 +260,14 @@ export type Database = {
           seccion_nombre: string | null
           seccion_orden: number | null
           varietal: string | null
+        }
+        Relationships: []
+      }
+      carta_secciones: {
+        Row: {
+          id: string | null
+          nombre: string | null
+          orden: number | null
         }
         Relationships: []
       }

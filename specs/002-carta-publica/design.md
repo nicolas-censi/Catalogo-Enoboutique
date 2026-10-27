@@ -27,13 +27,14 @@ simples) e índices GIN de trigramas sobre `productos` (nombre + varietal) y `bo
 al guardar con el usuario del personal; `anon` no.
 
 ### Lectura de la carta
-- Inicio: secciones visibles con al menos un producto disponible, desde
-  `carta_publica` (`select distinct seccion_id, seccion_nombre, seccion_orden`).
+- Inicio: vista pública `carta_secciones` (una fila por sección visible con al menos
+  un producto disponible), para no descargar todas las añadas de `carta_publica` solo
+  para listar secciones.
 - Sección: filas de `carta_publica` filtradas por `seccion_id`, ordenadas por
   `producto_orden` y `anio` desc.
 - Detalle: filas de `carta_publica` filtradas por `producto_id`.
 
-No hacen falta tablas nuevas.
+No hacen falta tablas nuevas; solo la vista `carta_secciones`.
 
 ## Rutas y pantallas
 | Ruta | Quién la usa | Qué muestra |

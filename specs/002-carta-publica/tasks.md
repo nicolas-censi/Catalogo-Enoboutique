@@ -10,7 +10,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   (CA-5)
 - [x] T3 — `buscar_carta()`: búsqueda por código de barras completo, textos cortos y
   productos no disponibles; tests. (CA-6, CA-8)
-- [ ] T4 — `lib/carta.ts`: lectura de secciones, sección y producto agrupando filas por
+- [x] T4 — `lib/carta.ts`: lectura de secciones, sección y producto agrupando filas por
   producto; etiquetas de añadas; tests unitarios y de base de datos. (CA-2, CA-3, CA-4)
 - [ ] T5 — Encabezado con logo y página de inicio con secciones; e2e. (CA-1)
 - [ ] T6 — Página de sección con tarjetas de producto y añadas; e2e. (CA-2, CA-4)
