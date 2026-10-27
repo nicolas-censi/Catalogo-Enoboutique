@@ -1,16 +1,19 @@
-import type { ChangeEventHandler } from "react";
+import type { ChangeEventHandler, ReactNode } from "react";
 import { textos } from "@/lib/textos";
 
 /** Buscador. Funciona sin JavaScript: envía a /buscar?q=... */
 export function FormularioBusqueda({
   valor = "",
   onChange,
+  accesorio,
 }: {
   valor?: string;
   onChange?: ChangeEventHandler<HTMLInputElement>;
+  /** Algo más al final de la fila, por ejemplo el botón de escanear. */
+  accesorio?: ReactNode;
 }) {
   return (
-    <form role="search" action="/buscar" method="get" className="flex gap-2">
+    <form role="search" action="/buscar" method="get" className="flex items-center gap-2">
       <input
         type="search"
         name="q"
@@ -28,6 +31,7 @@ export function FormularioBusqueda({
       >
         {textos.buscadorBoton}
       </button>
+      {accesorio}
     </form>
   );
 }

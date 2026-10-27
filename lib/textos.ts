@@ -16,6 +16,11 @@ export const textos = {
   sinResultadosAyuda: "Probá con otro nombre o consultá al personal.",
   escaner: {
     boton: "Escanear código",
+    titulo: "Escanear código",
+    ayuda: "Apuntá la cámara al código de barras de la botella.",
+    manualTitulo: "¿No podés escanear? Escribí el número",
+    numeroCodigo: "Número del código de barras",
+    buscar: "Buscar",
     sinPermiso:
       "No tenemos permiso para usar la cámara. Habilitalo en la configuración del navegador (el ícono al lado de la dirección) y volvé a intentar, o escribí el número del código.",
     sinCamara: "No encontramos una cámara en este dispositivo. Escribí el número del código.",
