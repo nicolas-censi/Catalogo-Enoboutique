@@ -52,7 +52,12 @@ export default function PaginaPanel({ searchParams }: PageProps<"/admin">) {
       <ConSesion>
         {() => (
           <>
-            <h1 className="mb-4 font-titulos text-2xl text-titulo">{textos.admin.productos}</h1>
+            <div className="mb-4 flex items-center justify-between gap-4">
+              <h1 className="font-titulos text-2xl text-titulo">{textos.admin.productos}</h1>
+              <Link href="/admin/productos/nuevo" className="inline-flex min-h-11 items-center rounded-md bg-boton px-5 font-semibold text-boton-texto">
+                {textos.admin.nuevoProducto}
+              </Link>
+            </div>
             <ListaProductos searchParams={searchParams} />
           </>
         )}

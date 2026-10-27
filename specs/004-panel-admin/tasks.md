@@ -16,7 +16,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   carta pública. (CA-3, CA-11)
 - [x] T7 — Validaciones y traducción de errores de Postgres a mensajes; tests
   unitarios. (CA-4, CA-5, CA-6)
-- [ ] T8 — Alta y edición de producto con `SelectorBodega`; e2e con errores de campos
+- [x] T8 — Alta y edición de producto con `SelectorBodega`; e2e con errores de campos
   obligatorios. (CA-4)
 - [ ] T9 — `EditorAnadas`: agregar, editar (incluido pasar "sin especificar" a "con
   año"), borrar; mensajes de reglas; e2e. (CA-5)

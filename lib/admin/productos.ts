@@ -68,14 +68,23 @@ export async function listarSeccionesAdmin(cliente: Cliente) {
 }
 
 export type AnadaAdmin = Database["public"]["Tables"]["anadas"]["Row"];
-export type FichaProducto = Database["public"]["Tables"]["productos"]["Row"] & { anadas: AnadaAdmin[] };
+export type FichaProducto = Database["public"]["Tables"]["productos"]["Row"] & {
+  anadas: AnadaAdmin[];
+  bodegas: { nombre: string } | null;
+};
 
 export async function leerFichaProducto(cliente: Cliente, id: string): Promise<FichaProducto | null> {
   if (!UUID.test(id)) return null;
-  const { data, error } = await cliente.from("productos").select("*, anadas(*)").eq("id", id).maybeSingle();
+  const { data, error } = await cliente.from("productos").select("*, anadas(*), bodegas(nombre)").eq("id", id).maybeSingle();
   if (error) throw error;
   if (!data) return null;
   // Más nueva primero; sin año al final.
   data.anadas.sort((a, b) => (b.anio ?? -Infinity) - (a.anio ?? -Infinity));
   return data;
+}
+
+export async function listarBodegas(cliente: Cliente): Promise<string[]> {
+  const { data, error } = await cliente.from("bodegas").select("nombre").order("nombre");
+  if (error) throw error;
+  return data.map((b) => b.nombre);
 }

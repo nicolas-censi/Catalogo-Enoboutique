@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { ConSesion } from "@/components/admin/ConSesion";
+import { FormularioProducto } from "@/components/admin/FormularioProducto";
 import { InterruptorStock } from "@/components/admin/InterruptorStock";
-import { leerFichaProducto, type AnadaAdmin } from "@/lib/admin/productos";
+import { leerFichaProducto, listarBodegas, listarSeccionesAdmin, type AnadaAdmin } from "@/lib/admin/productos";
 import { formatearPrecio } from "@/lib/formato";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
@@ -14,7 +15,12 @@ function etiqueta(anada: AnadaAdmin) {
 
 async function Ficha({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const producto = await leerFichaProducto(await crearClienteServidor(), id);
+  const cliente = await crearClienteServidor();
+  const [producto, secciones, bodegas] = await Promise.all([
+    leerFichaProducto(cliente, id),
+    listarSeccionesAdmin(cliente),
+    listarBodegas(cliente),
+  ]);
   const volver = (
     <Link href="/admin" className="inline-flex min-h-11 items-center text-titulo before:mr-1 before:content-['‹']">
       {textos.admin.volverAProductos}
@@ -33,7 +39,22 @@ async function Ficha({ params }: { params: Promise<{ id: string }> }) {
     <>
       {volver}
       <h1 className="mt-2 font-titulos text-2xl text-titulo">{producto.nombre}</h1>
-      <h2 className="mt-6 text-lg font-semibold text-destacado">{textos.admin.anadas}</h2>
+      <h2 className="mt-6 mb-3 text-lg font-semibold text-destacado">{textos.admin.datosProducto}</h2>
+      <FormularioProducto
+        productoId={producto.id}
+        inicial={{
+          tipo: producto.tipo,
+          nombre: producto.nombre,
+          bodega: producto.bodegas?.nombre ?? "",
+          varietal: producto.varietal ?? "",
+          seccion: producto.seccion_id ?? "",
+          descripcion: producto.descripcion ?? "",
+          visible: producto.visible,
+        }}
+        secciones={secciones}
+        bodegas={bodegas}
+      />
+      <h2 className="mt-8 text-lg font-semibold text-destacado">{textos.admin.anadas}</h2>
       <table className="mt-2 w-full border-collapse text-left">
         <thead className="border-b border-dorado/40 text-sm text-texto-suave">
           <tr>
