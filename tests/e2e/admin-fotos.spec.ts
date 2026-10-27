@@ -77,6 +77,14 @@ test("CA-7: reemplazar la foto borra la anterior", async ({ page }) => {
   await expect.poll(archivosDelProducto).toHaveLength(1);
 });
 
+test("CA-7: ofrece elegir archivos, no sacar la foto con la cámara", async ({ page }) => {
+  await page.goto(`/admin/productos/${ids.producto}`);
+  const entrada = page.getByLabel("Subir foto", { exact: true });
+  await expect(entrada).not.toHaveAttribute("capture");
+  await expect(entrada).toHaveAttribute("accept", /image\/jpeg/);
+  await expect(entrada).not.toHaveAttribute("accept", /image\/\*/);
+});
+
 test("CA-7: rechaza un archivo que no es imagen", async ({ page }) => {
   await page.goto(`/admin/productos/${ids.producto}`);
   const antes = await fotoEnBase();

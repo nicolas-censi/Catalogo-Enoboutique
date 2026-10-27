@@ -50,7 +50,8 @@ export function SubirFoto({ productoId, nombre, fotoPath }: { productoId: string
             {ocupado ? t.subiendoFoto : fotoPath ? t.reemplazarFoto : t.subirFoto}
             <input
               type="file"
-              accept="image/*,.heic,.heif"
+              // Tipos explícitos (sin image/* ni capture): ofrece archivos, no la cámara.
+              accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.jpg,.jpeg,.png,.webp,.heic,.heif"
               aria-label={t.subirFoto}
               disabled={ocupado}
               onChange={alElegir}

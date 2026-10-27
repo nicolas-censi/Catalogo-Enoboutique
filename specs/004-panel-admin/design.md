@@ -96,7 +96,9 @@ pedido. El `cacheLife` de 1 minuto se mantiene para cambios hechos por fuera del
 - `EditorAnadas` (tabla editable en una columna en celular), `EditorCodigos`.
 - Diseño **para computadora** (la lista es una tabla con columnas; atajos de teclado
   para buscar) que en pantallas angostas pasa a tarjetas y una columna.
-- `SubirFoto`: `<input type="file" accept="image/*">` (en el celular ofrece la cámara);
+- `SubirFoto`: `<input type="file" accept="image/jpeg,image/png,image/webp,image/heic,…">`
+  con tipos explícitos y sin `image/*` ni `capture`, para que ofrezca archivos y no la
+  cámara;
   reduce la
   imagen en el navegador a 1600 px de lado mayor y la convierte a WebP antes de subirla
   (las fotos de celular pesan varios MB y la señal es mala).

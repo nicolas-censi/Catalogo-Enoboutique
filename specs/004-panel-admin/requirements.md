@@ -18,8 +18,8 @@ funcionar desde el celular.
 - Como **personal**, quiero cambiar el precio de una añada, para corregirlo al momento.
 - Como **personal**, quiero dar de alta un vino con sus añadas, bodega, varietal,
   sección y códigos de barras, para que aparezca en la carta.
-- Como **personal**, quiero subir una foto de la botella (desde la computadora o
-  sacándola con el celular), para que el cliente la vea en el detalle.
+- Como **personal**, quiero subir una foto de la botella desde los archivos de la
+  computadora o del celular, para que el cliente la vea en el detalle.
 - Como **personal**, quiero recuperar mi contraseña por mail si me la olvido.
 - Como **encargado**, quiero dar de alta, cambiar el rol y dar de baja a las personas
   del personal desde el panel, para no depender de Supabase.
@@ -92,8 +92,9 @@ funcionar desde el celular.
 
 ### CA-7: Fotos
 - **Dado** un producto
-- **Cuando** el personal sube una foto (un archivo desde la computadora, o la cámara o
-  la galería del celular)
+- **Cuando** el personal sube una foto desde los archivos de la computadora o del
+  celular (no se ofrece sacar la foto con la cámara; en iPhone el sistema igual muestra
+  esa opción y una página web no la puede quitar)
 - **Entonces** la foto se guarda, se ve en el panel y en el detalle de la carta.
 - Y puede reemplazarla o quitarla.
 - Y se rechazan archivos que no son imágenes o que pesan más de 10 MB, con un mensaje
@@ -162,6 +163,8 @@ funcionar desde el celular.
 - **Mails:** se envían por SMTP con una cuenta de Google Workspace de `@lehonor.com`.
 
 ## Ideas para más adelante
+- Sugerir fotos de las etiquetas buscadas en internet por IA, para que el personal las
+  apruebe (va en la spec 7, junto con las descripciones).
 - Invitar personal desde el panel.
 - Historial de cambios de precio y stock.
 - Recortar y enderezar la foto antes de subirla.

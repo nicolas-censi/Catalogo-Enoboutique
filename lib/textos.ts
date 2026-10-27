@@ -102,6 +102,6 @@ export const textos = {
     subiendoFoto: "Subiendo foto…",
     fotoNoImagen: "Elegí una imagen (JPG, PNG, WebP o HEIC).",
     fotoMuyPesada: "La foto pesa más de 10 MB.",
-    fotoAyuda: "Opcional. Se achica sola antes de subirse.",
+    fotoAyuda: "Opcional. Elegí una imagen guardada en la computadora o el celular; se achica sola antes de subirse.",
   },
 } as const;
