@@ -8,7 +8,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   (sin sesión, no personal); cerrar sesión; e2e. (CA-1)
 - [x] T3 — `buscar_admin()` sobre todos los productos, por nombre, bodega, código de
   Tango y código de barras; tests de base de datos. (CA-2)
-- [ ] T4 — `/admin`: lista con estado (oculto, sin stock, a revisar), búsqueda y
+- [x] T4 — `/admin`: lista con estado (oculto, sin stock, a revisar), búsqueda y
   filtros en la URL; e2e. (CA-2)
 - [ ] T5 — Etiquetar el caché de la carta con `cacheTag` y helper `invalidarCarta()`;
   test en modo producción de que un cambio desde una acción se ve al instante. (CA-11)
