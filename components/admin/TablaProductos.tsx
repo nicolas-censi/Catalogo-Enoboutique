@@ -15,6 +15,7 @@ function Estado({ producto }: { producto: ProductoAdmin }) {
     <>
       {!producto.visible && <Etiqueta>{textos.admin.oculto}</Etiqueta>}
       {producto.anadas_en_stock === 0 && <Etiqueta>{textos.admin.sinStock}</Etiqueta>}
+      {!producto.foto_path && <Etiqueta>{textos.admin.sinFoto}</Etiqueta>}
       {(producto.anadas_a_revisar ?? 0) > 0 && <Etiqueta>{textos.admin.aRevisar(producto.anadas_a_revisar!)}</Etiqueta>}
     </>
   );

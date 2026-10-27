@@ -4,6 +4,7 @@ import { ConSesion } from "@/components/admin/ConSesion";
 import { FormularioProducto } from "@/components/admin/FormularioProducto";
 import { EditorAnadas } from "@/components/admin/EditorAnadas";
 import { EditorCodigos } from "@/components/admin/EditorCodigos";
+import { SubirFoto } from "@/components/admin/SubirFoto";
 import { leerFichaProducto, listarBodegas, listarSeccionesAdmin } from "@/lib/admin/productos";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
@@ -48,6 +49,8 @@ async function Ficha({ params }: { params: Promise<{ id: string }> }) {
         secciones={secciones}
         bodegas={bodegas}
       />
+      <h2 className="mt-8 mb-3 text-lg font-semibold text-destacado">{textos.admin.foto}</h2>
+      <SubirFoto productoId={producto.id} nombre={producto.nombre} fotoPath={producto.foto_path} />
       <h2 className="mt-8 text-lg font-semibold text-destacado">{textos.admin.anadas}</h2>
       <EditorAnadas productoId={producto.id} esVino={producto.tipo === "vino"} anadas={producto.anadas} />
       <h2 className="mt-8 mb-3 text-lg font-semibold text-destacado">{textos.admin.codigosBarras}</h2>

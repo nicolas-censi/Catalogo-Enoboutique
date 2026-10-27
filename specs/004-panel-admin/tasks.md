@@ -23,7 +23,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T10 — `EditorCodigos`: agregar y quitar códigos, mensaje si el código ya es de
   otro producto; e2e. (CA-6)
 - [x] T11 — Migración del bucket `fotos` con políticas; tests de base de datos. (CA-7)
-- [ ] T12 — `SubirFoto` con reducción a 1600 px/WebP, reemplazar y quitar; e2e que
+- [x] T12 — `SubirFoto` con reducción a 1600 px/WebP, reemplazar y quitar; e2e que
   sube una imagen y la ve en el detalle de la carta; aviso "Sin foto" en la lista y la
   ficha del panel. (CA-7)
 - [ ] T13 — Ocultar/mostrar producto y borrar con confirmación; e2e. (CA-8)

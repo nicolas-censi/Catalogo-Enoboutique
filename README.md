@@ -77,6 +77,8 @@ No hace falta Docker: el desarrollo y los tests usan el proyecto de Supabase en 
 - **Entornos con proxy** (como el entorno en la nube de Claude Code): Node no usa el
   proxy por defecto. Definí `NODE_USE_ENV_PROXY=1` en el entorno antes de correr los
   tests o los scripts `db:*`.
+  Además, `IMAGENES_SIN_OPTIMIZAR=1` hace que las fotos se sirvan sin pasar por el
+  optimizador de Next.js, que no puede salir por ese proxy (en Vercel no hace falta).
 
 ## Base de datos
 
