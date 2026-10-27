@@ -37,8 +37,9 @@ ya le permiten leer y modificar todo (CA-10 de la spec 001).
   español (Supabase → Authentication → Email Templates).
 - Ambos enlaces llevan a `/admin/restablecer`, donde la persona elige su contraseña
   (`auth.updateUser`).
-- **SMTP propio** configurado en Supabase (ver pregunta abierta 2): el servicio
-  incluido solo envía al equipo de Supabase. Los tests e2e no mandan mails reales:
+- **SMTP propio** configurado en Supabase con la cuenta de **Google Workspace** de
+  `@lehonor.com` (`smtp.gmail.com`, puerto 587, con una contraseña de aplicación de esa
+  cuenta). El servicio incluido en Supabase solo envía al equipo de Supabase. Los tests e2e no mandan mails reales:
   generan el enlace con `auth.admin.generateLink` y lo abren directo.
 - En Supabase → Authentication → URL Configuration se agregan como URLs de
   redirección: `http://localhost:3000`, los enlaces de Vercel (`*.vercel.app`) y el

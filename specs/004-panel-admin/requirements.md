@@ -1,6 +1,6 @@
 # 004 – Panel de administración (backoffice)
 
-**Estado:** Borrador
+**Estado:** Aprobada (2026-10-27)
 
 ## Objetivo
 Que el personal (encargado y vendedor) mantenga la carta sin tocar código ni la base de
@@ -125,7 +125,7 @@ funcionar desde el celular.
   formularios a una columna y los elementos tocables miden al menos 44×44 px.
 
 ### CA-12: Alta y baja de personal
-- **Dado** un **encargado** en el panel (ver la pregunta abierta 1)
+- **Dado** un **encargado** en el panel
 - **Cuando** abre "Personal"
 - **Entonces** ve la lista del personal (email, rol y si ya activó su cuenta).
 - Y puede **invitar** a alguien con su email y rol (encargado o vendedor): la persona
@@ -156,18 +156,8 @@ funcionar desde el celular.
 - **Alta de personal:** desde el panel (CA-12).
 - **Borrar productos:** con confirmación; lo borrado se puede volver a crear.
 - **Cambios al instante:** sí (CA-11).
-
-## Preguntas abiertas
-- [ ] 1. **¿Quién gestiona el personal?** Propuesta: **solo el encargado** puede
-  invitar, cambiar roles y dar de baja (si no, un vendedor podría dar de baja al
-  encargado). Para todo lo demás, encargado y vendedor siguen pudiendo lo mismo.
-- [ ] 2. **Mails de invitación y de contraseña:** el servicio de mail incluido en
-  Supabase solo manda a los emails del equipo de Supabase y unos pocos por hora: no
-  sirve para el personal real. Hace falta conectar un servicio de envío a Supabase
-  (SMTP). ¿Lehonor ya tiene correo con dominio propio (por ejemplo Google Workspace con
-  `@lehonor.com`)? Propuesta: usar **Resend** (gratis hasta 3.000 mails por mes),
-  enviando desde `no-responder@lehonor.com`; requiere agregar 3 registros en el DNS de
-  `lehonor.com`, que manejan ustedes. Te guío paso a paso cuando lleguemos a esa tarea.
+- **Gestión del personal:** solo el encargado invita, cambia roles y da de baja.
+- **Mails:** se envían por SMTP con una cuenta de Google Workspace de `@lehonor.com`.
 
 ## Ideas para más adelante
 - Invitar personal desde el panel.
