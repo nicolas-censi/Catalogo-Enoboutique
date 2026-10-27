@@ -17,5 +17,6 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T8 — Cerrar y salir apagan la cámara; e2e que verifica la pista `ended`. (CA-5)
 - [x] T9 — Carga diferida y privacidad: e2e de pedidos de red (sin archivos del lector
   en la carta, sin imágenes enviadas). (CA-6, CA-7)
-- [ ] T10 — Accesibilidad: anuncios, nombres y axe; prueba manual en iPhone y Android
-  reales. (CA-8)
+- [x] T10 — Accesibilidad: anuncios, nombres y axe (automatizado). (CA-8)
+- [ ] T11 — Prueba manual en un iPhone y un Android reales, con botellas de verdad,
+  desde el enlace de Vercel. (CA-2)
