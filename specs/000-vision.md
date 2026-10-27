@@ -26,7 +26,8 @@ y una descripción. El personal administra todo desde un panel simple, sin tocar
 4. Panel admin con login: alta, edición, fotos, ocultar/mostrar
 5. Orden visual de secciones y vinos (arrastrar y soltar)
 6. Identidad de marca y textos editables de la carta
-7. Descripciones sugeridas por IA con búsqueda web → borrador → aprobación humana
+7. Sugerencias por IA con búsqueda web → borrador → aprobación humana: descripciones
+   y fotos de las etiquetas (priorizando fotos oficiales de bodegas o distribuidores)
 8. Importación masiva desde CSV/Excel de Tango (agrupando añadas por nombre) y
    actualización masiva de precios por código de artículo
 9. Deploy, dominio y QR imprimible

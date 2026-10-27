@@ -1,0 +1,46 @@
+# 004 – Tareas
+
+Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un criterio (CA-n).
+
+- [x] T1 — Ayudante e2e para iniciar sesión como personal (crea el usuario, guarda la
+  sesión) y `proxy.ts` que refresca la sesión en `/admin/*`. (CA-1)
+- [x] T2 — `/admin/ingresar` con login, errores y redirección; protección de `/admin/*`
+  (sin sesión, no personal); cerrar sesión; e2e. (CA-1)
+- [x] T3 — `buscar_admin()` sobre todos los productos, por nombre, bodega, código de
+  Tango y código de barras; tests de base de datos. (CA-2)
+- [x] T4 — `/admin`: lista con estado (oculto, sin stock, a revisar), búsqueda y
+  filtros en la URL; e2e. (CA-2)
+- [x] T5 — Etiquetar el caché de la carta con `cacheTag` y helper `invalidarCarta()`;
+  test en modo producción de que un cambio desde una acción se ve al instante. (CA-11)
+- [x] T6 — `InterruptorStock` optimista y su acción; e2e que lo cambia y verifica la
+  carta pública. (CA-3, CA-11)
+- [x] T7 — Validaciones y traducción de errores de Postgres a mensajes; tests
+  unitarios. (CA-4, CA-5, CA-6)
+- [x] T8 — Alta y edición de producto con `SelectorBodega`; e2e con errores de campos
+  obligatorios. (CA-4)
+- [x] T9 — `EditorAnadas`: agregar, editar (incluido pasar "sin especificar" a "con
+  año"), borrar; mensajes de reglas; e2e. (CA-5)
+- [x] T10 — `EditorCodigos`: agregar y quitar códigos, mensaje si el código ya es de
+  otro producto; e2e. (CA-6)
+- [x] T11 — Migración del bucket `fotos` con políticas; tests de base de datos. (CA-7)
+- [x] T12 — `SubirFoto` con reducción a 1600 px/WebP, reemplazar y quitar; e2e que
+  sube una imagen y la ve en el detalle de la carta; aviso "Sin foto" en la lista y la
+  ficha del panel. (CA-7)
+- [x] T13 — Ocultar/mostrar producto y borrar con confirmación; e2e. (CA-8)
+- [x] T14 — `/admin/secciones`: crear al final, renombrar, ocultar/mostrar, no borrar
+  con productos; e2e. (CA-9)
+- [x] T15 — Contraseña olvidada: `/admin/olvide` y `/admin/restablecer`; e2e con el
+  enlace generado por la API. (CA-1b)
+- [x] T16 — Migración `es_encargado()`, políticas y trigger de `personal` (nadie se quita
+  el rol ni se da de baja a sí mismo, así no queda sin encargados); tests de base de
+  datos. (CA-12)
+- [x] T17 — `/admin/personal`: lista con estado de activación, invitar, cambiar rol y
+  dar de baja con la API de administración solo en el servidor; e2e. (CA-12)
+- [x] T18 — SMTP de Google Workspace (`@lehonor.com`) en Supabase y plantillas de mail
+  en español (`npm run db:mails`). Prueba manual con mail real: "Olvidé mi contraseña"
+  llegó y permitió entrar (2026-10-27). (CA-1b, CA-12)
+- [x] T19 — Diseño para computadora (tabla, teclado) y adaptación a celular;
+  accesibilidad (axe) y tamaños en todas las pantallas del panel, en ambos tamaños.
+  (CA-10)
+- [x] T20 — README: cómo entra el personal, alta desde el panel y configuración de
+  mails; verificación final. (CA-1, CA-12)

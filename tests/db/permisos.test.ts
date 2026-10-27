@@ -140,14 +140,15 @@ describe.each<Rol>(["encargado", "vendedor"])("CA-10: personal con rol %s", (rol
     expect((await cliente.from("anadas").insert(presentacion(2))).error?.code).toBe("23514");
   });
 
-  it("puede leer la tabla de personal, pero no darse de alta ni cambiar roles", async () => {
+  it("puede leer la tabla de personal; solo el encargado da de alta (spec 004)", async () => {
     const lectura = await cliente.from("personal").select("rol");
     expect(lectura.error).toBeNull();
     expect(lectura.data!.length).toBeGreaterThan(0);
 
     const { usuario: otro } = await crearUsuario();
-    const alta = await cliente.from("personal").insert({ user_id: otro.id, rol: "encargado" });
-    expect(alta.error?.code).toBe("42501");
+    const alta = await cliente.from("personal").insert({ user_id: otro.id, rol: "vendedor" });
+    if (rol === "encargado") expect(alta.error).toBeNull();
+    else expect(alta.error?.code).toBe("42501");
   });
 });
 

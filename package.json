@@ -13,14 +13,16 @@
     "test:e2e:produccion": "playwright test --config playwright.produccion.config.ts",
     "db:migrar": "node scripts/migrar.mjs",
     "db:tipos": "supabase gen types typescript --project-id \"$SUPABASE_PROJECT_REF\" --schema public > lib/tipos-db.ts",
-    "db:seed": "node scripts/seed.mjs"
+    "db:seed": "node scripts/seed.mjs",
+    "db:mails": "node scripts/configurar-mails.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.118.0",
     "next": "16.4.3",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",

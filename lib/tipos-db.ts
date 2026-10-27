@@ -66,6 +66,13 @@ export type Database = {
             referencedRelation: "productos"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "anadas_producto_id_fkey"
+            columns: ["producto_id"]
+            isOneToOne: false
+            referencedRelation: "productos_admin"
+            referencedColumns: ["id"]
+          },
         ]
       }
       bodegas: {
@@ -118,6 +125,13 @@ export type Database = {
             columns: ["producto_id"]
             isOneToOne: false
             referencedRelation: "productos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "codigos_barras_producto_id_fkey"
+            columns: ["producto_id"]
+            isOneToOne: false
+            referencedRelation: "productos_admin"
             referencedColumns: ["id"]
           },
         ]
@@ -271,8 +285,54 @@ export type Database = {
         }
         Relationships: []
       }
+      productos_admin: {
+        Row: {
+          anadas_a_revisar: number | null
+          anadas_en_stock: number | null
+          bodega_nombre: string | null
+          cantidad_anadas: number | null
+          foto_path: string | null
+          id: string | null
+          nombre: string | null
+          seccion_id: string | null
+          seccion_nombre: string | null
+          tipo: Database["public"]["Enums"]["tipo_producto"] | null
+          varietal: string | null
+          visible: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "productos_seccion_id_fkey"
+            columns: ["seccion_id"]
+            isOneToOne: false
+            referencedRelation: "carta_publica"
+            referencedColumns: ["seccion_id"]
+          },
+          {
+            foreignKeyName: "productos_seccion_id_fkey"
+            columns: ["seccion_id"]
+            isOneToOne: false
+            referencedRelation: "carta_secciones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "productos_seccion_id_fkey"
+            columns: ["seccion_id"]
+            isOneToOne: false
+            referencedRelation: "secciones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
+      buscar_admin: {
+        Args: { limite?: number; texto: string }
+        Returns: {
+          producto_id: string
+          relevancia: number
+        }[]
+      }
       buscar_carta: {
         Args: { limite?: number; texto: string }
         Returns: {
