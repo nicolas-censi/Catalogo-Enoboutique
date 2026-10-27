@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { Encabezado } from "@/components/Encabezado";
 import { TarjetaProducto } from "@/components/TarjetaProducto";
 import { Volver } from "@/components/Volver";
@@ -25,15 +24,17 @@ async function ContenidoSeccion({ params }: { params: Promise<{ id: string }> })
   );
 }
 
+// La página se arma completa en el servidor antes de enviarse (sin Suspense), para
+// que se vea aunque el celular no ejecute JavaScript (CA-9).
+export const instant = false;
+
 export default function PaginaSeccion({ params }: PageProps<"/seccion/[id]">) {
   return (
     <>
       <Encabezado />
       <main className="mx-auto max-w-xl px-4 pb-10">
         <Volver />
-        <Suspense fallback={<div className="mt-4 h-64 animate-pulse rounded bg-dorado/10" />}>
-          <ContenidoSeccion params={params} />
-        </Suspense>
+        <ContenidoSeccion params={params} />
       </main>
     </>
   );

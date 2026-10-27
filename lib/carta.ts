@@ -104,3 +104,11 @@ export async function leerProducto(cliente: Cliente, id: string): Promise<Produc
   if (error) throw error;
   return agruparPorProducto(data)[0] ?? null;
 }
+
+/** Búsqueda tolerante a errores (o por código de barras). Productos por relevancia. */
+export async function buscarEnCarta(cliente: Cliente, texto: string): Promise<Producto[]> {
+  if (texto.trim().length < 2) return [];
+  const { data, error } = await cliente.rpc("buscar_carta", { texto });
+  if (error) throw error;
+  return agruparPorProducto(data);
+}

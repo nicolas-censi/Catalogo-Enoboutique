@@ -48,8 +48,12 @@ Las páginas son Server Components. Con `cacheComponents: true` (Next.js 16), la
 lecturas de la carta se cachean en `lib/carta-cache.ts` con `"use cache"` y un
 `cacheLife` propio de `{ stale: 60, revalidate: 60, expire: 3600 }` (CA-10). No se usa
 el perfil `minutes` porque su `stale` de 5 minutos dejaría al celular mostrar datos
-viejos más de 1 minuto. Las lecturas se envuelven en `<Suspense>` para que la
-navegación sea instantánea. La carta usa un cliente de Supabase sin cookies
+viejos más de 1 minuto. El inicio (sin datos de la URL) va
+prearmado y su lista de secciones se envuelve en `<Suspense>`. Las páginas que leen la
+URL (`/seccion/[id]`, `/producto/[id]`, `/buscar`) **no** usan `<Suspense>` y exportan
+`instant = false`: se arman completas en el servidor antes de enviarse. Con
+`<Suspense>`, el contenido llega en streaming y lo reemplaza un script, así que sin
+JavaScript solo se vería el marcador de carga (CA-9). La carta usa un cliente de Supabase sin cookies
 (`lib/supabase/publico.ts`) para poder cachearse.
 
 ## Componentes

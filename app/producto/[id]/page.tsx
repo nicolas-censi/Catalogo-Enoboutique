@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense } from "react";
 import { Encabezado } from "@/components/Encabezado";
 import { ListaAnadas } from "@/components/ListaAnadas";
 import { subtituloProducto } from "@/components/TarjetaProducto";
@@ -54,14 +53,16 @@ async function DetalleProducto({ params }: { params: Promise<{ id: string }> }) 
   );
 }
 
+// La página se arma completa en el servidor antes de enviarse (sin Suspense), para
+// que se vea aunque el celular no ejecute JavaScript (CA-9).
+export const instant = false;
+
 export default function PaginaProducto({ params }: PageProps<"/producto/[id]">) {
   return (
     <>
       <Encabezado />
       <main className="mx-auto max-w-xl px-4 pb-10">
-        <Suspense fallback={<div className="mt-4 h-64 animate-pulse rounded bg-dorado/10" />}>
-          <DetalleProducto params={params} />
-        </Suspense>
+        <DetalleProducto params={params} />
       </main>
     </>
   );
