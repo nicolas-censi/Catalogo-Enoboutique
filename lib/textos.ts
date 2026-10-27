@@ -7,4 +7,6 @@ export const textos = {
   buscadorAyuda: "Vino, bodega, varietal o código",
   buscadorBoton: "Buscar",
   secciones: "Secciones",
+  volverACarta: "Volver a la carta",
+  seccionNoEncontrada: "No encontramos esta sección.",
 } as const;
