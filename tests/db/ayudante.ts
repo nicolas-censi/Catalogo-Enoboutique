@@ -3,6 +3,7 @@
 import { randomUUID } from "node:crypto";
 import { createServerClient } from "@supabase/ssr";
 import { createClient, type SupabaseClient, type User } from "@supabase/supabase-js";
+import { aEmailInterno, contrasenaInterna } from "../../lib/admin/usuario";
 
 function variable(nombre: string): string {
   const valor = process.env[nombre];
@@ -36,11 +37,13 @@ export type Rol = "encargado" | "vendedor";
 export async function crearUsuario(
   rol?: Rol,
 ): Promise<{ cliente: SupabaseClient; usuario: User }> {
-  const email = `${prefijo}-${usuariosCreados.length + 1}@example.com`;
+  // Como las cuentas del panel (spec 012): usuario con email interno y contraseña interna.
+  const nombreUsuario = `${prefijo}-${usuariosCreados.length + 1}`;
+  const email = aEmailInterno(nombreUsuario);
   const password = randomUUID();
   const { data, error } = await clienteAdmin().auth.admin.createUser({
     email,
-    password,
+    password: contrasenaInterna(password),
     email_confirm: true,
   });
   if (error) throw error;
@@ -52,7 +55,7 @@ export async function crearUsuario(
   }
 
   const cliente = clienteAnon();
-  const sesion = await cliente.auth.signInWithPassword({ email, password });
+  const sesion = await cliente.auth.signInWithPassword({ email, password: contrasenaInterna(password) });
   if (sesion.error) throw sesion.error;
   return { cliente, usuario: data.user };
 }
@@ -66,12 +69,14 @@ export type CookieSesion = { name: string; value: string };
  */
 export async function crearUsuarioConSesion(
   rol?: Rol,
-): Promise<{ usuario: User; email: string; password: string; cookies: CookieSesion[] }> {
-  const email = `${prefijo}-${usuariosCreados.length + 1}@example.com`;
+): Promise<{ usuario: User; nombreUsuario: string; email: string; password: string; cookies: CookieSesion[] }> {
+  // Como las cuentas del panel (spec 012): usuario con email interno y contraseña interna.
+  const nombreUsuario = `${prefijo}-${usuariosCreados.length + 1}`;
+  const email = aEmailInterno(nombreUsuario);
   const password = randomUUID();
   const { data, error } = await clienteAdmin().auth.admin.createUser({
     email,
-    password,
+    password: contrasenaInterna(password),
     email_confirm: true,
   });
   if (error) throw error;
@@ -88,9 +93,9 @@ export async function crearUsuarioConSesion(
       setAll: (lista) => lista.forEach(({ name, value }) => frasco.set(name, value)),
     },
   });
-  const sesion = await cliente.auth.signInWithPassword({ email, password });
+  const sesion = await cliente.auth.signInWithPassword({ email, password: contrasenaInterna(password) });
   if (sesion.error) throw sesion.error;
-  return { usuario: data.user, email, password, cookies: [...frasco].map(([name, value]) => ({ name, value })) };
+  return { usuario: data.user, nombreUsuario, email, password, cookies: [...frasco].map(([name, value]) => ({ name, value })) };
 }
 
 export async function limpiarUsuarios(): Promise<void> {

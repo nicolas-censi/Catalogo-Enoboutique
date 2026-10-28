@@ -1,33 +1,13 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState } from "react";
-import { guardarContrasena, pedirEnlace, type EstadoContrasena } from "@/app/admin/acciones-contrasena";
+import { guardarContrasena, type EstadoContrasena } from "@/app/admin/acciones-contrasena";
 import { textos } from "@/lib/textos";
 
 const t = textos.admin;
 const control =
   "min-h-11 w-full rounded-md border border-dorado/60 bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-dorado aria-[invalid=true]:border-destacado";
 const boton = "min-h-11 rounded-md bg-boton px-5 font-semibold text-boton-texto disabled:opacity-60";
-
-export function FormularioPedirEnlace() {
-  const [estado, accion, enviando] = useActionState(pedirEnlace, { enviado: false });
-  return (
-    <form action={accion} className="mt-6 flex flex-col gap-4">
-      <div className="flex flex-col gap-1">
-        <label htmlFor="olvide-email">{t.email}</label>
-        <input id="olvide-email" type="email" name="email" required autoComplete="username" className={control} />
-      </div>
-      <button type="submit" disabled={enviando} className={boton}>
-        {t.mandarEnlace}
-      </button>
-      {estado.enviado && <p role="status">{t.enlaceEnviado}</p>}
-      <Link href="/admin/ingresar" className="inline-flex min-h-11 items-center text-titulo">
-        {t.volverAIngresar}
-      </Link>
-    </form>
-  );
-}
 
 export function FormularioElegirContrasena() {
   const [estado, accion, enviando] = useActionState<EstadoContrasena, FormData>(guardarContrasena, {
