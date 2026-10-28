@@ -1,6 +1,6 @@
 # 003 – Escaneo de código de barras con la cámara
 
-**Estado:** Aprobada (2026-10-28)
+**Estado:** Implementada (2026-10-28)
 
 ## Objetivo
 Que el cliente, en el local, apunte la cámara del celular al código de barras de la

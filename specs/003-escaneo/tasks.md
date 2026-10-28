@@ -21,5 +21,5 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T12 — Alta resolución y enfoque continuo. (CA-9)
 - [x] T13 — Se descarta la linterna; lectura cada 100 ms, indicación para encuadrar y
   e2e con un código chico. (CA-9)
-- [ ] T11 — Prueba manual en un iPhone y un Android reales, con botellas de verdad,
+- [x] T11 — Prueba manual en un iPhone y un Android reales, con botellas de verdad,
   desde el enlace de Vercel. (CA-2)
