@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { codigoValido, mensajeErrorCamara, variantesCodigo } from "@/lib/escaneo";
 import { crearLector, type Lector } from "@/lib/lector-codigos";
+import { camaraConLinterna, navegadorSoportaLinterna, tieneLinterna } from "@/lib/linterna";
 import { crearClienteNavegador } from "@/lib/supabase/client";
 import { textos } from "@/lib/textos";
 
@@ -12,7 +13,9 @@ const t = textos.escaner;
 const CADA_MS = 200;
 
 // Capacidades que la cámara puede informar y TypeScript todavía no tipa.
-type Capacidades = MediaTrackCapabilities & { torch?: boolean; focusMode?: string[] };
+type Capacidades = MediaTrackCapabilities & { focusMode?: string[] };
+// Cámara trasera en alta resolución: los códigos chicos se leen mejor (CA-10).
+const VIDEO: MediaTrackConstraints = { facingMode: { ideal: "environment" }, width: { ideal: 1920 }, height: { ideal: 1080 } };
 type Avanzadas = MediaTrackConstraintSet & { torch?: boolean; focusMode?: string };
 const avanzadas = (r: Avanzadas): MediaTrackConstraints => ({ advanced: [r as MediaTrackConstraintSet] });
 
@@ -41,6 +44,7 @@ export function Escaner() {
   const [estado, setEstado] = useState<Estado>({ tipo: "iniciando" });
   const [intento, setIntento] = useState(0);
   const [linterna, setLinterna] = useState<{ disponible: boolean; prendida: boolean }>({ disponible: false, prendida: false });
+  const [avisoLinterna, setAvisoLinterna] = useState<string | null>(null);
 
   const apagarCamara = useCallback(() => {
     // Al apagar la cámara se apaga también la linterna.
@@ -50,14 +54,29 @@ export function Escaner() {
   }, []);
 
   async function alternarLinterna() {
-    const pista = flujo.current?.getVideoTracks()[0];
+    let pista = flujo.current?.getVideoTracks()[0];
     if (!pista) return;
     const prender = !linterna.prendida;
+    if (prender && !tieneLinterna(pista)) {
+      // La cámara abierta no tiene flash: se busca otra trasera que sí lo tenga.
+      const otra = await camaraConLinterna(pista.getSettings().deviceId, VIDEO);
+      if (!otra) {
+        setLinterna({ disponible: false, prendida: false });
+        setAvisoLinterna(t.sinLinterna);
+        return;
+      }
+      flujo.current?.getTracks().forEach((p) => p.stop());
+      flujo.current = otra;
+      video.current!.srcObject = otra;
+      await video.current!.play().catch(() => {});
+      pista = otra.getVideoTracks()[0];
+    }
     try {
       await pista.applyConstraints(avanzadas({ torch: prender }));
       setLinterna({ disponible: true, prendida: prender });
     } catch {
       setLinterna({ disponible: false, prendida: false });
+      setAvisoLinterna(t.sinLinterna);
     }
   }
 
@@ -100,11 +119,7 @@ export function Escaner() {
         // Primero el lector y después la cámara: si el lector no carga, la cámara ni se
         // enciende; y si algo falla después, se apaga (ver catch).
         lector = await crearLector();
-        // Cámara trasera en alta resolución: los códigos chicos se leen mejor (CA-10).
-        const camara = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: { ideal: "environment" }, width: { ideal: 1920 }, height: { ideal: 1080 } },
-          audio: false,
-        });
+        const camara = await navigator.mediaDevices.getUserMedia({ video: VIDEO, audio: false });
         flujo.current = camara;
         if (!activo) return apagarCamara();
         const pista = camara.getVideoTracks()[0];
@@ -112,7 +127,9 @@ export function Escaner() {
         if (capacidades.focusMode?.includes("continuous")) {
           pista.applyConstraints(avanzadas({ focusMode: "continuous" })).catch(() => {});
         }
-        setLinterna({ disponible: capacidades.torch === true, prendida: false });
+        // Se muestra el botón si la cámara ya informa linterna o si el navegador la soporta
+        // (Chrome la informa tarde, o abre una cámara sin flash: se resuelve al tocar).
+        setLinterna({ disponible: tieneLinterna(pista) || navegadorSoportaLinterna(), prendida: false });
         video.current!.srcObject = camara;
         await video.current!.play();
         setEstado({ tipo: "escaneando" });
@@ -157,6 +174,7 @@ export function Escaner() {
         {mensaje}
       </p>
       {estado.tipo === "no-encontrado" && <p className="text-texto-suave">{t.codigoLeido(estado.codigo)}</p>}
+      {avisoLinterna && estado.tipo === "escaneando" && <p className="text-sm text-texto-suave">{avisoLinterna}</p>}
       {estado.tipo === "error" && estado.codigo && (
         <p className="text-sm text-texto-suave">{t.codigoProblema(estado.codigo)}</p>
       )}
