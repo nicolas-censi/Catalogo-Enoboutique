@@ -22,3 +22,6 @@ export async function listarSeccionesPanel(cliente: Cliente, padre: string | nul
       subsecciones: hijas.get(s.id) ?? 0,
     }));
 }
+
+/** "Cava › Joyitas": cómo se nombra una subsección en el panel. */
+export const nombreConSeccion = (seccion: string, subseccion: string) => `${seccion} › ${subseccion}`;

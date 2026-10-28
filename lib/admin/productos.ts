@@ -40,7 +40,8 @@ export async function listarProductosAdmin(
 
   let consulta = cliente.from("productos_admin").select("*", { count: "exact" });
   if (ordenBusqueda) consulta = consulta.in("id", ordenBusqueda);
-  if (filtros.seccion) consulta = consulta.eq("seccion_id", filtros.seccion);
+  // Una sección trae también los productos de sus subsecciones (spec 011, CA-6).
+  if (filtros.seccion) consulta = consulta.or(`seccion_id.eq.${filtros.seccion},seccion_padre_id.eq.${filtros.seccion}`);
   if (filtros.estado === "ocultos") consulta = consulta.eq("visible", false);
   if (filtros.estado === "sin-stock") consulta = consulta.eq("anadas_en_stock", 0);
   if (filtros.estado === "a-revisar") consulta = consulta.gt("anadas_a_revisar", 0);
@@ -61,10 +62,19 @@ export async function listarProductosAdmin(
   return { productos: data, total: count ?? data.length };
 }
 
-export async function listarSeccionesAdmin(cliente: Cliente) {
-  const { data, error } = await cliente.from("secciones").select("id, nombre, visible").order("orden");
+/** Secciones de primer nivel, cada una con sus subsecciones (spec 011), en orden. */
+export type SeccionConSubsecciones = { id: string; nombre: string; subsecciones: { id: string; nombre: string }[] };
+
+export async function listarSeccionesAdmin(cliente: Cliente): Promise<SeccionConSubsecciones[]> {
+  const { data, error } = await cliente.from("secciones").select("id, nombre, seccion_padre_id").order("orden");
   if (error) throw error;
-  return data;
+  return data
+    .filter((s) => !s.seccion_padre_id)
+    .map((s) => ({
+      id: s.id,
+      nombre: s.nombre,
+      subsecciones: data.filter((h) => h.seccion_padre_id === s.id).map((h) => ({ id: h.id, nombre: h.nombre })),
+    }));
 }
 
 export type AnadaAdmin = Database["public"]["Tables"]["anadas"]["Row"];
