@@ -15,11 +15,16 @@ página explica que hace falta JavaScript para usar la cámara y ofrece escribir
 número, que va a `/buscar?q=<número>`).
 
 ## Componentes
-- `BotonEscanear`: enlace con ícono junto al buscador del inicio y en "sin resultados".
+- `BotonEscanear`: enlace circular (44×44 px o más) al costado del buscador del inicio,
+  con un ícono SVG de escáner de código de barras en dorado y `aria-label="Escanear
+  código"`.
 - `Escaner` (Client Component, cargado con `next/dynamic` solo en `/escanear`):
-  1. Pide la cámara trasera con `getUserMedia({ video: { facingMode: "environment" } })`.
-  2. Muestra el video con una guía para encuadrar.
-  3. Lee cuadros del video ~5 veces por segundo con `BarcodeDetector`:
+  1. Pide la cámara trasera en alta resolución con `getUserMedia({ video: { facingMode:
+     { ideal: "environment" }, width: { ideal: 1920 }, height: { ideal: 1080 } } })` y
+     enfoque continuo si la cámara lo permite (CA-9).
+  2. Muestra el video con una guía para encuadrar y la indicación de alejar el celular
+     si se ve borroso.
+  3. Lee cuadros del video 10 veces por segundo con `BarcodeDetector`:
      - nativo si el navegador lo trae y soporta los formatos;
      - si no, el ponyfill `barcode-detector` (ZXing compilado a WebAssembly). El
        archivo `.wasm` se copia a `public/` y se sirve desde el propio sitio (no desde un

@@ -1,6 +1,6 @@
 # 003 – Escaneo de código de barras con la cámara
 
-**Estado:** Borrador
+**Estado:** Implementada (2026-10-28)
 
 ## Objetivo
 Que el cliente, en el local, apunte la cámara del celular al código de barras de la
@@ -20,7 +20,9 @@ disponibles y sus precios, sin tener que escribir nada.
 ### CA-1: Botón para escanear
 - **Dado** un cliente en el inicio de la carta, en un celular
 - **Cuando** mira el buscador
-- **Entonces** ve un botón "Escanear código" junto al buscador.
+- **Entonces** ve, al costado del buscador, un botón circular con un ícono de escáner
+  de código de barras, cuyo nombre accesible es "Escanear código".
+- Y el botón aparece solo en el inicio.
 
 ### CA-2: Escanear y ver el producto
 - **Dado** un código de barras asociado a un producto disponible (por ejemplo, el de
@@ -70,22 +72,31 @@ disponibles y sus precios, sin tener que escribir nada.
 - **Entonces** los botones tienen nombre, el resultado se anuncia ("Encontramos Rutini
   Malbec") y axe no reporta errores graves.
 
+### CA-9: Lectura fácil con la luz del local
+- **Dado** el escáner abierto
+- **Cuando** se abre la cámara
+- **Entonces** se pide la cámara trasera en alta resolución (hasta 1920×1080) y con
+  enfoque automático continuo cuando el celular lo permite, se intenta leer cada 100 ms
+  y se muestra la indicación "Poné el código dentro del recuadro. Si se ve borroso, alejá
+  un poco el celular."
+- Y un código chico dentro de la imagen se lee igual.
+- Y no hay botones extra: solo el lector con la cámara.
+
 ## Fuera de alcance
 - Escanear el QR de la mesa o del local (el QR que abre la carta lo lee la cámara del
   celular por su cuenta; spec 9).
 - Escanear desde el panel de administración para cargar códigos (se puede sumar más
   adelante).
-- Linterna, zoom o elegir otra cámara.
+- Zoom, elegir otra cámara o prender la linterna.
 
-## Preguntas abiertas
-- [ ] 1. **Librería nueva:** el navegador de los iPhone (Safari) no trae un lector de
-  códigos de barras. Propuesta: usar el lector del navegador cuando existe (Chrome en
-  Android) y, si no, la librería `barcode-detector` (código abierto, basada en ZXing),
-  servida desde nuestro propio sitio y cargada solo al abrir el escáner. Es una
-  dependencia nueva del stack: ¿la aprobás?
-- [ ] 2. **Dónde va el botón:** propuesta: en el inicio, junto al buscador, y en la
-  página de resultados "sin resultados". ¿Lo querés también en la página de cada
-  sección?
+## Decisiones tomadas en la revisión
+- **Librería:** aprobada. Se usa el lector del navegador cuando existe y, si no,
+  `barcode-detector` (ZXing), servida desde el propio sitio.
+- **Botón:** solo en el inicio, al costado del buscador, circular y con un ícono de
+  escáner.
+- **Linterna (prueba en Android real):** se probó un botón para prender el flash y no
+  funcionó de forma confiable desde el navegador. Se descartó: queda solo el lector con
+  la cámara, pensado para que capte fácil el código (CA-9).
 
 ## Ideas para más adelante
 - Escanear desde el panel para cargar el código de barras de un producto.

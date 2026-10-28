@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { BotonEscanear } from "@/components/BotonEscanear";
 import { FormularioBusqueda } from "@/components/FormularioBusqueda";
 import { ResultadosBusqueda } from "@/components/ResultadosBusqueda";
 import { buscarEnCarta, type Producto } from "@/lib/carta";
@@ -36,7 +37,7 @@ export function Buscador() {
 
   return (
     <>
-      <FormularioBusqueda onChange={(evento) => setTexto(evento.target.value)} />
+      <FormularioBusqueda onChange={(evento) => setTexto(evento.target.value)} accesorio={<BotonEscanear />} />
       {/* Solo se muestran los resultados del texto actual (al borrar, desaparecen). */}
       {resultado && resultado.busqueda === texto.trim() && (
         <ResultadosBusqueda busqueda={resultado.busqueda} productos={resultado.productos} />

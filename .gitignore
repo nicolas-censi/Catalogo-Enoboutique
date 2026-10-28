@@ -48,3 +48,6 @@ next-env.d.ts
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# lector de códigos (se copia desde node_modules al levantar o armar la app)
+/public/zxing/
