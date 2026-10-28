@@ -7,8 +7,8 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   tests de base. (CA-2, CA-3)
 - [x] T2 — Funciones `ordenar_secciones` y `ordenar_destacados` con sus validaciones y
   permisos; tests de base. (CA-1, CA-3)
-- [ ] T3 — Orden de la sección en la carta (destacados, bodega, precio, nombre);
-  unit + e2e con datos de prueba. (CA-2)
+- [x] T3 — Orden de la sección en la carta (destacados, bodega, precio, nombre);
+  test de `leerSeccion` contra la base con datos de prueba. (CA-2)
 - [ ] T4 — `ListaOrdenable` con dnd-kit: mouse, teclado, anuncios en español y vuelta
   atrás si falla; e2e. (CA-1, CA-4)
 - [ ] T5 — Secciones arrastrables en `/admin/secciones` con guardado automático; e2e

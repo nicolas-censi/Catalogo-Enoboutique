@@ -93,8 +93,13 @@ export async function leerSeccion(
     .from("carta_publica")
     .select("*")
     .eq("seccion_id", id)
-    .order("producto_orden")
-    .order("producto_nombre");
+    // Destacados primero; el resto por bodega y del más caro al más barato (spec 005).
+    .order("producto_orden", { nullsFirst: false })
+    .order("bodega_orden", { nullsFirst: false })
+    .order("producto_precio_min", { ascending: false, nullsFirst: false })
+    .order("producto_nombre")
+    .order("producto_id")
+    .order("anio", { ascending: false, nullsFirst: false });
   if (error) throw error;
   if (data.length === 0) return null;
   return { id, nombre: data[0].seccion_nombre!, productos: agruparPorProducto(data) };
