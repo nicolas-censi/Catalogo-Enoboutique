@@ -2,7 +2,7 @@
 
 Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un criterio (CA-n).
 
-- [ ] T1 — Migración: `productos.orden` opcional (destacados), trigger al cambiar de
+- [x] T1 — Migración: `productos.orden` opcional (destacados), trigger al cambiar de
   sección, `producto_precio_min` y `bodega_orden` en `carta_publica`; seed y tipos;
   tests de base. (CA-2, CA-3)
 - [ ] T2 — Funciones `ordenar_secciones` y `ordenar_destacados` con sus validaciones y

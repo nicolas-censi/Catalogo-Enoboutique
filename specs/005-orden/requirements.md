@@ -1,6 +1,6 @@
 # 005 – Orden de la carta
 
-**Estado:** Borrador
+**Estado:** Aprobada (2026-10-28)
 
 ## Objetivo
 Que el personal decida en qué orden aparecen las secciones de la carta y qué productos
@@ -62,13 +62,11 @@ resto de cada sección se ordena solo, por bodega y por precio.
 - Ordenar las añadas: siguen de la más nueva a la más vieja (spec 1).
 - El orden de los resultados de búsqueda: siguen por relevancia (spec 2).
 
-## Preguntas abiertas
-- [ ] ¿Hay un máximo de destacados por sección? Propuesta: sin máximo.
-
 ## Decisiones tomadas en la revisión
 - **Productos:** destacados ordenados a mano arriba; el resto por bodega (A-Z) y,
   dentro de cada bodega, del más caro al más barato.
 - **Secciones:** se ordenan arrastrando desde la pantalla Secciones.
+- **Destacados:** sin máximo por sección.
 
 ## Ideas para más adelante
 - Mostrar un distintivo "Recomendado" en los destacados de la carta.

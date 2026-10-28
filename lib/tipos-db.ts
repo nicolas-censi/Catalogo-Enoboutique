@@ -81,18 +81,21 @@ export type Database = {
           creado_en: string
           id: string
           nombre: string
+          nombre_orden: string | null
         }
         Insert: {
           actualizado_en?: string
           creado_en?: string
           id?: string
           nombre: string
+          nombre_orden?: string | null
         }
         Update: {
           actualizado_en?: string
           creado_en?: string
           id?: string
           nombre?: string
+          nombre_orden?: string | null
         }
         Relationships: []
       }
@@ -163,7 +166,7 @@ export type Database = {
           foto_path: string | null
           id: string
           nombre: string
-          orden: number
+          orden: number | null
           seccion_id: string | null
           tipo: Database["public"]["Enums"]["tipo_producto"]
           varietal: string | null
@@ -177,7 +180,7 @@ export type Database = {
           foto_path?: string | null
           id?: string
           nombre: string
-          orden?: number
+          orden?: number | null
           seccion_id?: string | null
           tipo: Database["public"]["Enums"]["tipo_producto"]
           varietal?: string | null
@@ -191,7 +194,7 @@ export type Database = {
           foto_path?: string | null
           id?: string
           nombre?: string
-          orden?: number
+          orden?: number | null
           seccion_id?: string | null
           tipo?: Database["public"]["Enums"]["tipo_producto"]
           varietal?: string | null
@@ -263,12 +266,14 @@ export type Database = {
           anada_tipo: Database["public"]["Enums"]["tipo_anada"] | null
           anio: number | null
           bodega_nombre: string | null
+          bodega_orden: string | null
           descripcion: string | null
           foto_path: string | null
           precio: number | null
           producto_id: string | null
           producto_nombre: string | null
           producto_orden: number | null
+          producto_precio_min: number | null
           producto_tipo: Database["public"]["Enums"]["tipo_producto"] | null
           seccion_id: string | null
           seccion_nombre: string | null
@@ -361,12 +366,14 @@ export type Database = {
           anada_tipo: Database["public"]["Enums"]["tipo_anada"] | null
           anio: number | null
           bodega_nombre: string | null
+          bodega_orden: string | null
           descripcion: string | null
           foto_path: string | null
           precio: number | null
           producto_id: string | null
           producto_nombre: string | null
           producto_orden: number | null
+          producto_precio_min: number | null
           producto_tipo: Database["public"]["Enums"]["tipo_producto"] | null
           seccion_id: string | null
           seccion_nombre: string | null
@@ -380,6 +387,7 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      es_encargado: { Args: never; Returns: boolean }
       es_personal: { Args: never; Returns: boolean }
       normalizar_busqueda: { Args: { texto: string }; Returns: string }
     }

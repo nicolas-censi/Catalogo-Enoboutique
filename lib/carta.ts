@@ -6,7 +6,9 @@ import type { Database } from "@/lib/tipos-db";
 type Publico = Database["public"];
 type Cliente = SupabaseClient<Database>;
 
-export type FilaCarta = Publico["Views"]["carta_publica"]["Row"];
+// Las columnas de orden (bodega_orden, producto_precio_min) solo sirven para ordenar en
+// la base: la búsqueda no las trae y la carta no las muestra.
+export type FilaCarta = Omit<Publico["Views"]["carta_publica"]["Row"], "bodega_orden" | "producto_precio_min">;
 type TipoAnada = Publico["Enums"]["tipo_anada"];
 type TipoProducto = Publico["Enums"]["tipo_producto"];
 

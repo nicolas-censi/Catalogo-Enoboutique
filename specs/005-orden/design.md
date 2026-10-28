@@ -20,8 +20,10 @@
 `leerSeccion` (`lib/carta.ts`) ordena por:
 `producto_orden` (nulls last) → `normalizar(bodega_nombre)` (nulls last) →
 `producto_precio_min` desc → `producto_nombre` → `anio` desc (nulls last).
-Para ordenar la bodega sin tildes se agrega a la vista `bodega_orden`
-(`normalizar_busqueda(b.nombre)`, que ya existe). El orden se arma en la base, no en
+Para ordenar la bodega sin tildes, `bodegas` suma la columna calculada `nombre_orden`
+(`normalizar_busqueda(nombre)`, guardada al escribir: el público no puede llamar a esa
+función) y la vista la expone como `bodega_orden`. `buscar_carta` pasa a elegir sus
+columnas una por una, porque la vista sumó columnas. El orden se arma en la base, no en
 JavaScript, así es el mismo en todas las consultas.
 
 ## Rutas y pantallas
