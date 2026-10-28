@@ -1,6 +1,6 @@
 # 011 – Subsecciones
 
-**Estado:** Borrador
+**Estado:** Aprobada (2026-10-28)
 
 ## Objetivo
 Que una sección de la carta se pueda dividir en subsecciones (por ejemplo, Cava en
@@ -70,17 +70,14 @@ y el personal arme la carta como está organizado el local.
 - Productos sueltos en una sección que tiene subsecciones.
 - Que la importación de Tango (spec 8) asigne subsecciones: se define en esa spec.
 
-## Preguntas abiertas
-- [ ] Al crear la primera subsección de una sección que ya tiene productos, ¿está bien
-  que todos pasen a esa subsección (CA-2) y después los repartas? La alternativa es
-  no dejar crear subsecciones hasta mover los productos a mano, que es más trabajo.
-
 ## Decisiones tomadas en la revisión
 - **En la carta:** todo en una página, con títulos y accesos a cada subsección.
 - **Productos sueltos:** no; en una sección con subsecciones, todo producto está en una.
 - **Orden:** igual que las secciones (destacados + bodega y precio; subsecciones
   arrastrables).
 - **Niveles:** uno solo.
+- **Primera subsección:** si la sección ya tiene productos, pasan todos a esa
+  subsección, con aviso, y después se reparten.
 
 ## Ideas para más adelante
 - Mover varios productos a otra subsección de una vez desde la lista del panel.
