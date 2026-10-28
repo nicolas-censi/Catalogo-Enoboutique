@@ -12,6 +12,7 @@ export const textos = {
   productoNoEncontrado: "No encontramos este producto. Puede que ya no esté disponible.",
   volverA: (seccion: string) => `Volver a ${seccion}`,
   resultados: "Resultados",
+  subsecciones: "Subsecciones",
   sinResultados: (busqueda: string) => `No encontramos nada para “${busqueda}”.`,
   sinResultadosAyuda: "Probá con otro nombre o consultá al personal.",
   escaner: {
