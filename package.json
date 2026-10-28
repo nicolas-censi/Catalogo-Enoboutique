@@ -16,7 +16,8 @@
     "db:migrar": "node scripts/migrar.mjs",
     "db:tipos": "supabase gen types typescript --project-id \"$SUPABASE_PROJECT_REF\" --schema public > lib/tipos-db.ts",
     "db:seed": "node scripts/seed.mjs",
-    "db:mails": "node scripts/configurar-mails.mjs"
+    "db:usuarios": "node scripts/usuarios.mjs",
+    "db:encargado": "node scripts/crear-encargado.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
