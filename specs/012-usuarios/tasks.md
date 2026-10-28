@@ -2,7 +2,7 @@
 
 Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un criterio (CA-n).
 
-- [ ] T1 — `lib/admin/usuario.ts` (reglas, email interno, contraseña interna); tests
+- [x] T1 — `lib/admin/usuario.ts` (reglas, email interno, contraseña interna); tests
   unitarios. (CA-1, CA-2)
 - [ ] T2 — Ingreso con usuario en una Server Action, error genérico y actualización de
   cuentas viejas; sin "Olvidé mi contraseña"; e2e. (CA-1, CA-3, CA-5)

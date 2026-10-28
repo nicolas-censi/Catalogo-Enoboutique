@@ -1,6 +1,6 @@
 # 012 – Usuarios sin email
 
-**Estado:** Borrador
+**Estado:** Aprobada (2026-10-28)
 
 ## Objetivo
 Que el personal entre al panel con un **usuario** (por ejemplo, `ncensi`) y una
@@ -63,16 +63,12 @@ mail y "Olvidé mi contraseña" de la spec 004 (CA-12 y contraseña olvidada).
 - Nombre y apellido de cada persona (solo usuario).
 - Mails de cualquier tipo (invitación, recuperación, avisos).
 
-## Preguntas abiertas
-- [ ] Cuando decís "les asignaría su nombre y contraseña", ¿el "nombre" es el usuario
-  (`ncensi`) o querés guardar también el nombre y apellido para mostrarlo en la lista?
-  Propuesta: solo el usuario.
-
 ## Decisiones tomadas en la revisión
 - **Contraseña olvidada:** la cambia el encargado.
 - **Cambiar la propia contraseña:** no; solo el encargado cambia contraseñas.
 - **Cuentas existentes:** el usuario es lo que está antes de la @.
 - **Largo mínimo de la contraseña:** 4 caracteres.
+- **Nombre:** solo el usuario (sin nombre y apellido).
 
 ## Ideas para más adelante
 - Bloquear el ingreso unos minutos después de varios intentos fallidos con el mismo
