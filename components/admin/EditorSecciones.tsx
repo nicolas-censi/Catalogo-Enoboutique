@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, useOptimistic, useState, useTransition } from "react";
 import {
   borrarSeccion,
@@ -100,7 +101,9 @@ function FilaSeccion({ seccion }: { seccion: SeccionAdmin }) {
             </button>
           </form>
         ) : (
-          seccion.nombre
+          <Link href={`/admin/secciones/${seccion.id}`} className="inline-flex min-h-11 min-w-11 items-center text-titulo underline-offset-4 hover:underline">
+            {seccion.nombre}
+          </Link>
         )}
       </td>
       <td data-etiqueta={t.columnasSecciones.productos} className="py-1 pr-4 text-texto-suave">{t.cantidadProductos(seccion.productos)}</td>

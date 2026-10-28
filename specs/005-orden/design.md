@@ -42,8 +42,11 @@ JavaScript, así es el mismo en todas las consultas.
 - `EditorSecciones` (existente): usa `Ordenable`; se saca el texto
   "(próximamente)".
 - `EditorDestacados`: `Ordenable` + botón "Quitar" + buscador (reusa
-  `buscar_admin` filtrado por sección).
-- Acciones de servidor `ordenarSecciones` y `ordenarDestacados`: llaman a las funciones
+  `buscar_admin` filtrado por sección y sin los que ya son destacados). Los que no se
+  ven en la carta (ocultos o sin stock) se marcan. El nombre de cada sección en
+  `/admin/secciones` enlaza a su pantalla.
+- Acciones de servidor `ordenarSecciones` y `guardarDestacados` (agregar, quitar y
+  ordenar guardan la lista completa): llaman a las funciones
   y a `updateTag("carta")` (al instante, como el resto del panel).
 
 ## Tests
