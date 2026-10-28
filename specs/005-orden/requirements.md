@@ -1,6 +1,6 @@
 # 005 – Orden de la carta
 
-**Estado:** Aprobada (2026-10-28)
+**Estado:** Implementada (2026-10-28)
 
 ## Objetivo
 Que el personal decida en qué orden aparecen las secciones de la carta y qué productos
