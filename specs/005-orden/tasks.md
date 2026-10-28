@@ -9,9 +9,9 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   permisos; tests de base. (CA-1, CA-3)
 - [x] T3 — Orden de la sección en la carta (destacados, bodega, precio, nombre);
   test de `leerSeccion` contra la base con datos de prueba. (CA-2)
-- [ ] T4 — `ListaOrdenable` con dnd-kit: mouse, teclado, anuncios en español y vuelta
+- [x] T4 — `Ordenable` con dnd-kit: mouse, teclado, anuncios en español y vuelta
   atrás si falla; e2e. (CA-1, CA-4)
-- [ ] T5 — Secciones arrastrables en `/admin/secciones` con guardado automático; e2e
+- [x] T5 — Secciones arrastrables en `/admin/secciones` con guardado automático; e2e
   que verifica la carta. (CA-1)
 - [ ] T6 — `/admin/secciones/[id]`: destacados arrastrables, quitar y agregar desde
   el buscador; e2e que verifica la carta. (CA-3)

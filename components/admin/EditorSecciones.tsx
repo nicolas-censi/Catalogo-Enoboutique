@@ -5,9 +5,11 @@ import {
   borrarSeccion,
   cambiarVisibilidadSeccion,
   crearSeccion,
+  ordenarSecciones,
   renombrarSeccion,
   type EstadoSeccion,
 } from "@/app/admin/acciones-secciones";
+import { ManijaOrdenable, Ordenable, useElementoOrdenable } from "@/components/admin/Ordenable";
 import { textos } from "@/lib/textos";
 
 const t = textos.admin;
@@ -59,6 +61,7 @@ function FilaSeccion({ seccion }: { seccion: SeccionAdmin }) {
   const [nombre, setNombre] = useState(seccion.nombre);
   const [error, setError] = useState<string | null>(null);
   const [ocupado, iniciar] = useTransition();
+  const { ref, estilo, arrastrando, manija } = useElementoOrdenable(seccion.id, seccion.nombre);
 
   function pedirBorrar() {
     // Con productos no se puede: se avisa sin preguntar.
@@ -68,7 +71,10 @@ function FilaSeccion({ seccion }: { seccion: SeccionAdmin }) {
   }
 
   return (
-    <tr>
+    <tr ref={ref} style={estilo} className={arrastrando ? "bg-superficie shadow-lg" : undefined}>
+      <td data-etiqueta={t.columnasSecciones.orden} className="py-1 pr-4">
+        <ManijaOrdenable manija={manija} />
+      </td>
       <td data-etiqueta={t.columnasSecciones.seccion} className="py-1 pr-4">
         {modo === "renombrar" ? (
           <form
@@ -155,21 +161,26 @@ export function EditorSecciones({ secciones }: { secciones: SeccionAdmin[] }) {
   return (
     <>
       <p className="mb-4 text-texto-suave">{t.ordenSecciones}</p>
-      <table aria-label={t.secciones} className="tabla-responsiva w-full border-collapse text-left">
-        <thead className="border-b border-dorado/40 text-sm text-texto-suave">
-          <tr>
-            <th scope="col" className="py-2 pr-4">{c.seccion}</th>
-            <th scope="col" className="py-2 pr-4">{c.productos}</th>
-            <th scope="col" className="py-2 pr-4">{c.visible}</th>
-            <th scope="col" className="py-2">{t.acciones}</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-dorado/20">
-          {secciones.map((s) => (
-            <FilaSeccion key={`${s.id}-${s.nombre}-${s.visible}`} seccion={s} />
-          ))}
-        </tbody>
-      </table>
+      <Ordenable items={secciones} onCambio={ordenarSecciones}>
+        {(ordenadas) => (
+          <table aria-label={t.secciones} className="tabla-responsiva w-full border-collapse text-left">
+            <thead className="border-b border-dorado/40 text-sm text-texto-suave">
+              <tr>
+                <th scope="col" className="py-2 pr-4">{c.orden}</th>
+                <th scope="col" className="py-2 pr-4">{c.seccion}</th>
+                <th scope="col" className="py-2 pr-4">{c.productos}</th>
+                <th scope="col" className="py-2 pr-4">{c.visible}</th>
+                <th scope="col" className="py-2">{t.acciones}</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-dorado/20">
+              {ordenadas.map((s) => (
+                <FilaSeccion key={`${s.id}-${s.nombre}-${s.visible}`} seccion={s} />
+              ))}
+            </tbody>
+          </table>
+        )}
+      </Ordenable>
       <form action={accion} key={estado.guardados} noValidate className="mt-6 flex flex-wrap items-end gap-3">
         <div className="flex flex-col gap-1">
           <label htmlFor="seccion-nueva" className="text-sm text-texto-suave">

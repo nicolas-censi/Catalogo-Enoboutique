@@ -34,14 +34,14 @@ JavaScript, así es el mismo en todas las consultas.
 | `/admin/secciones/[id]` | personal | destacados de la sección arrastrables, con "Quitar"; buscador para agregar productos de la sección; texto que explica el orden automático (CA-3) |
 
 ## Componentes
-- `ListaOrdenable` (Client Component, dnd-kit: `@dnd-kit/core` + `@dnd-kit/sortable`):
-  lista vertical genérica con manija, `PointerSensor` (con distancia mínima, para no
+- `Ordenable` (Client Component, dnd-kit: `@dnd-kit/core` + `@dnd-kit/sortable`):
+  lista vertical genérica (filas de tabla o elementos de lista) con `ManijaOrdenable`, `PointerSensor` (con distancia mínima, para no
   trabar el scroll en el celular), `KeyboardSensor` y anuncios en español
   (`announcements` de dnd-kit con textos de `lib/textos.ts`). Al soltar llama a
   `onCambio(ids)`; si falla, vuelve al orden anterior y muestra el error.
-- `EditorSecciones` (existente): usa `ListaOrdenable`; se saca el texto
+- `EditorSecciones` (existente): usa `Ordenable`; se saca el texto
   "(próximamente)".
-- `EditorDestacados`: `ListaOrdenable` + botón "Quitar" + buscador (reusa
+- `EditorDestacados`: `Ordenable` + botón "Quitar" + buscador (reusa
   `buscar_admin` filtrado por sección).
 - Acciones de servidor `ordenarSecciones` y `ordenarDestacados`: llaman a las funciones
   y a `updateTag("carta")` (al instante, como el resto del panel).
