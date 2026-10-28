@@ -1,9 +1,10 @@
 import "server-only";
 import { connection } from "next/server";
+import { deEmailInterno } from "@/lib/admin/usuario";
 import { crearClienteServidor } from "@/lib/supabase/server";
 
 export type Rol = "encargado" | "vendedor";
-export type SesionPanel = { id: string; email: string; rol: Rol | null };
+export type SesionPanel = { id: string; usuario: string; rol: Rol | null };
 
 /**
  * Usuario con sesión iniciada y su rol en el personal (null si no es del personal).
@@ -21,5 +22,5 @@ export async function obtenerSesionPanel(): Promise<SesionPanel | null> {
     .select("rol")
     .eq("user_id", data.user.id)
     .maybeSingle();
-  return { id: data.user.id, email: data.user.email ?? "", rol: (fila?.rol as Rol | undefined) ?? null };
+  return { id: data.user.id, usuario: deEmailInterno(data.user.email ?? ""), rol: (fila?.rol as Rol | undefined) ?? null };
 }

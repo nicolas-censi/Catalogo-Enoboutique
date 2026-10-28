@@ -8,7 +8,7 @@ de usuario a email y de email a usuario en un solo lugar (`lib/admin/usuario.ts`
 
 **Contraseñas de 4 caracteres:** Supabase exige al menos 6. La contraseña que escribe
 la persona se pasa siempre por la misma función en el servidor antes de mandarla a
-Supabase (`contrasenaInterna(usuario, contrasena)`: le agrega un sufijo fijo). Así una
+Supabase (`contrasenaInterna(contrasena)`: le agrega un sufijo fijo). Así una
 contraseña de 4 caracteres cumple el mínimo de Supabase. El ingreso pasa a una Server
 Action para que esto ocurra en el servidor.
 - Las cuentas existentes tienen la contraseña sin sufijo: al entrar, si la interna no

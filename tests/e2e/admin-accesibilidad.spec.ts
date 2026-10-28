@@ -9,7 +9,6 @@ test.afterAll(limpiarUsuarios);
 
 const pantallas: [string, string, boolean][] = [
   ["ingreso", "/admin/ingresar", false],
-  ["contraseña olvidada", "/admin/olvide", false],
   ["productos", "/admin", true],
   ["nuevo producto", "/admin/productos/nuevo", true],
   ["ficha de producto", "/admin/productos/5eed0000-0000-4000-8000-000000000202", true],

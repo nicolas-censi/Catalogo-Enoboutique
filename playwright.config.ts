@@ -29,8 +29,6 @@ export default defineConfig({
     command: `npm run dev -- --port ${puerto}`,
     url: `http://localhost:${puerto}`,
     reuseExistingServer: !process.env.CI,
-    // Las invitaciones crean la cuenta sin mandar el mail (ver lib/admin/personal-servidor.ts).
-    env: { ...(process.env as Record<string, string>), MAILS_DE_PRUEBA: "1" },
     timeout: 120_000,
   },
 });

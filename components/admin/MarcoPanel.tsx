@@ -30,7 +30,7 @@ export function MarcoPanel({ sesion, children }: { sesion: SesionPanel; children
             )}
             <Link href="/" className={enlace}>{textos.admin.verCarta}</Link>
           </nav>
-          <span className="ml-auto text-sm text-texto-suave">{sesion.email}</span>
+          <span className="ml-auto text-sm text-texto-suave">{sesion.usuario}</span>
           <BotonSalir />
         </div>
       </header>

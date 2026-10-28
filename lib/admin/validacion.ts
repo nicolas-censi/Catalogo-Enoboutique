@@ -125,11 +125,3 @@ export function validarCodigoBarras(entrada: string): { codigo: string; error: s
   const codigo = entrada.replace(/\s/g, "");
   return { codigo, error: /^\d{8,14}$/.test(codigo) ? null : MENSAJES.codigoBarras };
 }
-
-export const LARGO_MINIMO_CONTRASENA = 8;
-
-export function validarContrasena(nueva: string, repetida: string): Partial<Record<"nueva" | "repetida", string>> {
-  if (nueva.length < LARGO_MINIMO_CONTRASENA) return { nueva: "Tiene que tener al menos 8 caracteres." };
-  if (nueva !== repetida) return { repetida: "Las contraseñas no coinciden." };
-  return {};
-}
