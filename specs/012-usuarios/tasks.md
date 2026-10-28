@@ -13,5 +13,5 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T5 — Lista y encabezado con el usuario; roles y bajas siguen andando; e2e. (CA-4)
 - [x] T6 — Script `db:usuarios` para las cuentas existentes y script para crear el
   primer encargado; test. (CA-5)
-- [ ] T7 — Borrar lo de mails (pantallas, plantillas, script, `MAILS_DE_PRUEBA`) y
+- [x] T7 — Borrar lo de mails (pantallas, plantillas, script, `MAILS_DE_PRUEBA`) y
   actualizar README; accesibilidad y celular. (CA-3, CA-4)

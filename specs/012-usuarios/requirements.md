@@ -1,6 +1,6 @@
 # 012 – Usuarios sin email
 
-**Estado:** Aprobada (2026-10-28)
+**Estado:** Implementada (2026-10-28)
 
 ## Objetivo
 Que el personal entre al panel con un **usuario** (por ejemplo, `ncensi`) y una

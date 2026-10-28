@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { aEmailInterno, contrasenaInterna } from "@/lib/admin/usuario";
-// @ts-expect-error: script en JavaScript, sin tipos.
 import { DOMINIO_INTERNO, contrasenaInterna as contrasenaInternaScript, planearUsuarios } from "../../scripts/usuarios-plan.mjs";
 
 // Spec 012, CA-5: cuentas existentes → usuario (lo que está antes de la @).

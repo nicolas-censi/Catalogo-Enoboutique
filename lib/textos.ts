@@ -42,7 +42,6 @@ export const textos = {
   admin: {
     titulo: "Panel",
     ingresar: "Ingresar al panel",
-    email: "Email",
     usuario: "Usuario",
     olvidoContrasena: "¿Te olvidaste la contraseña? Pedile al encargado que te la cambie.",
     contrasena: "Contraseña",
