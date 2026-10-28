@@ -6,9 +6,13 @@ import type { Database } from "@/lib/tipos-db";
 type Publico = Database["public"];
 type Cliente = SupabaseClient<Database>;
 
-// Las columnas de orden (bodega_orden, producto_precio_min) solo sirven para ordenar en
-// la base: la búsqueda no las trae y la carta no las muestra.
-export type FilaCarta = Omit<Publico["Views"]["carta_publica"]["Row"], "bodega_orden" | "producto_precio_min">;
+// Las columnas de orden (bodega_orden, producto_precio_min) y de subsección solo las usa
+// la página de una sección (ordenar y agrupar): la búsqueda no las trae.
+type FilaCompleta = Publico["Views"]["carta_publica"]["Row"];
+export type FilaCarta = Omit<
+  FilaCompleta,
+  "bodega_orden" | "producto_precio_min" | "subseccion_id" | "subseccion_nombre" | "subseccion_orden"
+>;
 type TipoAnada = Publico["Enums"]["tipo_anada"];
 type TipoProducto = Publico["Enums"]["tipo_producto"];
 

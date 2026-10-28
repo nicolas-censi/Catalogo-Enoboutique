@@ -134,3 +134,41 @@ describe("T2: crear_subseccion y ordenar entre hermanas", () => {
     expect((await clienteAnon().rpc("crear_subseccion", { padre: cava, nombre: "X" })).error?.code).toBe("42501");
   });
 });
+
+describe("T3: la carta y el panel con subsecciones", () => {
+  let padre: string, hija: string, producto: string;
+  beforeAll(async () => {
+    padre = await seccion("Carta padre");
+    hija = await seccion("Carta hija", { seccion_padre_id: padre, orden: 3 });
+    producto = (await admin.from("productos").insert({ tipo: "vino", nombre: `${prefijo} Vino hija`, seccion_id: hija }).select().single()).data!.id;
+    await admin.from("anadas").insert({ producto_id: producto, codigo_tango: `${prefijo}-hija`, descripcion_tango: "X", tipo: "con_anio", anio: 2020, precio: 1000, en_stock: true });
+  });
+  const fila = async () =>
+    (await clienteAnon().from("carta_publica").select("seccion_id, seccion_nombre, subseccion_id, subseccion_nombre, subseccion_orden").eq("producto_id", producto)).data;
+
+  it("CA-3: el producto aparece en la sección de primer nivel, con su subsección", async () => {
+    expect(await fila()).toEqual([
+      { seccion_id: padre, seccion_nombre: `${prefijo} Carta padre`, subseccion_id: hija, subseccion_nombre: `${prefijo} Carta hija`, subseccion_orden: 3 },
+    ]);
+  });
+
+  it("CA-3: el inicio lista la sección, no la subsección", async () => {
+    const { data } = await clienteAnon().from("carta_secciones").select("id").in("id", [padre, hija]);
+    expect(data).toEqual([{ id: padre }]);
+  });
+
+  it("CA-5: ocultar la subsección o la sección saca el producto de la carta", async () => {
+    await admin.from("secciones").update({ visible: false }).eq("id", hija);
+    expect(await fila()).toEqual([]);
+    await admin.from("secciones").update({ visible: true }).eq("id", hija);
+    await admin.from("secciones").update({ visible: false }).eq("id", padre);
+    expect(await fila()).toEqual([]);
+    await admin.from("secciones").update({ visible: true }).eq("id", padre);
+    expect(await fila()).toHaveLength(1);
+  });
+
+  it("CA-6: el panel ve la sección padre de cada producto", async () => {
+    const { data } = await admin.from("productos_admin").select("seccion_id, seccion_nombre, seccion_padre_id, seccion_padre_nombre").eq("id", producto).single();
+    expect(data).toEqual({ seccion_id: hija, seccion_nombre: `${prefijo} Carta hija`, seccion_padre_id: padre, seccion_padre_nombre: `${prefijo} Carta padre` });
+  });
+});

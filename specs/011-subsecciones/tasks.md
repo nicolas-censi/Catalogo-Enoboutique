@@ -6,7 +6,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   en secciones sin subsecciones; tests de base. (CA-1, CA-2)
 - [x] T2 — `crear_subseccion` (al final y moviendo los productos si es la primera) y
   `ordenar_secciones` entre hermanas; tests de base. (CA-1, CA-2, CA-5)
-- [ ] T3 — `carta_publica` con subsección y visibilidad del padre, `carta_secciones` y
+- [x] T3 — `carta_publica` con subsección y visibilidad del padre, `carta_secciones` y
   `productos_admin`; tipos; tests de base. (CA-3, CA-5, CA-6)
 - [ ] T4 — Página de sección con títulos y accesos por subsección, y su orden; e2e
   (también sin JS). (CA-3, CA-4)
