@@ -2,6 +2,8 @@
 
 import { useActionState } from "react";
 import { guardarProducto, type EstadoProducto } from "@/app/admin/acciones-producto";
+import type { SeccionConSubsecciones } from "@/lib/admin/productos";
+import { nombreConSeccion } from "@/lib/admin/secciones";
 import { textos } from "@/lib/textos";
 
 const t = textos.admin;
@@ -35,7 +37,7 @@ export function FormularioProducto({
 }: {
   productoId: string | null;
   inicial: ValoresProducto;
-  secciones: { id: string; nombre: string }[];
+  secciones: SeccionConSubsecciones[];
   bodegas: string[];
 }) {
   const [estado, accion, enviando] = useActionState<EstadoProducto, FormData>(guardarProducto.bind(null, productoId), {
@@ -101,11 +103,22 @@ export function FormularioProducto({
         <label htmlFor="producto-seccion">{t.seccion}</label>
         <select id="producto-seccion" name="seccion" defaultValue={v.seccion} key={`seccion-${v.seccion}`} className={control}>
           <option value="">{t.sinSeccionOpcion}</option>
-          {secciones.map((s) => (
-            <option key={s.id} value={s.id}>
-              {s.nombre}
-            </option>
-          ))}
+          {/* Una sección con subsecciones no se elige: es el título del grupo (spec 011, CA-2). */}
+          {secciones.map((s) =>
+            s.subsecciones.length === 0 ? (
+              <option key={s.id} value={s.id}>
+                {s.nombre}
+              </option>
+            ) : (
+              <optgroup key={s.id} label={s.nombre}>
+                {s.subsecciones.map((h) => (
+                  <option key={h.id} value={h.id}>
+                    {nombreConSeccion(s.nombre, h.nombre)}
+                  </option>
+                ))}
+              </optgroup>
+            ),
+          )}
         </select>
       </div>
       <label className="flex min-h-11 items-center gap-3 self-end">

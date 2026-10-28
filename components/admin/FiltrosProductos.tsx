@@ -1,4 +1,5 @@
-import { ESTADOS, type Filtros } from "@/lib/admin/productos";
+import { ESTADOS, type Filtros, type SeccionConSubsecciones } from "@/lib/admin/productos";
+import { nombreConSeccion } from "@/lib/admin/secciones";
 import { textos } from "@/lib/textos";
 
 const control =
@@ -10,7 +11,7 @@ export function FiltrosProductos({
   secciones,
 }: {
   filtros: Filtros;
-  secciones: { id: string; nombre: string }[];
+  secciones: SeccionConSubsecciones[];
 }) {
   return (
     <form method="get" action="/admin" role="search" className="flex flex-wrap items-end gap-3">
@@ -31,11 +32,17 @@ export function FiltrosProductos({
         <label htmlFor="filtro-seccion" className="text-sm text-texto-suave">{textos.admin.seccion}</label>
         <select id="filtro-seccion" name="seccion" defaultValue={filtros.seccion} className={control}>
           <option value="">{textos.admin.todasLasSecciones}</option>
-          {secciones.map((s) => (
+          {/* La sección incluye sus subsecciones; también se puede elegir una sola. */}
+          {secciones.flatMap((s) => [
             <option key={s.id} value={s.id}>
               {s.nombre}
-            </option>
-          ))}
+            </option>,
+            ...s.subsecciones.map((h) => (
+              <option key={h.id} value={h.id}>
+                {nombreConSeccion(s.nombre, h.nombre)}
+              </option>
+            )),
+          ])}
         </select>
       </div>
       <div className="flex flex-col gap-1">

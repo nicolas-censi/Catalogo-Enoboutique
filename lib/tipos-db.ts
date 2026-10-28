@@ -212,20 +212,6 @@ export type Database = {
             foreignKeyName: "productos_seccion_id_fkey"
             columns: ["seccion_id"]
             isOneToOne: false
-            referencedRelation: "carta_publica"
-            referencedColumns: ["seccion_id"]
-          },
-          {
-            foreignKeyName: "productos_seccion_id_fkey"
-            columns: ["seccion_id"]
-            isOneToOne: false
-            referencedRelation: "carta_secciones"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "productos_seccion_id_fkey"
-            columns: ["seccion_id"]
-            isOneToOne: false
             referencedRelation: "secciones"
             referencedColumns: ["id"]
           },
@@ -238,6 +224,7 @@ export type Database = {
           id: string
           nombre: string
           orden: number
+          seccion_padre_id: string | null
           visible: boolean
         }
         Insert: {
@@ -246,6 +233,7 @@ export type Database = {
           id?: string
           nombre: string
           orden: number
+          seccion_padre_id?: string | null
           visible?: boolean
         }
         Update: {
@@ -254,9 +242,18 @@ export type Database = {
           id?: string
           nombre?: string
           orden?: number
+          seccion_padre_id?: string | null
           visible?: boolean
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "secciones_seccion_padre_id_fkey"
+            columns: ["seccion_padre_id"]
+            isOneToOne: false
+            referencedRelation: "secciones"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -278,6 +275,9 @@ export type Database = {
           seccion_id: string | null
           seccion_nombre: string | null
           seccion_orden: number | null
+          subseccion_id: string | null
+          subseccion_nombre: string | null
+          subseccion_orden: number | null
           varietal: string | null
         }
         Relationships: []
@@ -301,6 +301,8 @@ export type Database = {
           nombre: string | null
           seccion_id: string | null
           seccion_nombre: string | null
+          seccion_padre_id: string | null
+          seccion_padre_nombre: string | null
           tipo: Database["public"]["Enums"]["tipo_producto"] | null
           varietal: string | null
           visible: boolean | null
@@ -310,19 +312,12 @@ export type Database = {
             foreignKeyName: "productos_seccion_id_fkey"
             columns: ["seccion_id"]
             isOneToOne: false
-            referencedRelation: "carta_publica"
-            referencedColumns: ["seccion_id"]
-          },
-          {
-            foreignKeyName: "productos_seccion_id_fkey"
-            columns: ["seccion_id"]
-            isOneToOne: false
-            referencedRelation: "carta_secciones"
+            referencedRelation: "secciones"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "productos_seccion_id_fkey"
-            columns: ["seccion_id"]
+            foreignKeyName: "secciones_seccion_padre_id_fkey"
+            columns: ["seccion_padre_id"]
             isOneToOne: false
             referencedRelation: "secciones"
             referencedColumns: ["id"]
@@ -378,6 +373,9 @@ export type Database = {
           seccion_id: string | null
           seccion_nombre: string | null
           seccion_orden: number | null
+          subseccion_id: string | null
+          subseccion_nombre: string | null
+          subseccion_orden: number | null
           varietal: string | null
         }[]
         SetofOptions: {
@@ -386,6 +384,13 @@ export type Database = {
           isOneToOne: false
           isSetofReturn: true
         }
+      }
+      crear_subseccion: {
+        Args: { nombre: string; padre: string }
+        Returns: {
+          id: string
+          movidos: number
+        }[]
       }
       es_encargado: { Args: never; Returns: boolean }
       es_personal: { Args: never; Returns: boolean }

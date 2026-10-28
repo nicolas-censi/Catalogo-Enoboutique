@@ -6,9 +6,13 @@ import type { Database } from "@/lib/tipos-db";
 type Publico = Database["public"];
 type Cliente = SupabaseClient<Database>;
 
-// Las columnas de orden (bodega_orden, producto_precio_min) solo sirven para ordenar en
-// la base: la búsqueda no las trae y la carta no las muestra.
-export type FilaCarta = Omit<Publico["Views"]["carta_publica"]["Row"], "bodega_orden" | "producto_precio_min">;
+// Las columnas de orden (bodega_orden, producto_precio_min) y de subsección solo las usa
+// la página de una sección (ordenar y agrupar): la búsqueda no las trae.
+type FilaCompleta = Publico["Views"]["carta_publica"]["Row"];
+export type FilaCarta = Omit<
+  FilaCompleta,
+  "bodega_orden" | "producto_precio_min" | "subseccion_id" | "subseccion_nombre" | "subseccion_orden"
+>;
 type TipoAnada = Publico["Enums"]["tipo_anada"];
 type TipoProducto = Publico["Enums"]["tipo_producto"];
 
@@ -84,16 +88,22 @@ export async function leerSecciones(cliente: Cliente): Promise<Seccion[]> {
   return data.map((s) => ({ id: s.id!, nombre: s.nombre! }));
 }
 
-export async function leerSeccion(
-  cliente: Cliente,
-  id: string,
-): Promise<(Seccion & { productos: Producto[] }) | null> {
+export type SeccionCarta = Seccion & {
+  productos: Producto[];
+  /** Vacío si la sección no tiene subsecciones (spec 011). */
+  subsecciones: (Seccion & { productos: Producto[] })[];
+};
+
+export async function leerSeccion(cliente: Cliente, id: string): Promise<SeccionCarta | null> {
   if (!UUID.test(id)) return null;
   const { data, error } = await cliente
     .from("carta_publica")
     .select("*")
     .eq("seccion_id", id)
-    // Destacados primero; el resto por bodega y del más caro al más barato (spec 005).
+    // Por subsección (spec 011); dentro de cada una, destacados primero y el resto por
+    // bodega y del más caro al más barato (spec 005).
+    .order("subseccion_orden", { nullsFirst: true })
+    .order("subseccion_id", { nullsFirst: true })
     .order("producto_orden", { nullsFirst: false })
     .order("bodega_orden", { nullsFirst: false })
     .order("producto_precio_min", { ascending: false, nullsFirst: false })
@@ -102,7 +112,20 @@ export async function leerSeccion(
     .order("anio", { ascending: false, nullsFirst: false });
   if (error) throw error;
   if (data.length === 0) return null;
-  return { id, nombre: data[0].seccion_nombre!, productos: agruparPorProducto(data) };
+
+  const grupos = new Map<string, { id: string; nombre: string; filas: FilaCompleta[] }>();
+  for (const fila of data) {
+    if (!fila.subseccion_id) continue;
+    const grupo = grupos.get(fila.subseccion_id) ?? { id: fila.subseccion_id, nombre: fila.subseccion_nombre!, filas: [] };
+    grupo.filas.push(fila);
+    grupos.set(fila.subseccion_id, grupo);
+  }
+  return {
+    id,
+    nombre: data[0].seccion_nombre!,
+    productos: agruparPorProducto(data),
+    subsecciones: [...grupos.values()].map((g) => ({ id: g.id, nombre: g.nombre, productos: agruparPorProducto(g.filas) })),
+  };
 }
 
 export async function leerProducto(cliente: Cliente, id: string): Promise<Producto | null> {

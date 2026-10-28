@@ -11,6 +11,7 @@ import {
   type EstadoSeccion,
 } from "@/app/admin/acciones-secciones";
 import { ManijaOrdenable, Ordenable, useElementoOrdenable } from "@/components/admin/Ordenable";
+import type { SeccionAdmin } from "@/lib/admin/secciones";
 import { textos } from "@/lib/textos";
 
 const t = textos.admin;
@@ -19,7 +20,6 @@ const control =
 const secundario = "inline-flex min-h-11 items-center rounded-md border border-dorado/60 px-4";
 const principal = "inline-flex min-h-11 items-center rounded-md bg-boton px-5 font-semibold text-boton-texto disabled:opacity-60";
 
-export type SeccionAdmin = { id: string; nombre: string; visible: boolean; productos: number };
 
 function InterruptorVisible({ seccion }: { seccion: SeccionAdmin }) {
   const [guardado, setGuardado] = useState(seccion.visible);
@@ -65,7 +65,8 @@ function FilaSeccion({ seccion }: { seccion: SeccionAdmin }) {
   const { ref, estilo, arrastrando, manija } = useElementoOrdenable(seccion.id, seccion.nombre);
 
   function pedirBorrar() {
-    // Con productos no se puede: se avisa sin preguntar.
+    // Con subsecciones o productos no se puede: se avisa sin preguntar.
+    if (seccion.subsecciones > 0) return setError(t.noBorrarConSubsecciones(seccion.subsecciones));
     if (seccion.productos > 0) return setError(t.noBorrarSeccion(seccion.productos));
     setError(null);
     setModo("borrar");
@@ -106,7 +107,9 @@ function FilaSeccion({ seccion }: { seccion: SeccionAdmin }) {
           </Link>
         )}
       </td>
-      <td data-etiqueta={t.columnasSecciones.productos} className="py-1 pr-4 text-texto-suave">{t.cantidadProductos(seccion.productos)}</td>
+      <td data-etiqueta={t.columnasSecciones.productos} className="py-1 pr-4 text-texto-suave">
+        {seccion.subsecciones > 0 ? t.cantidadSubsecciones(seccion.subsecciones) : t.cantidadProductos(seccion.productos)}
+      </td>
       <td data-etiqueta={t.columnasSecciones.visible} className="py-1 pr-4">
         <InterruptorVisible seccion={seccion} />
       </td>
@@ -154,19 +157,22 @@ function FilaSeccion({ seccion }: { seccion: SeccionAdmin }) {
   );
 }
 
-export function EditorSecciones({ secciones }: { secciones: SeccionAdmin[] }) {
+/** Secciones de primer nivel o, con `padre`, las subsecciones de esa sección (spec 011). */
+export function EditorSecciones({ secciones, padre }: { secciones: SeccionAdmin[]; padre?: string }) {
   const [estado, accion, enviando] = useActionState<EstadoSeccion, FormData>(crearSeccion, {
     errorCampo: null,
     error: null,
+    aviso: null,
     guardados: 0,
   });
   const c = t.columnasSecciones;
   return (
     <>
-      <p className="mb-4 text-texto-suave">{t.ordenSecciones}</p>
+      <p className="mb-4 max-w-prose text-texto-suave">{padre ? t.ordenSubsecciones : t.ordenSecciones}</p>
+      {padre && secciones.length === 0 && <p className="mb-4">{t.sinSubsecciones}</p>}
       <Ordenable items={secciones} onCambio={ordenarSecciones}>
         {(ordenadas) => (
-          <table aria-label={t.secciones} className="tabla-responsiva w-full border-collapse text-left">
+          <table aria-label={padre ? t.subsecciones : t.secciones} className="tabla-responsiva w-full border-collapse text-left">
             <thead className="border-b border-dorado/40 text-sm text-texto-suave">
               <tr>
                 <th scope="col" className="py-2 pr-4">{c.orden}</th>
@@ -185,9 +191,10 @@ export function EditorSecciones({ secciones }: { secciones: SeccionAdmin[] }) {
         )}
       </Ordenable>
       <form action={accion} key={estado.guardados} noValidate className="mt-6 flex flex-wrap items-end gap-3">
+        {padre && <input type="hidden" name="padre" value={padre} />}
         <div className="flex flex-col gap-1">
           <label htmlFor="seccion-nueva" className="text-sm text-texto-suave">
-            {t.nombreSeccionNueva}
+            {padre ? t.nombreSubseccionNueva : t.nombreSeccionNueva}
           </label>
           <input
             id="seccion-nueva"
@@ -198,7 +205,7 @@ export function EditorSecciones({ secciones }: { secciones: SeccionAdmin[] }) {
           />
         </div>
         <button type="submit" disabled={enviando} className={principal}>
-          {t.crearSeccion}
+          {padre ? t.crearSubseccion : t.crearSeccion}
         </button>
         {estado.errorCampo && (
           <span id="error-seccion-nueva" className="basis-full text-sm text-destacado">
@@ -211,6 +218,11 @@ export function EditorSecciones({ secciones }: { secciones: SeccionAdmin[] }) {
           </p>
         )}
       </form>
+      {estado.aviso && (
+        <p role="status" className="mt-3">
+          {estado.aviso}
+        </p>
+      )}
     </>
   );
 }

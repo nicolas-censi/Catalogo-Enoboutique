@@ -32,6 +32,8 @@ y una descripción. El personal administra todo desde un panel simple, sin tocar
    actualización masiva de precios por código de artículo
 9. Deploy, dominio y QR imprimible
 10. (Más adelante) Actualización masiva de stock desde un reporte de Tango
+11. Subsecciones dentro de las secciones (por ejemplo, Cava: Joyitas, Añadas y
+    Experiencias)
 
 ## Principios
 - **Lo humano manda**: todo dato es editable desde el panel; la IA solo sugiere.

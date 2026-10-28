@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ProductoAdmin } from "@/lib/admin/productos";
+import { nombreConSeccion } from "@/lib/admin/secciones";
 import { textos } from "@/lib/textos";
 
 function Etiqueta({ children }: { children: React.ReactNode }) {
@@ -46,7 +47,11 @@ export function TablaProductos({ productos }: { productos: ProductoAdmin[] }) {
               </Link>
             </td>
             <td data-etiqueta={c.bodega} className="py-1 pr-4">{p.bodega_nombre}</td>
-            <td data-etiqueta={c.seccion} className="py-1 pr-4">{p.seccion_nombre ?? <span className="text-texto-suave">{textos.admin.sinSeccion}</span>}</td>
+            <td data-etiqueta={c.seccion} className="py-1 pr-4">{p.seccion_nombre ? (
+                p.seccion_padre_nombre ? nombreConSeccion(p.seccion_padre_nombre, p.seccion_nombre) : p.seccion_nombre
+              ) : (
+                <span className="text-texto-suave">{textos.admin.sinSeccion}</span>
+              )}</td>
             <td data-etiqueta={c.anadas} className="py-1 pr-4 tabular-nums md:text-right">{p.cantidad_anadas}</td>
             <td className="py-1"><Estado producto={p} /></td>
           </tr>
