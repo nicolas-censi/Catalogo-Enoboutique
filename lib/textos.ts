@@ -32,9 +32,7 @@ export const textos = {
     cerrar: "Cerrar",
     camara: "Imagen de la cámara",
     codigoProblema: (codigo: string) => `Código del problema: ${codigo}`,
-    prenderLinterna: "Prender linterna",
-    apagarLinterna: "Apagar linterna",
-    sinLinterna: "Este celular no permite prender la linterna desde el navegador.",
+    encuadrar: "Poné el código dentro del recuadro. Si se ve borroso, alejá un poco el celular.",
     sinPermiso:
       "No tenemos permiso para usar la cámara. Habilitalo en la configuración del navegador (el ícono al lado de la dirección) y volvé a intentar, o escribí el número del código.",
     sinCamara: "No encontramos una cámara en este dispositivo. Escribí el número del código.",

@@ -21,19 +21,24 @@ export function modulosEan13(codigo: string): string {
   return `101${izquierda}01010${derecha}101`;
 }
 
-export function videoConCodigo(codigo: string, ancho = 640, alto = 480): string {
+/** Tamaño del cuadro y del código: `escala` son los px por módulo (95 módulos por EAN-13). */
+export type OpcionesVideo = { ancho?: number; alto?: number; escala?: number };
+
+export function videoConCodigo(codigo: string, { ancho = 640, alto = 480, escala = 4 }: OpcionesVideo = {}): string {
   // Fuera de test-results: Playwright vacía esa carpeta al empezar cada corrida.
   const carpeta = join(tmpdir(), "catalogo-enoboutique-videos");
-  const ruta = join(carpeta, `ean-${codigo}.y4m`);
+  const ruta = join(carpeta, `ean-${codigo}-${ancho}x${alto}-${escala}.y4m`);
   if (existsSync(ruta)) return ruta;
   mkdirSync(carpeta, { recursive: true });
 
   // "sin-codigo": una imagen sin barras, para que el escáner quede buscando.
   const modulos = codigo === "sin-codigo" ? "" : modulosEan13(codigo);
-  const escala = 4; // px por módulo: 95 módulos → 380 px
   const margenX = Math.floor((ancho - 95 * escala) / 2);
   const y = Buffer.alloc(ancho * alto, 235); // fondo blanco (luma)
-  for (let fila = Math.floor(alto * 0.25); fila < Math.floor(alto * 0.75); fila++) {
+  // Barras de alto proporcional al ancho, como en una etiqueta real, centradas.
+  const altoBarras = Math.max(8, Math.round(95 * escala * 0.6));
+  const desde = Math.floor((alto - altoBarras) / 2);
+  for (let fila = desde; fila < desde + altoBarras; fila++) {
     for (let i = 0; i < modulos.length; i++) {
       if (modulos[i] !== "1") continue;
       y.fill(16, fila * ancho + margenX + i * escala, fila * ancho + margenX + (i + 1) * escala);
@@ -47,14 +52,14 @@ export function videoConCodigo(codigo: string, ancho = 640, alto = 480): string 
 }
 
 /** Opciones de Chromium para usar un video como cámara, con el permiso ya concedido. */
-export function camaraSimulada(codigo: string) {
+export function camaraSimulada(codigo: string, opciones?: OpcionesVideo) {
   return {
     launchOptions: {
       executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE || undefined,
       args: [
         "--use-fake-device-for-media-stream",
         "--use-fake-ui-for-media-stream",
-        `--use-file-for-fake-video-capture=${videoConCodigo(codigo)}`,
+        `--use-file-for-fake-video-capture=${videoConCodigo(codigo, opciones)}`,
       ],
     },
     permissions: ["camera"],
