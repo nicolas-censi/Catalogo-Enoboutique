@@ -85,8 +85,9 @@ export const textos = {
       errorGuardar: "No se pudo guardar el orden. Probá de nuevo.",
     },
     destacados: {
-      titulo: (seccion: string) => `Destacados de ${seccion}`,
+      titulo: "Destacados",
       volver: "Volver a secciones",
+      volverA: (seccion: string) => `Volver a ${seccion}`,
       seccionNoEncontrada: "No encontramos esta sección.",
       explicacion:
         "Los destacados van primero en la carta, en este orden. El resto de la sección se ordena solo: por bodega y, dentro de cada bodega, del más caro al más barato.",
@@ -193,6 +194,17 @@ export const textos = {
     visibleDe: (nombre: string) => `Visible: ${nombre}`,
     cantidadProductos: (n: number) => `${n} ${n === 1 ? "producto" : "productos"}`,
     noBorrarSeccion: (n: number) => `Tiene ${n} ${n === 1 ? "producto" : "productos"}: no se puede borrar. Podés ocultarla.`,
+    noBorrarConSubsecciones: (n: number) =>
+      `Tiene ${n} ${n === 1 ? "subsección" : "subsecciones"}: no se puede borrar. Podés ocultarla.`,
+    cantidadSubsecciones: (n: number) => `${n} ${n === 1 ? "subsección" : "subsecciones"}`,
+    subsecciones: "Subsecciones",
+    sinSubsecciones: "Todavía no tiene subsecciones.",
+    nombreSubseccionNueva: "Nombre de la subsección nueva",
+    crearSubseccion: "Crear subsección",
+    ordenSubsecciones:
+      "Dividí la sección en subsecciones (por ejemplo, Joyitas o Experiencias). Se ordenan arrastrando desde la manija. Al crear la primera, todos los productos de la sección pasan a ella.",
+    productosMovidos: (n: number, seccion: string, subseccion: string) =>
+      `${n === 1 ? "El producto" : `Los ${n} productos`} de ${seccion} ${n === 1 ? "pasó" : "pasaron"} a ${subseccion}. Después podés moverlos.`,
     confirmarBorrarSeccion: (nombre: string) => `¿Borrar la sección ${nombre}?`,
     ordenSecciones:
       "Arrastrá las secciones desde la manija para cambiar el orden de la carta (con el teclado: Espacio y flechas). Las secciones nuevas quedan al final.",

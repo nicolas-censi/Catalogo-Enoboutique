@@ -36,9 +36,9 @@ test("CA-4: destacados en el celular: sin errores graves, sin scroll horizontal 
   const { violations } = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
   expect(violations.filter((v) => v.impact === "serious" || v.impact === "critical").map((v) => v.id)).toEqual([]);
   expect(await page.evaluate(() => document.documentElement.scrollWidth - 390)).toBeLessThanOrEqual(0);
-  // 3 manijas, 3 "Quitar" y "Buscar".
+  // 3 manijas, 3 "Quitar", "Buscar" y "Crear subsección" (spec 011).
   const botones = await page.getByRole("main").getByRole("button").all();
-  expect(botones).toHaveLength(7);
+  expect(botones).toHaveLength(8);
   for (const boton of botones) {
     const caja = (await boton.boundingBox())!;
     expect(Math.min(caja.width, caja.height), await boton.getAttribute("aria-label") ?? "").toBeGreaterThanOrEqual(44);
@@ -59,6 +59,8 @@ test("CA-4: solo la manija toma el dedo; el resto de la fila deja scrollear", as
 
 test("CA-4: en el celular se arrastra desde la manija", async ({ page }) => {
   await page.goto(`/admin/secciones/${seccionId}`);
+  // Los destacados quedan debajo de las subsecciones: se los trae a la pantalla.
+  await page.getByRole("list", { name: "Destacados" }).scrollIntoViewIfNeeded();
   const origen = (await page.getByRole("button", { name: `Mover ${nombre("Tercero")}` }).boundingBox())!;
   const destino = (await page.getByRole("button", { name: `Mover ${nombre("Primero")}` }).boundingBox())!;
   await page.mouse.move(origen.x + origen.width / 2, origen.y + origen.height / 2);

@@ -1,20 +1,12 @@
 import { Suspense } from "react";
 import { ConSesion } from "@/components/admin/ConSesion";
 import { EditorSecciones } from "@/components/admin/EditorSecciones";
+import { listarSeccionesPanel } from "@/lib/admin/secciones";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
 
 async function Secciones() {
-  const supabase = await crearClienteServidor();
-  const { data, error } = await supabase.from("secciones").select("id, nombre, visible, productos(count)").order("orden");
-  if (error) throw error;
-  const secciones = data.map((s) => ({
-    id: s.id,
-    nombre: s.nombre,
-    visible: s.visible,
-    productos: (s.productos as unknown as { count: number }[])[0]?.count ?? 0,
-  }));
-  return <EditorSecciones secciones={secciones} />;
+  return <EditorSecciones secciones={await listarSeccionesPanel(await crearClienteServidor(), null)} />;
 }
 
 export default function PaginaSecciones() {

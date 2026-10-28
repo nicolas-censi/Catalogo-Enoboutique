@@ -59,7 +59,7 @@ test("CA-3: desde Secciones se entra a los destacados; al principio no hay", asy
   await page.goto("/admin/secciones");
   await page.getByRole("link", { name: seccion, exact: true }).click();
   await expect(page).toHaveURL(`/admin/secciones/${ids.seccion}`);
-  await expect(page.getByRole("heading", { level: 1, name: `Destacados de ${seccion}` })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: seccion })).toBeVisible();
   await expect(page.getByText("Todavía no hay destacados en esta sección.")).toBeVisible();
   expect(await enCarta(page)).toEqual(["Alfa Malbec", "Beta Malbec", "Zeta Malbec"]);
 });

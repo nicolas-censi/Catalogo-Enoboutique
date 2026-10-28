@@ -1,6 +1,7 @@
 // Destacados de una sección (spec 005, CA-3): van primero en la carta, en el orden que
 // elige el personal (productos.orden). El resto de la sección se ordena solo.
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { listarSeccionesPanel, type SeccionAdmin } from "@/lib/admin/secciones";
 import type { Database } from "@/lib/tipos-db";
 
 type Cliente = SupabaseClient<Database>;
@@ -24,14 +25,29 @@ const aDestacable = (p: Fila): ProductoDestacable => ({
   enCarta: p.visible && p.anadas.some((a) => a.en_stock),
 });
 
-export async function leerDestacados(
-  cliente: Cliente,
-  seccionId: string,
-): Promise<{ seccion: { id: string; nombre: string }; destacados: ProductoDestacable[] } | null> {
+export type PantallaSeccion = {
+  seccion: { id: string; nombre: string };
+  /** La sección de la que es subsección, o null si es de primer nivel (spec 011). */
+  padre: { id: string; nombre: string } | null;
+  /** Solo para secciones de primer nivel. */
+  subsecciones: SeccionAdmin[];
+  /** Una sección con subsecciones no tiene destacados propios: los tiene cada una. */
+  destacados: ProductoDestacable[];
+};
+
+export async function leerDestacados(cliente: Cliente, seccionId: string): Promise<PantallaSeccion | null> {
   if (!UUID.test(seccionId)) return null;
-  const { data: seccion, error } = await cliente.from("secciones").select("id, nombre").eq("id", seccionId).maybeSingle();
+  const { data: seccion, error } = await cliente
+    .from("secciones")
+    .select("id, nombre, seccion_padre_id")
+    .eq("id", seccionId)
+    .maybeSingle();
   if (error) throw error;
   if (!seccion) return null;
+  const padre = seccion.seccion_padre_id
+    ? (await cliente.from("secciones").select("id, nombre").eq("id", seccion.seccion_padre_id).single()).data
+    : null;
+  const subsecciones = padre ? [] : await listarSeccionesPanel(cliente, seccion.id);
   const productos = await cliente
     .from("productos")
     .select(COLUMNAS)
@@ -39,7 +55,12 @@ export async function leerDestacados(
     .not("orden", "is", null)
     .order("orden");
   if (productos.error) throw productos.error;
-  return { seccion, destacados: (productos.data as unknown as Fila[]).map(aDestacable) };
+  return {
+    seccion: { id: seccion.id, nombre: seccion.nombre },
+    padre,
+    subsecciones,
+    destacados: (productos.data as unknown as Fila[]).map(aDestacable),
+  };
 }
 
 /** Productos de la sección que todavía no son destacados, por nombre, bodega o código. */
