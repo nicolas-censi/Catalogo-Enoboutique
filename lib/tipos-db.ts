@@ -390,6 +390,11 @@ export type Database = {
       es_encargado: { Args: never; Returns: boolean }
       es_personal: { Args: never; Returns: boolean }
       normalizar_busqueda: { Args: { texto: string }; Returns: string }
+      ordenar_destacados: {
+        Args: { ids: string[]; seccion: string }
+        Returns: undefined
+      }
+      ordenar_secciones: { Args: { ids: string[] }; Returns: undefined }
     }
     Enums: {
       tipo_anada: "con_anio" | "sin_especificar" | "sin_anada"

@@ -9,8 +9,9 @@
 - Vista `carta_publica`: se agrega al final la columna `producto_precio_min`
   (`min(a.precio) over (partition by p.id)` entre las añadas visibles en la carta).
 - Funciones (`security invoker`, sujetas a RLS, solo personal):
-  - `ordenar_secciones(ids uuid[])`: pone `orden = posición` a cada sección. Rechaza
-    si la lista no tiene exactamente todas las secciones.
+  - `ordenar_secciones(ids uuid[])`: las secciones de `ids` toman las posiciones 1..n;
+    las que no vinieron (por ejemplo, una recién creada por otra persona mientras se
+    ordenaba) quedan al final, en su orden anterior.
   - `ordenar_destacados(seccion uuid, ids uuid[])`: pone `orden = posición` a los
     productos de `ids` (todos de esa sección; si no, rechaza) y `null` al resto de la
     sección. En una sola transacción.
