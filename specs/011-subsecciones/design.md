@@ -12,9 +12,10 @@ Una subsección es una **sección con sección padre**. Así reusa todo lo de la
   los mueve).
 - Trigger en `productos` (CA-2): `seccion_id` no puede ser una sección que tiene
   subsecciones ("Elegí una subsección de Cava.").
-- Función `crear_subseccion(padre uuid, nombre text) returns uuid` (personal): crea la
-  subsección al final de sus hermanas; si es la primera y el padre tiene productos, los
-  pasa todos a la nueva (en la misma transacción) y devuelve cuántos movió.
+- Función `crear_subseccion(padre uuid, nombre text) returns table (id, movidos)`
+  (personal): crea la subsección al final de sus hermanas; si es la primera y el padre
+  tiene productos, los pasa todos a la nueva, conservando sus destacados (en la misma
+  transacción), y devuelve cuántos movió.
 - `ordenar_secciones(ids)` pasa a ordenar **entre hermanas**: todas las de `ids` tienen
   que tener el mismo padre (o ninguno); las demás hermanas quedan al final. Las de otro
   nivel no se tocan.

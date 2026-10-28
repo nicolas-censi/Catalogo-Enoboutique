@@ -412,6 +412,13 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      crear_subseccion: {
+        Args: { nombre: string; padre: string }
+        Returns: {
+          id: string
+          movidos: number
+        }[]
+      }
       es_encargado: { Args: never; Returns: boolean }
       es_personal: { Args: never; Returns: boolean }
       normalizar_busqueda: { Args: { texto: string }; Returns: string }

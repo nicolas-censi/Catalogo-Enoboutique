@@ -3,7 +3,8 @@
 -- subsección (crear_subseccion, en T2, los mueve al crear la primera).
 
 alter table public.secciones
-  add column seccion_padre_id uuid references public.secciones (id) on delete restrict,
+  -- Sin "on delete": no se borra una sección con subsecciones, pero sí ambas juntas.
+  add column seccion_padre_id uuid references public.secciones (id),
   add constraint secciones_padre_distinto check (seccion_padre_id is distinct from id);
 
 create index secciones_padre_orden_idx on public.secciones (seccion_padre_id, orden);

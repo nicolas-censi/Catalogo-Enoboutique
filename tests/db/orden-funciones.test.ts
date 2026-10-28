@@ -19,7 +19,7 @@ async function insertar(tabla: string, fila: Record<string, unknown>) {
 }
 
 const ordenSecciones = async () =>
-  ((await admin.from("secciones").select("id").order("orden").order("id")).data ?? []).map((s) => s.id);
+  ((await admin.from("secciones").select("id").is("seccion_padre_id", null).order("orden").order("id")).data ?? []).map((s) => s.id);
 
 let a: string, b: string, c: string;
 let seccion: string, otra: string;
