@@ -24,3 +24,21 @@ for (const [caso, preparar, esperado] of [
     await expect(page.getByRole("article").getByRole("heading")).toHaveText(["Salentein Primus Malbec"]);
   });
 }
+
+test("un problema desconocido muestra su código para diagnosticar", async ({ page }) => {
+  await page.addInitScript(() => {
+    navigator.mediaDevices.getUserMedia = () => Promise.reject(new DOMException("simulado", "ErrorRaroDeCamara"));
+  });
+  await page.goto("/escanear");
+  await expect(page.getByRole("status")).toHaveText(/no permite usar la cámara/);
+  await expect(page.getByText("Código del problema: ErrorRaroDeCamara")).toBeVisible();
+});
+
+test("los problemas conocidos no muestran código técnico", async ({ page }) => {
+  await page.addInitScript(() => {
+    navigator.mediaDevices.getUserMedia = () => Promise.reject(new DOMException("simulado", "NotAllowedError"));
+  });
+  await page.goto("/escanear");
+  await expect(page.getByRole("status")).toHaveText(/permiso/);
+  await expect(page.getByText(/Código del problema/)).toHaveCount(0);
+});

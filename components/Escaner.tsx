@@ -17,7 +17,7 @@ type Estado =
   | { tipo: "buscando" }
   | { tipo: "encontrado"; nombre: string }
   | { tipo: "no-encontrado"; codigo: string }
-  | { tipo: "error"; mensaje: string };
+  | { tipo: "error"; mensaje: string; codigo: string | null };
 
 /** Busca el código (y sus variantes) en la carta pública. */
 async function buscarProducto(codigo: string) {
@@ -73,23 +73,27 @@ export function Escaner() {
 
     async function iniciar() {
       if (!navigator.mediaDevices?.getUserMedia) {
-        setEstado({ tipo: "error", mensaje: mensajeErrorCamara("SinSoporte") });
+        setEstado({ tipo: "error", mensaje: mensajeErrorCamara("SinSoporte"), codigo: null });
         return;
       }
       try {
-        const [camara, nuevoLector] = await Promise.all([
-          navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false }),
-          crearLector(),
-        ]);
-        if (!activo) return camara.getTracks().forEach((p) => p.stop());
+        // Primero el lector y después la cámara: si el lector no carga, la cámara ni se
+        // enciende; y si algo falla después, se apaga (ver catch).
+        lector = await crearLector();
+        const camara = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
         flujo.current = camara;
-        lector = nuevoLector;
+        if (!activo) return apagarCamara();
         video.current!.srcObject = camara;
         await video.current!.play();
         setEstado({ tipo: "escaneando" });
         leer();
       } catch (error) {
-        if (activo) setEstado({ tipo: "error", mensaje: mensajeErrorCamara((error as Error).name) });
+        apagarCamara();
+        const nombre = (error as Error)?.name || "Error";
+        const mensaje = mensajeErrorCamara(nombre);
+        // Si el problema no es uno de los conocidos, se muestra su código para diagnosticar.
+        const conocido = mensaje !== mensajeErrorCamara("SinSoporte");
+        if (activo) setEstado({ tipo: "error", mensaje, codigo: conocido ? null : nombre });
       }
     }
 
@@ -123,6 +127,9 @@ export function Escaner() {
         {mensaje}
       </p>
       {estado.tipo === "no-encontrado" && <p className="text-texto-suave">{t.codigoLeido(estado.codigo)}</p>}
+      {estado.tipo === "error" && estado.codigo && (
+        <p className="text-sm text-texto-suave">{t.codigoProblema(estado.codigo)}</p>
+      )}
       <div className="mt-4 flex flex-wrap gap-2">
         {(estado.tipo === "no-encontrado" || estado.tipo === "error") && (
           <button

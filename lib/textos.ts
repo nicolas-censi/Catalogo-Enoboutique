@@ -31,6 +31,7 @@ export const textos = {
     buscarPorNombre: "Buscar por nombre",
     cerrar: "Cerrar",
     camara: "Imagen de la cámara",
+    codigoProblema: (codigo: string) => `Código del problema: ${codigo}`,
     sinPermiso:
       "No tenemos permiso para usar la cámara. Habilitalo en la configuración del navegador (el ícono al lado de la dirección) y volvé a intentar, o escribí el número del código.",
     sinCamara: "No encontramos una cámara en este dispositivo. Escribí el número del código.",
