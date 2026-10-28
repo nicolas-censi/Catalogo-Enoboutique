@@ -1,6 +1,6 @@
 # 011 – Subsecciones
 
-**Estado:** Aprobada (2026-10-28)
+**Estado:** Implementada (2026-10-29)
 
 ## Objetivo
 Que una sección de la carta se pueda dividir en subsecciones (por ejemplo, Cava en

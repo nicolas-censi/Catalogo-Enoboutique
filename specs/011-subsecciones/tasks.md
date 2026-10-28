@@ -15,4 +15,4 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   CA-4, CA-5)
 - [x] T6 — Selector de sección en la ficha y filtro de la lista con subsecciones;
   "Cava › Joyitas" en la lista; e2e. (CA-2, CA-6)
-- [ ] T7 — Accesibilidad y celular de las pantallas nuevas. (CA-3, CA-5)
+- [x] T7 — Accesibilidad y celular de las pantallas nuevas. (CA-3, CA-5)
