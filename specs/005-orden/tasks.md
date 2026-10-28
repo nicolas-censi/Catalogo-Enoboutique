@@ -15,4 +15,4 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   que verifica la carta. (CA-1)
 - [x] T6 — `/admin/secciones/[id]`: destacados arrastrables, quitar y agregar desde
   el buscador; e2e que verifica la carta. (CA-3)
-- [ ] T7 — Accesibilidad y celular: axe, manija de 44 px y scroll sin trabas. (CA-4)
+- [x] T7 — Accesibilidad y celular: axe, manija de 44 px y scroll sin trabas. (CA-4)

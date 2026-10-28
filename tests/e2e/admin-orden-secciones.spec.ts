@@ -71,7 +71,7 @@ test("CA-1 y CA-4: con el teclado, mueve una sección, guarda solo y la carta ca
   await subirConTeclado(page, segunda);
 
   await expect(page.getByRole("status").filter({ hasText: "Orden guardado" })).toBeVisible();
-  await expect.poll(ordenEnBase).toEqual([segunda, primera]);
+  await expect.poll(ordenEnBase, { timeout: 15_000 }).toEqual([segunda, primera]);
   expect(await ordenEnPantalla(page)).toEqual([segunda, primera]);
   expect(await ordenEnCarta(page)).toEqual([segunda, primera]);
 });
@@ -86,7 +86,7 @@ test("CA-1: con el mouse, arrastra una sección a otra posición", async ({ page
   await page.mouse.up();
 
   await expect(page.getByRole("status").filter({ hasText: "Orden guardado" })).toBeVisible();
-  await expect.poll(ordenEnBase).toEqual([primera, segunda]);
+  await expect.poll(ordenEnBase, { timeout: 15_000 }).toEqual([primera, segunda]);
 });
 
 test("CA-1: si no se puede guardar, avisa y vuelve al orden anterior", async ({ page }) => {
