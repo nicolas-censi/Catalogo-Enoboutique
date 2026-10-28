@@ -72,18 +72,35 @@ disponibles y sus precios, sin tener que escribir nada.
 - **Entonces** los botones tienen nombre, el resultado se anuncia ("Encontramos Rutini
   Malbec") y axe no reporta errores graves.
 
+### CA-9: Linterna
+- **Dado** el escáner abierto en un celular cuya cámara tiene linterna y el navegador
+  permite usarla (Chrome en Android)
+- **Cuando** el cliente toca "Prender linterna"
+- **Entonces** se prende el flash para iluminar el código, y el mismo botón ("Apagar
+  linterna") lo apaga. Al cerrar el escáner, la linterna se apaga con la cámara.
+- Y si el navegador no permite la linterna (Safari en iPhone), el botón no aparece.
+
+### CA-10: Lectura con la luz del local
+- **Dado** el escáner abierto
+- **Cuando** se abre la cámara
+- **Entonces** se pide la cámara trasera en alta resolución (hasta 1920×1080) y con
+  enfoque automático continuo cuando el celular lo permite, para leer mejor los códigos
+  chicos o con poca luz.
+
 ## Fuera de alcance
 - Escanear el QR de la mesa o del local (el QR que abre la carta lo lee la cámara del
   celular por su cuenta; spec 9).
 - Escanear desde el panel de administración para cargar códigos (se puede sumar más
   adelante).
-- Linterna, zoom o elegir otra cámara.
+- Zoom o elegir otra cámara.
 
 ## Decisiones tomadas en la revisión
 - **Librería:** aprobada. Se usa el lector del navegador cuando existe y, si no,
   `barcode-detector` (ZXing), servida desde el propio sitio.
 - **Botón:** solo en el inicio, al costado del buscador, circular y con un ícono de
   escáner.
+- **Linterna (prueba en Android real):** se agrega un botón para prender el flash
+  (CA-9), y se pide más resolución y enfoque continuo (CA-10).
 
 ## Ideas para más adelante
 - Escanear desde el panel para cargar el código de barras de un producto.

@@ -18,5 +18,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T9 — Carga diferida y privacidad: e2e de pedidos de red (sin archivos del lector
   en la carta, sin imágenes enviadas). (CA-6, CA-7)
 - [x] T10 — Accesibilidad: anuncios, nombres y axe (automatizado). (CA-8)
+- [x] T12 — Linterna (si la cámara y el navegador la permiten), alta resolución y enfoque
+  continuo; e2e con una cámara que informa linterna. (CA-9, CA-10)
 - [ ] T11 — Prueba manual en un iPhone y un Android reales, con botellas de verdad,
   desde el enlace de Vercel. (CA-2)

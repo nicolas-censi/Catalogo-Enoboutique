@@ -11,6 +11,11 @@ import { textos } from "@/lib/textos";
 const t = textos.escaner;
 const CADA_MS = 200;
 
+// Capacidades que la cámara puede informar y TypeScript todavía no tipa.
+type Capacidades = MediaTrackCapabilities & { torch?: boolean; focusMode?: string[] };
+type Avanzadas = MediaTrackConstraintSet & { torch?: boolean; focusMode?: string };
+const avanzadas = (r: Avanzadas): MediaTrackConstraints => ({ advanced: [r as MediaTrackConstraintSet] });
+
 type Estado =
   | { tipo: "iniciando" }
   | { tipo: "escaneando" }
@@ -35,11 +40,26 @@ export function Escaner() {
   const flujo = useRef<MediaStream | null>(null);
   const [estado, setEstado] = useState<Estado>({ tipo: "iniciando" });
   const [intento, setIntento] = useState(0);
+  const [linterna, setLinterna] = useState<{ disponible: boolean; prendida: boolean }>({ disponible: false, prendida: false });
 
   const apagarCamara = useCallback(() => {
+    // Al apagar la cámara se apaga también la linterna.
     flujo.current?.getTracks().forEach((pista) => pista.stop());
     flujo.current = null;
+    setLinterna({ disponible: false, prendida: false });
   }, []);
+
+  async function alternarLinterna() {
+    const pista = flujo.current?.getVideoTracks()[0];
+    if (!pista) return;
+    const prender = !linterna.prendida;
+    try {
+      await pista.applyConstraints(avanzadas({ torch: prender }));
+      setLinterna({ disponible: true, prendida: prender });
+    } catch {
+      setLinterna({ disponible: false, prendida: false });
+    }
+  }
 
   useEffect(() => {
     let activo = true;
@@ -80,9 +100,19 @@ export function Escaner() {
         // Primero el lector y después la cámara: si el lector no carga, la cámara ni se
         // enciende; y si algo falla después, se apaga (ver catch).
         lector = await crearLector();
-        const camara = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
+        // Cámara trasera en alta resolución: los códigos chicos se leen mejor (CA-10).
+        const camara = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { ideal: "environment" }, width: { ideal: 1920 }, height: { ideal: 1080 } },
+          audio: false,
+        });
         flujo.current = camara;
         if (!activo) return apagarCamara();
+        const pista = camara.getVideoTracks()[0];
+        const capacidades = (pista.getCapabilities?.() ?? {}) as Capacidades;
+        if (capacidades.focusMode?.includes("continuous")) {
+          pista.applyConstraints(avanzadas({ focusMode: "continuous" })).catch(() => {});
+        }
+        setLinterna({ disponible: capacidades.torch === true, prendida: false });
         video.current!.srcObject = camara;
         await video.current!.play();
         setEstado({ tipo: "escaneando" });
@@ -131,6 +161,16 @@ export function Escaner() {
         <p className="text-sm text-texto-suave">{t.codigoProblema(estado.codigo)}</p>
       )}
       <div className="mt-4 flex flex-wrap gap-2">
+        {estado.tipo === "escaneando" && linterna.disponible && (
+          <button
+            type="button"
+            aria-pressed={linterna.prendida}
+            onClick={alternarLinterna}
+            className={`min-h-11 rounded-full border border-dorado px-5 font-semibold ${linterna.prendida ? "bg-dorado text-boton-texto" : ""}`}
+          >
+            {linterna.prendida ? t.apagarLinterna : t.prenderLinterna}
+          </button>
+        )}
         {(estado.tipo === "no-encontrado" || estado.tipo === "error") && (
           <button
             type="button"
