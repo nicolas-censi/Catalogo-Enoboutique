@@ -58,3 +58,12 @@ export async function borrarSeccion(id: string): Promise<{ error: string | null 
   listo();
   return { error: null };
 }
+
+export async function ordenarSecciones(ids: string[]): Promise<{ error: string | null }> {
+  await exigirPersonal();
+  const supabase = await crearClienteServidor();
+  const { error } = await supabase.rpc("ordenar_secciones", { ids });
+  if (error) return { error: textos.admin.orden.errorGuardar };
+  listo();
+  return { error: null };
+}

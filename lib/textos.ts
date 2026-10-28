@@ -84,6 +84,37 @@ export const textos = {
     salir: "Salir",
     productos: "Productos",
     secciones: "Secciones",
+    orden: {
+      mover: (nombre: string) => `Mover ${nombre}`,
+      instrucciones:
+        "Para mover, apretá Espacio, usá las flechas arriba y abajo, y apretá Espacio para soltar. Escape cancela.",
+      tomado: (nombre: string, posicion: number, total: number) =>
+        `Tomaste ${nombre}, posición ${posicion} de ${total}. Usá las flechas para moverlo.`,
+      posicion: (nombre: string, posicion: number, total: number) => `${nombre}, posición ${posicion} de ${total}.`,
+      soltado: (nombre: string, posicion: number, total: number) => `Soltaste ${nombre} en la posición ${posicion} de ${total}.`,
+      cancelado: (nombre: string, posicion: number) => `Cancelado. ${nombre} volvió a la posición ${posicion}.`,
+      guardado: "Orden guardado.",
+      errorGuardar: "No se pudo guardar el orden. Probá de nuevo.",
+    },
+    destacados: {
+      titulo: (seccion: string) => `Destacados de ${seccion}`,
+      volver: "Volver a secciones",
+      seccionNoEncontrada: "No encontramos esta sección.",
+      explicacion:
+        "Los destacados van primero en la carta, en este orden. El resto de la sección se ordena solo: por bodega y, dentro de cada bodega, del más caro al más barato.",
+      lista: "Destacados",
+      vacia: "Todavía no hay destacados en esta sección.",
+      quitar: (nombre: string) => `Quitar ${nombre}`,
+      quitarCorto: "Quitar",
+      noSeVe: "No se ve en la carta (oculto o sin stock)",
+      agregarDe: (seccion: string) => `Agregar un producto de ${seccion}`,
+      buscar: "Buscar",
+      resultados: "Resultados",
+      sinResultados: "No encontramos productos de esta sección que no estén destacados.",
+      agregar: (nombre: string) => `Agregar ${nombre}`,
+      agregarCorto: "Agregar",
+      errorBuscar: "No se pudo buscar. Probá de nuevo.",
+    },
     personal: "Personal",
     verCarta: "Ver la carta",
     buscarProductos: "Buscar productos",
@@ -175,7 +206,8 @@ export const textos = {
     cantidadProductos: (n: number) => `${n} ${n === 1 ? "producto" : "productos"}`,
     noBorrarSeccion: (n: number) => `Tiene ${n} ${n === 1 ? "producto" : "productos"}: no se puede borrar. Podés ocultarla.`,
     confirmarBorrarSeccion: (nombre: string) => `¿Borrar la sección ${nombre}?`,
-    ordenSecciones: "El orden se cambia arrastrando (próximamente). Las secciones nuevas quedan al final.",
-    columnasSecciones: { seccion: "Sección", productos: "Productos", visible: "En la carta" },
+    ordenSecciones:
+      "Arrastrá las secciones desde la manija para cambiar el orden de la carta (con el teclado: Espacio y flechas). Las secciones nuevas quedan al final.",
+    columnasSecciones: { orden: "Orden", seccion: "Sección", productos: "Productos", visible: "En la carta" },
   },
 } as const;
