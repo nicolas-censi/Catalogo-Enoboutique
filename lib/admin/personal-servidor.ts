@@ -1,12 +1,13 @@
 import "server-only";
 import { createClient } from "@supabase/supabase-js";
+import { aEmailInterno, contrasenaInterna, deEmailInterno } from "@/lib/admin/usuario";
 import type { Database } from "@/lib/tipos-db";
 
 /**
  * Cliente con la clave secreta, SOLO para la API de administración de Supabase Auth
- * (invitar, dar de baja, ver emails). Es la única excepción a "la app no usa la clave
- * secreta": Supabase no permite hacer esto de otra forma. Se usa únicamente desde
- * Server Actions que antes verifican que quien llama es encargado.
+ * (dar de alta, cambiar contraseñas, dar de baja y ver usuarios). Es la única excepción
+ * a "la app no usa la clave secreta": Supabase no permite hacer esto de otra forma. Se
+ * usa únicamente desde Server Actions que antes verifican que quien llama es encargado.
  */
 function clienteAdministracion() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -15,38 +16,28 @@ function clienteAdministracion() {
   return createClient<Database>(url, clave, { auth: { persistSession: false, autoRefreshToken: false } });
 }
 
-export type CuentaPersonal = { id: string; email: string; activa: boolean };
-
-/** Emails y estado de las cuentas indicadas. */
-export async function cuentas(ids: string[]): Promise<Map<string, CuentaPersonal>> {
+/** Usuario de cada una de las cuentas indicadas (spec 012). */
+export async function usuarios(ids: string[]): Promise<Map<string, string>> {
   const { data, error } = await clienteAdministracion().auth.admin.listUsers({ perPage: 1000 });
   if (error) throw error;
   const buscadas = new Set(ids);
-  return new Map(
-    data.users
-      .filter((u) => buscadas.has(u.id))
-      .map((u) => [u.id, { id: u.id, email: u.email ?? "", activa: !!u.last_sign_in_at }]),
-  );
+  return new Map(data.users.filter((u) => buscadas.has(u.id)).map((u) => [u.id, deEmailInterno(u.email ?? "")]));
 }
 
-export async function buscarCuentaPorEmail(email: string) {
-  const { data, error } = await clienteAdministracion().auth.admin.listUsers({ perPage: 1000 });
-  if (error) throw error;
-  return data.users.find((u) => u.email?.toLowerCase() === email.toLowerCase()) ?? null;
+/** Crea la cuenta con usuario y contraseña, lista para entrar (sin mails). */
+export async function crearCuenta(usuario: string, contrasena: string): Promise<{ id: string } | { error: "repetido" | "otro" }> {
+  const { data, error } = await clienteAdministracion().auth.admin.createUser({
+    email: aEmailInterno(usuario),
+    password: contrasenaInterna(contrasena),
+    email_confirm: true,
+  });
+  if (error) return { error: error.code === "email_exists" ? "repetido" : "otro" };
+  return { id: data.user.id };
 }
 
-/**
- * Crea la cuenta y manda el mail de invitación. Con MAILS_DE_PRUEBA=1 (solo tests) crea
- * la cuenta sin mandar el mail.
- */
-export async function invitar(email: string, redirectTo: string): Promise<{ id: string } | { error: string }> {
-  const admin = clienteAdministracion().auth.admin;
-  if (process.env.MAILS_DE_PRUEBA === "1") {
-    const { data, error } = await admin.generateLink({ type: "invite", email, options: { redirectTo } });
-    return error ? { error: error.message } : { id: data.user.id };
-  }
-  const { data, error } = await admin.inviteUserByEmail(email, { redirectTo });
-  return error ? { error: error.message } : { id: data.user.id };
+export async function cambiarContrasenaCuenta(id: string, contrasena: string): Promise<string | null> {
+  const { error } = await clienteAdministracion().auth.admin.updateUserById(id, { password: contrasenaInterna(contrasena) });
+  return error?.message ?? null;
 }
 
 export async function borrarCuenta(id: string): Promise<string | null> {

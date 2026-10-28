@@ -1,16 +1,15 @@
 "use server";
 
-import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { obtenerSesionPanel, type Rol } from "@/lib/admin/sesion";
 import { traducirError } from "@/lib/admin/errores";
-import { borrarCuenta, buscarCuentaPorEmail, invitar } from "@/lib/admin/personal-servidor";
+import { borrarCuenta, cambiarContrasenaCuenta, crearCuenta } from "@/lib/admin/personal-servidor";
+import { validarContrasena, validarUsuario } from "@/lib/admin/usuario";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
 
 const t = textos.admin;
 const ROLES: Rol[] = ["encargado", "vendedor"];
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 async function exigirEncargado() {
   const sesion = await obtenerSesionPanel();
@@ -18,37 +17,53 @@ async function exigirEncargado() {
   return sesion;
 }
 
-export type EstadoInvitacion = { errorEmail: string | null; error: string | null; enviadoA: string | null; enviados: number };
+export type EstadoAlta = {
+  errores: Partial<Record<"usuario" | "contrasena", string>>;
+  error: string | null;
+  creado: string | null;
+  creados: number;
+};
 
-export async function invitarPersona(estado: EstadoInvitacion, formulario: FormData): Promise<EstadoInvitacion> {
+export async function darDeAlta(estado: EstadoAlta, formulario: FormData): Promise<EstadoAlta> {
   await exigirEncargado();
-  const email = String(formulario.get("email") ?? "").trim().toLowerCase();
+  const validado = validarUsuario(String(formulario.get("usuario") ?? ""));
+  const contrasena = String(formulario.get("contrasena") ?? "");
   const rol = String(formulario.get("rol") ?? "") as Rol;
-  if (!EMAIL.test(email)) return { ...estado, errorEmail: t.emailInvalido, error: null, enviadoA: null };
-  if (!ROLES.includes(rol)) return { ...estado, errorEmail: null, error: t.errorGuardar, enviadoA: null };
+  const errores: EstadoAlta["errores"] = {};
+  if ("error" in validado) errores.usuario = validado.error;
+  const errorContrasena = validarContrasena(contrasena);
+  if (errorContrasena) errores.contrasena = errorContrasena;
+  if (Object.keys(errores).length > 0 || "error" in validado) return { ...estado, errores, error: null, creado: null };
+  if (!ROLES.includes(rol)) return { ...estado, errores: {}, error: t.errorGuardar, creado: null };
 
-  const supabase = await crearClienteServidor();
-  const existente = await buscarCuentaPorEmail(email);
-  let userId: string;
-  if (existente) {
-    const yaEs = await supabase.from("personal").select("user_id").eq("user_id", existente.id).maybeSingle();
-    if (yaEs.data) return { ...estado, errorEmail: null, error: t.yaEsPersonal(email), enviadoA: null };
-    // Ya tenía cuenta (por ejemplo, alguien dado de alta antes): solo se lo suma al
-    // personal; entra con su contraseña o con "Olvidé mi contraseña".
-    userId = existente.id;
-  } else {
-    const h = await headers();
-    const origen = `${h.get("x-forwarded-proto") ?? "https"}://${h.get("host")}`;
-    const resultado = await invitar(email, `${origen}/admin/restablecer/confirmar`);
-    if ("error" in resultado) return { ...estado, errorEmail: null, error: t.errorInvitar, enviadoA: null };
-    userId = resultado.id;
+  const cuenta = await crearCuenta(validado.usuario, contrasena);
+  if ("error" in cuenta) {
+    return cuenta.error === "repetido"
+      ? { ...estado, errores: { usuario: t.usuarioRepetido(validado.usuario) }, error: null, creado: null }
+      : { ...estado, errores: {}, error: t.errorGuardar, creado: null };
   }
-
-  // El alta en el personal la hace el encargado con su sesión (RLS).
-  const { error } = await supabase.from("personal").insert({ user_id: userId, rol });
-  if (error) return { ...estado, errorEmail: null, error: traducirError(error), enviadoA: null };
+  // El alta en el personal la hace el encargado con su sesión (RLS). Si falla, se borra
+  // la cuenta para no dejarla suelta.
+  const supabase = await crearClienteServidor();
+  const { error } = await supabase.from("personal").insert({ user_id: cuenta.id, rol });
+  if (error) {
+    await borrarCuenta(cuenta.id);
+    return { ...estado, errores: {}, error: traducirError(error), creado: null };
+  }
   revalidatePath("/admin/personal");
-  return { errorEmail: null, error: null, enviadoA: email, enviados: estado.enviados + 1 };
+  return { errores: {}, error: null, creado: validado.usuario, creados: estado.creados + 1 };
+}
+
+/** El encargado le pone una contraseña nueva a alguien del personal (también a sí mismo). */
+export async function cambiarContrasena(userId: string, contrasena: string): Promise<{ error: string | null; errorCampo: string | null }> {
+  await exigirEncargado();
+  const errorCampo = validarContrasena(contrasena);
+  if (errorCampo) return { error: null, errorCampo };
+  const supabase = await crearClienteServidor();
+  const esPersonal = await supabase.from("personal").select("user_id").eq("user_id", userId).maybeSingle();
+  if (!esPersonal.data) return { error: t.errorGuardar, errorCampo: null };
+  if (await cambiarContrasenaCuenta(userId, contrasena)) return { error: t.errorGuardar, errorCampo: null };
+  return { error: null, errorCampo: null };
 }
 
 export async function cambiarRol(userId: string, rol: Rol): Promise<{ error: string | null }> {
