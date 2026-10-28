@@ -2,7 +2,7 @@
 
 Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un criterio (CA-n).
 
-- [ ] T1 — Migración: `seccion_padre_id`, triggers de un solo nivel y de productos solo
+- [x] T1 — Migración: `seccion_padre_id`, triggers de un solo nivel y de productos solo
   en secciones sin subsecciones; tests de base. (CA-1, CA-2)
 - [ ] T2 — `crear_subseccion` (al final y moviendo los productos si es la primera) y
   `ordenar_secciones` entre hermanas; tests de base. (CA-1, CA-2, CA-5)

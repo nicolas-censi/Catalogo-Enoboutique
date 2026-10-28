@@ -6,8 +6,10 @@ Una subsección es una **sección con sección padre**. Así reusa todo lo de la
 
 - `secciones.seccion_padre_id uuid null references secciones(id) on delete restrict`.
 - Índice `(seccion_padre_id, orden)`.
-- Trigger en `secciones` (CA-1): el padre no puede tener padre (un solo nivel) y una
-  sección con productos no puede pasar a tener padre.
+- Trigger en `secciones` (CA-1): el padre no puede tener padre (un solo nivel), una
+  sección con subsecciones no puede pasar a ser subsección y una sección con productos
+  no puede recibir subsecciones directamente (solo con `crear_subseccion`, que primero
+  los mueve).
 - Trigger en `productos` (CA-2): `seccion_id` no puede ser una sección que tiene
   subsecciones ("Elegí una subsección de Cava.").
 - Función `crear_subseccion(padre uuid, nombre text) returns uuid` (personal): crea la

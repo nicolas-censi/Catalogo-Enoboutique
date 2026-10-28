@@ -238,6 +238,7 @@ export type Database = {
           id: string
           nombre: string
           orden: number
+          seccion_padre_id: string | null
           visible: boolean
         }
         Insert: {
@@ -246,6 +247,7 @@ export type Database = {
           id?: string
           nombre: string
           orden: number
+          seccion_padre_id?: string | null
           visible?: boolean
         }
         Update: {
@@ -254,9 +256,32 @@ export type Database = {
           id?: string
           nombre?: string
           orden?: number
+          seccion_padre_id?: string | null
           visible?: boolean
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "secciones_seccion_padre_id_fkey"
+            columns: ["seccion_padre_id"]
+            isOneToOne: false
+            referencedRelation: "carta_publica"
+            referencedColumns: ["seccion_id"]
+          },
+          {
+            foreignKeyName: "secciones_seccion_padre_id_fkey"
+            columns: ["seccion_padre_id"]
+            isOneToOne: false
+            referencedRelation: "carta_secciones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "secciones_seccion_padre_id_fkey"
+            columns: ["seccion_padre_id"]
+            isOneToOne: false
+            referencedRelation: "secciones"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
