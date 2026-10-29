@@ -16,6 +16,6 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T8 — Diccionario y bodegas de Tango en el panel; e2e. (CA-4, CA-5)
 - [x] T9 — Filtro "Sin sección" en la lista; e2e. (CA-6, CA-10)
 - [x] T11 — Lista de Lehonor: diccionario completo y bodegas con su código de Tango
-  precargadas; el seed no borra bodegas. (CA-4, CA-5)
+  precargadas tal cual figuran en la lista; el seed no borra bodegas. (CA-4, CA-5)
 - [ ] T10 — Prueba con el archivo real en el proyecto de desarrollo: revisar nombres,
   secciones y bodegas con el encargado. (todos)
