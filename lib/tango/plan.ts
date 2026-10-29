@@ -196,14 +196,24 @@ export function planear(reporte: Reporte, estado: EstadoActual, diccionario: Abr
   }
 
   // Bodegas nuevas: por código; si ya hay una con ese nombre sin código, se usa esa.
+  // Los nombres de bodega no se repiten: si el sugerido ya está usado, se le agrega el
+  // código ("Callejón (cdc)") para que el encargado lo corrija.
   const bodegasNuevas: Plan["bodegasNuevas"] = [];
   const conCodigo = new Set(estado.bodegas.map((b) => b.codigo).filter(Boolean));
+  const nombresUsados = new Set(estado.bodegas.map((b) => comparable(b.nombre)));
+  const asignadas = new Set<string>();
   for (const [codigo, descripciones] of descripcionesPorBodega) {
     if (conCodigo.has(codigo)) continue;
     const sugerido = nombreSugeridoBodega(descripciones, diccionario) ?? codigo.toUpperCase();
     const mismoNombre = estado.bodegas.find((b) => comparable(b.nombre) === comparable(sugerido));
-    if (mismoNombre && !mismoNombre.codigo) bodegasNuevas.push({ codigo, nombre: mismoNombre.nombre, existenteId: mismoNombre.id });
-    else bodegasNuevas.push({ codigo, nombre: mismoNombre ? `${sugerido} (${codigo})` : sugerido, existenteId: null });
+    if (mismoNombre && !mismoNombre.codigo && !asignadas.has(mismoNombre.id)) {
+      asignadas.add(mismoNombre.id);
+      bodegasNuevas.push({ codigo, nombre: mismoNombre.nombre, existenteId: mismoNombre.id });
+      continue;
+    }
+    const nombre = nombresUsados.has(comparable(sugerido)) ? `${sugerido} (${codigo})` : sugerido;
+    nombresUsados.add(comparable(nombre));
+    bodegasNuevas.push({ codigo, nombre, existenteId: null });
   }
 
   const enArchivo = new Set(reporte.articulos.map((a) => a.codigo));

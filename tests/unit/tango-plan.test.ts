@@ -126,3 +126,13 @@ describe("actualización (CA-8)", () => {
     expect(q.resumen.problemas).toEqual(["VIzuc0005: el código de barras 77900000001 ya es de otro producto; no se importa."]);
   });
 });
+
+describe("bodegas con el mismo nombre sugerido", () => {
+  it("la segunda lleva el código para no repetir el nombre", () => {
+    const p = plan(vacio, ["VIcyt0001", "CALLEJ DE BRUJAS MAL", null, 1], ["VIcdc0001", "CALLEJ DEL CRIMEN MAL", null, 1]);
+    expect(p.bodegasNuevas).toEqual([
+      { codigo: "cyt", nombre: "Callejón", existenteId: null },
+      { codigo: "cdc", nombre: "Callejón (cdc)", existenteId: null },
+    ]);
+  });
+});
