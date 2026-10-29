@@ -87,6 +87,8 @@ test.describe("CA-2: filtros en la dirección", () => {
     ["ocultos", ["Bramare Cabernet"]],
     ["sin-stock", ["Catena Alta Chardonnay"]],
     ["a-revisar", ["Durigutti Bonarda"]],
+    // Spec 008, CA-6 y CA-10: lo que la importación no pudo ubicar.
+    ["sin-seccion", ["Catena Alta Chardonnay"]],
   ] as const) {
     test(`filtra por ${estado}`, async ({ page }) => {
       await page.goto(`/admin?q=${prefijo}&estado=${estado}`);

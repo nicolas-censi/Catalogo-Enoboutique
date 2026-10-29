@@ -4,8 +4,8 @@ import type { Database } from "@/lib/tipos-db";
 
 type Cliente = SupabaseClient<Database>;
 export type ProductoAdmin = Database["public"]["Views"]["productos_admin"]["Row"];
-export type EstadoFiltro = "ocultos" | "sin-stock" | "a-revisar";
-export const ESTADOS: EstadoFiltro[] = ["ocultos", "sin-stock", "a-revisar"];
+export type EstadoFiltro = "ocultos" | "sin-stock" | "a-revisar" | "sin-seccion";
+export const ESTADOS: EstadoFiltro[] = ["ocultos", "sin-stock", "a-revisar", "sin-seccion"];
 export const POR_PAGINA = 50;
 
 export type Filtros = { q: string; seccion: string; estado: EstadoFiltro | ""; pagina: number };
@@ -45,6 +45,7 @@ export async function listarProductosAdmin(
   if (filtros.estado === "ocultos") consulta = consulta.eq("visible", false);
   if (filtros.estado === "sin-stock") consulta = consulta.eq("anadas_en_stock", 0);
   if (filtros.estado === "a-revisar") consulta = consulta.gt("anadas_a_revisar", 0);
+  if (filtros.estado === "sin-seccion") consulta = consulta.is("seccion_id", null);
 
   if (ordenBusqueda) {
     // Con búsqueda: orden por relevancia (lo devuelve buscar_admin), paginado acá.

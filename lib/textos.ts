@@ -156,7 +156,7 @@ export const textos = {
     estado: "Estado",
     todos: "Todos",
     filtrar: "Filtrar",
-    estados: { ocultos: "Ocultos", "sin-stock": "Sin stock", "a-revisar": "A revisar" },
+    estados: { ocultos: "Ocultos", "sin-stock": "Sin stock", "a-revisar": "A revisar", "sin-seccion": "Sin sección" },
     columnas: { producto: "Producto", bodega: "Bodega", seccion: "Sección", anadas: "Añadas", estado: "Estado" },
     oculto: "Oculto",
     sinStock: "Sin stock",
