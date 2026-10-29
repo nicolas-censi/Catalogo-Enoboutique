@@ -57,4 +57,5 @@
 - Reglas de nombres y secciones imperfectas: por eso todo es editable y lo dudoso
   queda marcado. Se prueban con el archivo real (sin subirlo al repositorio: se usa una
   muestra anonimizada en los tests).
-- Tamaño del archivo: el reporte pesa ~200 KB; límite de subida 5 MB.
+- Tamaño del archivo: el reporte pesa ~200 KB; límite de subida 4 MB (Vercel admite
+  hasta 4,5 MB por pedido).

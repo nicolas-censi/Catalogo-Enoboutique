@@ -11,7 +11,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T5 — `planear` (primera importación y actualizaciones); unit. (CA-3, CA-7, CA-8)
 - [x] T6 — Migración: `abreviaturas`, `bodegas.codigo_tango`, `importaciones` y
   `aplicar_importacion`; tests de base (atómico, permisos). (CA-1, CA-7, CA-8)
-- [ ] T7 — Pantalla `/admin/importar`: subir, resumen, Importar, resultado; e2e con un
+- [x] T7 — Pantalla `/admin/importar`: subir, resumen, Importar, resultado; e2e con un
   archivo de prueba. (CA-1, CA-10)
 - [ ] T8 — Diccionario y bodegas de Tango en el panel; e2e. (CA-4, CA-5)
 - [ ] T9 — Filtro "Sin sección" en la lista; e2e. (CA-6, CA-10)

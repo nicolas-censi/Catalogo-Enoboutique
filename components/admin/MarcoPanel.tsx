@@ -26,7 +26,10 @@ export function MarcoPanel({ sesion, children }: { sesion: SesionPanel; children
             <Link href="/admin" className={enlace}>{textos.admin.productos}</Link>
             <Link href="/admin/secciones" className={enlace}>{textos.admin.secciones}</Link>
             {sesion.rol === "encargado" && (
-              <Link href="/admin/personal" className={enlace}>{textos.admin.personal}</Link>
+              <>
+                <Link href="/admin/importar" className={enlace}>{textos.admin.importar.menu}</Link>
+                <Link href="/admin/personal" className={enlace}>{textos.admin.personal}</Link>
+              </>
             )}
             <Link href="/" className={enlace}>{textos.admin.verCarta}</Link>
           </nav>
