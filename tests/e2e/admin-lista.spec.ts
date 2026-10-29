@@ -87,6 +87,8 @@ test.describe("CA-2: filtros en la dirección", () => {
     ["ocultos", ["Bramare Cabernet"]],
     ["sin-stock", ["Catena Alta Chardonnay"]],
     ["a-revisar", ["Durigutti Bonarda"]],
+    // Spec 008, CA-6 y CA-10: lo que la importación no pudo ubicar.
+    ["sin-seccion", ["Catena Alta Chardonnay"]],
   ] as const) {
     test(`filtra por ${estado}`, async ({ page }) => {
       await page.goto(`/admin?q=${prefijo}&estado=${estado}`);
@@ -97,7 +99,7 @@ test.describe("CA-2: filtros en la dirección", () => {
 
   test("filtra por sección desde el formulario", async ({ page }) => {
     await page.goto(`/admin?q=${prefijo}`);
-    await page.getByLabel("Sección").selectOption({ label: `${prefijo} Tintos` });
+    await page.getByLabel("Sección", { exact: true }).selectOption({ label: `${prefijo} Tintos` });
     await page.getByRole("button", { name: "Filtrar" }).click();
     await expect(page).toHaveURL(new RegExp(`seccion=${seccionId}`));
     await expect(filas(page)).toHaveCount(3);

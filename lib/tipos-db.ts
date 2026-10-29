@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      abreviaturas: {
+        Row: {
+          abreviatura: string
+          es_varietal: boolean
+          expansion: string
+        }
+        Insert: {
+          abreviatura: string
+          es_varietal?: boolean
+          expansion: string
+        }
+        Update: {
+          abreviatura?: string
+          es_varietal?: boolean
+          expansion?: string
+        }
+        Relationships: []
+      }
       anadas: {
         Row: {
           actualizado_en: string
@@ -78,6 +96,7 @@ export type Database = {
       bodegas: {
         Row: {
           actualizado_en: string
+          codigo_tango: string | null
           creado_en: string
           id: string
           nombre: string
@@ -85,6 +104,7 @@ export type Database = {
         }
         Insert: {
           actualizado_en?: string
+          codigo_tango?: string | null
           creado_en?: string
           id?: string
           nombre: string
@@ -92,6 +112,7 @@ export type Database = {
         }
         Update: {
           actualizado_en?: string
+          codigo_tango?: string | null
           creado_en?: string
           id?: string
           nombre?: string
@@ -138,6 +159,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      importaciones: {
+        Row: {
+          aplicada_en: string | null
+          creada_en: string
+          creada_por: string | null
+          estado: string
+          id: string
+          plan: Json
+        }
+        Insert: {
+          aplicada_en?: string | null
+          creada_en?: string
+          creada_por?: string | null
+          estado?: string
+          id?: string
+          plan: Json
+        }
+        Update: {
+          aplicada_en?: string | null
+          creada_en?: string
+          creada_por?: string | null
+          estado?: string
+          id?: string
+          plan?: Json
+        }
+        Relationships: []
       }
       personal: {
         Row: {
@@ -326,6 +374,7 @@ export type Database = {
       }
     }
     Functions: {
+      aplicar_importacion: { Args: { importacion: string }; Returns: undefined }
       buscar_admin: {
         Args: { limite?: number; texto: string }
         Returns: {
