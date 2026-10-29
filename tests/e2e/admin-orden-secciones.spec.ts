@@ -78,6 +78,9 @@ test("CA-1 y CA-4: con el teclado, mueve una sección, guarda solo y la carta ca
 
 test("CA-1: con el mouse, arrastra una sección a otra posición", async ({ page }) => {
   await page.goto("/admin/secciones");
+  // Las secciones del test están al final de la lista: se las trae al centro de la
+  // pantalla (cerca del borde, dnd-kit hace scroll solo mientras se arrastra).
+  await manija(page, segunda).evaluate((el) => el.scrollIntoView({ block: "center" }));
   const origen = await manija(page, primera).boundingBox();
   const destino = await manija(page, segunda).boundingBox();
   await page.mouse.move(origen!.x + origen!.width / 2, origen!.y + origen!.height / 2);

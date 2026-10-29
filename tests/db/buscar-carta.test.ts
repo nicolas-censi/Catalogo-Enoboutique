@@ -44,7 +44,9 @@ async function producto(
 type Fila = { producto_id: string; anio: number | null; relevancia: number };
 
 async function buscar(texto: string): Promise<Fila[]> {
-  const { data, error } = await clienteAnon().rpc("buscar_carta", { texto });
+  // Sin el límite de 30 de la carta: la base tiene los productos reales de Tango y los
+  // de este test pueden quedar más abajo.
+  const { data, error } = await clienteAnon().rpc("buscar_carta", { texto, limite: 10000 });
   if (error) throw error;
   return data;
 }
