@@ -7,6 +7,11 @@
 begin;
 
 delete from public.productos where id::text like '5eed0000-0000-4000-8000-0000000002%';
+-- Subsecciones creadas a mano dentro de las secciones de ejemplo (spec 011), si quedaron
+-- vacías: sin esto no se pueden borrar las secciones de ejemplo.
+delete from public.secciones s
+where s.seccion_padre_id::text like '5eed0000-0000-4000-8000-0000000001%'
+  and not exists (select 1 from public.productos p where p.seccion_id = s.id);
 delete from public.secciones where id::text like '5eed0000-0000-4000-8000-0000000001%';
 delete from public.bodegas where id::text like '5eed0000-0000-4000-8000-0000000003%';
 
