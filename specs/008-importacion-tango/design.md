@@ -46,6 +46,17 @@
 | `/admin/importar/bodegas` | encargado | bodegas de Tango: código, nombre, productos; renombrar (CA-5) |
 | `/admin` | personal | filtro "Sin sección" (CA-6, CA-10) |
 
+## Elegir secciones (CA-11 y CA-12)
+- El plan guarda, por producto nuevo, `seccion` (nombre, para las secciones que crea la
+  importación) o `seccionId` (una sección o subsección que ya existe). Al confirmar, el
+  servidor aplica las elecciones del encargado al plan guardado y recién ahí lo aplica.
+  `aplicar_importacion` usa `seccionId` si viene.
+- El resumen trae todos los productos nuevos (nombre y sección sugerida) y la lista de
+  secciones y subsecciones elegibles. La tabla se pagina en el navegador.
+- Lista de Productos: acción de servidor `moverProductos` que recibe ids tildados o los
+  filtros actuales (para "todos los del filtro" se recalculan los ids en el servidor,
+  todas las páginas) y la sección; actualiza de a tandas.
+
 ## Decisiones y alternativas descartadas
 - **Plan en dos pasos (resumen → confirmar)** en vez de importar directo: el archivo
   puede venir mal y la carta es pública.

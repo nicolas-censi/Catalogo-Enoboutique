@@ -138,6 +138,28 @@ mano. Ver "Integración con Tango" en `specs/000-vision.md`.
 - Y en la lista de productos se pueden filtrar los que quedaron para revisar: sin
   sección, ocultos y con añadas "sin especificar".
 
+### CA-11: Elegir la sección al importar
+- **Dado** el resumen de una importación con productos nuevos
+- **Cuando** el encargado lo revisa
+- **Entonces** ve **todos** los productos nuevos (de a 50 por página), cada uno con un
+  selector de sección que trae la sugerida (CA-6) y deja elegir cualquier sección o
+  subsección, o "Sin sección".
+- Y puede filtrar los que quedaron "Sin sección", tildar varios (o todos los de la
+  página, o todos los del filtro) y ponerlos juntos en una sección.
+- Y al tocar **Importar**, cada producto entra en la sección elegida.
+
+### CA-12: Mover varios productos a una sección
+- **Dado** la lista de productos del panel, con o sin filtros (por ejemplo, "Sin
+  sección" o una búsqueda)
+- **Cuando** el personal tilda varios productos (uno por uno, todos los de la página o
+  **todos los que coinciden con el filtro**, aunque estén en varias páginas), elige una
+  sección o subsección y toca **Mover**
+- **Entonces** todos pasan a esa sección, la carta lo muestra al instante y se avisa
+  cuántos se movieron ("Se movieron 294 productos a Tintos.").
+- Y una sección que tiene subsecciones no se puede elegir (spec 011): se elige la
+  subsección.
+- Y un producto que era destacado deja de serlo al cambiar de sección (spec 005).
+
 ## Fuera de alcance
 - Stock desde Tango (capacidad 10).
 - Importar carnes, comidas, gift cards y otros (`AR`, `PR`, `01`, `CE`).
@@ -154,6 +176,8 @@ mano. Ver "Integración con Tango" en `specs/000-vision.md`.
   Experiencias).
 - **Quién importa:** solo el encargado, por ahora.
 - **Librería para leer Excel:** `read-excel-file` (solo lectura, liviana).
+- **Elegir la sección de muchos productos juntos:** en Importar (antes de confirmar) y en
+  la lista de Productos, tildando o con todos los del filtro (CA-11 y CA-12).
 - **Nombres:** se expanden las abreviaturas y se escriben en mayúscula y minúscula;
   editables, y una nueva importación no los pisa.
 
