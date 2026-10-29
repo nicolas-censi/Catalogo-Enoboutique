@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { DICCIONARIO_INICIAL } from "@/lib/tango/nombres";
-import { planear, type EstadoActual } from "@/lib/tango/plan";
+import { aplicarElecciones, planear, type EstadoActual } from "@/lib/tango/plan";
 import { leerReporte } from "@/lib/tango/reporte";
 
 // Spec 008, CA-3 y CA-5 a CA-9.
@@ -134,5 +134,24 @@ describe("bodegas con el mismo nombre sugerido", () => {
       { codigo: "cyt", nombre: "Callejón", existenteId: null },
       { codigo: "cdc", nombre: "Callejón (cdc)", existenteId: null },
     ]);
+  });
+});
+
+describe("aplicarElecciones (CA-11)", () => {
+  const p = plan(vacio, ["VIrut0001", "RUTINI MAL", null, 1], ["VIxxx0001", "CONFIADO ANFORA", null, 1], ["VIkit0001", "2024 BOX 1", null, 1]);
+
+  it("pone cada producto en la sección elegida y crea solo las secciones nuevas que se usan", () => {
+    const q = aplicarElecciones(p, { 0: "id:sub-joyitas", 1: "nueva:Tintos", 2: "" });
+    expect(q.productosNuevos.map((x) => [x.seccion, x.seccionId])).toEqual([
+      [null, "sub-joyitas"],
+      ["Tintos", null],
+      [null, null],
+    ]);
+    expect(q.seccionesNuevas).toEqual(["Tintos"]);
+    expect(q.resumen.sinSeccion).toBe(1);
+  });
+
+  it("sin elecciones deja la sugerida", () => {
+    expect(aplicarElecciones(p, {}).productosNuevos.map((x) => x.seccion)).toEqual(["Tintos", null, "Combos y boxes"]);
   });
 });

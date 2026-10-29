@@ -17,7 +17,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T9 — Filtro "Sin sección" en la lista; e2e. (CA-6, CA-10)
 - [x] T11 — Lista de Lehonor: diccionario completo y bodegas con su código de Tango
   precargadas tal cual figuran en la lista; el seed no borra bodegas. (CA-4, CA-5)
-- [ ] T12 — Plan con `seccionId` y `aplicar_importacion` que lo usa; tests. (CA-11)
+- [x] T12 — Plan con `seccionId` y `aplicar_importacion` que lo usa; tests. (CA-11)
 - [ ] T13 — Importar: todos los productos nuevos con selector de sección, filtro "Sin
   sección" y asignación de a varios; e2e. (CA-11)
 - [ ] T14 — Lista de Productos: tildar (uno, la página o todos los del filtro) y mover

@@ -40,6 +40,8 @@ export type Plan = {
     bodegaCodigo: string | null;
     /** Nombre de la sección (existente o nueva), o null: sin sección. */
     seccion: string | null;
+    /** Sección o subsección que eligió el encargado (CA-11); pisa a `seccion`. */
+    seccionId?: string | null;
     visible: boolean;
     codigosBarras: string[];
     anadas: AnadaPlan[];
@@ -235,5 +237,30 @@ export function planear(reporte: Reporte, estado: EstadoActual, diccionario: Abr
       faltanEnArchivo: estado.anadas.map((a) => a.codigo).filter((c) => !enArchivo.has(c)),
       problemas,
     },
+  };
+}
+
+/**
+ * Elección del encargado para un producto nuevo (CA-11): "" sin sección, "id:<uuid>" una
+ * sección o subsección que ya existe, "nueva:<nombre>" una que crea la importación.
+ */
+export type EleccionSeccion = string;
+
+/** Aplica al plan las secciones que eligió el encargado, por posición del producto. */
+export function aplicarElecciones(plan: Plan, elecciones: Record<number, EleccionSeccion>): Plan {
+  const productosNuevos = plan.productosNuevos.map((p, i) => {
+    const eleccion = elecciones[i];
+    if (eleccion === undefined) return p;
+    if (eleccion.startsWith("id:")) return { ...p, seccion: null, seccionId: eleccion.slice(3) };
+    if (eleccion.startsWith("nueva:")) return { ...p, seccion: eleccion.slice(6), seccionId: null };
+    return { ...p, seccion: null, seccionId: null };
+  });
+  // Solo se crean las secciones nuevas que quedaron en uso.
+  const usadas = new Set(productosNuevos.filter((p) => !p.seccionId && p.seccion).map((p) => p.seccion));
+  return {
+    ...plan,
+    productosNuevos,
+    seccionesNuevas: plan.seccionesNuevas.filter((s) => usadas.has(s)),
+    resumen: { ...plan.resumen, sinSeccion: productosNuevos.filter((p) => !p.seccion && !p.seccionId).length },
   };
 }

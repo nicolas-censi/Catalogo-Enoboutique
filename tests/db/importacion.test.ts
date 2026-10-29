@@ -119,6 +119,23 @@ describe("aplicar_importacion", () => {
     expect((await admin.from("productos").select("id").eq("nombre", n("Tampoco"))).data).toEqual([]);
   });
 
+  it("CA-11: usa la sección elegida (también una subsección) en vez de la sugerida", async () => {
+    const padre = (await admin.from("secciones").insert({ nombre: n("Cava elegida"), orden: 99000 }).select().single()).data!.id;
+    const sub = (await admin.from("secciones").insert({ nombre: n("Joyitas elegida"), orden: 1, seccion_padre_id: padre }).select().single()).data!.id;
+    const r = await aplicar({
+      seccionesNuevas: [],
+      bodegasNuevas: [],
+      productosNuevos: [
+        { tipo: "vino", nombre: n("Elegido"), varietal: null, bodegaCodigo: null, seccion: n("Tintos importados"), seccionId: sub, visible: true, codigosBarras: [], anadas: [anada(cod("e1"))] },
+      ],
+      anadasNuevas: [],
+      codigosBarrasNuevos: [],
+      precios: [],
+    });
+    expect(r.error).toBeNull();
+    expect((await admin.from("productos").select("seccion_id").eq("nombre", n("Elegido")).single()).data!.seccion_id).toBe(sub);
+  });
+
   it("no se aplica dos veces", async () => {
     const r = await aplicar({ seccionesNuevas: [], bodegasNuevas: [], productosNuevos: [], anadasNuevas: [], codigosBarrasNuevos: [], precios: [] });
     expect(r.error).toBeNull();
