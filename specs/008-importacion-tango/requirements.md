@@ -1,6 +1,6 @@
 # 008 – Importación desde Tango
 
-**Estado:** Borrador
+**Estado:** Aprobada (2026-10-29)
 
 ## Objetivo
 Cargar la carta desde el reporte **"Precios por artículo"** de Tango (Excel o CSV) y
@@ -56,7 +56,8 @@ mano. Ver "Integración con Tango" en `specs/000-vision.md`.
   revisar) si no.
 - Y el tamaño separa productos: `ZUCCARDI TITO BLEND 2014 MAGNUM` no es una añada de
   `ZUCCARDI TITO BLEND`.
-- Y los combos y boxes (`VIkit…`) son un producto cada uno, sin añada.
+- Y los combos y boxes (`VIkit…`) son un producto cada uno, de tipo vino con una sola
+  presentación sin añada.
 - Y los demás tipos (destilados, almacén, aceites, acetos) son un producto cada uno, con
   una sola presentación sin añada.
 - Y los códigos de barras van al producto (spec 001). Los inválidos se saltean y se
@@ -140,19 +141,15 @@ mano. Ver "Integración con Tango" en `specs/000-vision.md`.
 - Conectarse a Tango directamente: siempre se sube el archivo exportado.
 - Combinar o separar productos después de importar (se hace editando en el panel).
 
-## Preguntas abiertas
-- [ ] **Tipo de los combos y boxes:** el modelo tiene vino, destilado, aceite y almacén.
-  Propuesta: tipo **almacén** (una presentación, sin añada) en la sección "Combos y
-  boxes".
-- [ ] **¿Solo el encargado importa, o también los vendedores?** Propuesta: solo el
-  encargado (cambia toda la carta).
-- [ ] **Librería para leer Excel:** propuesta `read-excel-file` (liviana, solo lectura).
-  Es una dependencia nueva: la tenés que aprobar.
-
 ## Decisiones tomadas en la revisión
 - **Qué entra:** vinos (con combos y boxes), destilados, almacén, aceites y acetos.
 - **Secciones:** automáticas por tipo y descripción; lo dudoso queda sin sección.
 - **Stock inicial:** disponible.
+- **Combos y boxes:** tipo vino, una presentación sin añada, en su propia sección
+  ("Combos y boxes"); el personal puede pasarlos a mano a otra (por ejemplo, Cava ›
+  Experiencias).
+- **Quién importa:** solo el encargado, por ahora.
+- **Librería para leer Excel:** `read-excel-file` (solo lectura, liviana).
 - **Nombres:** se expanden las abreviaturas y se escriben en mayúscula y minúscula;
   editables, y una nueva importación no los pisa.
 

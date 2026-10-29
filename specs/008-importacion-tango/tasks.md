@@ -2,7 +2,7 @@
 
 Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un criterio (CA-n).
 
-- [ ] T1 — `lib/tango/reporte.ts`: leer filas (xlsx/csv), validar columnas, tipos por
+- [x] T1 — `lib/tango/reporte.ts`: leer filas (xlsx/csv), validar columnas, tipos por
   código, precios; unit. (CA-1, CA-2, CA-9)
 - [ ] T2 — `separarAnada` y agrupación de vinos (año al final o antes del tamaño,
   combos, sin año); unit con casos del archivo real. (CA-3)
