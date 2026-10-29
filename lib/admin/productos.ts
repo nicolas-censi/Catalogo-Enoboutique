@@ -7,6 +7,8 @@ export type ProductoAdmin = Database["public"]["Views"]["productos_admin"]["Row"
 export type EstadoFiltro = "ocultos" | "sin-stock" | "a-revisar" | "sin-seccion";
 export const ESTADOS: EstadoFiltro[] = ["ocultos", "sin-stock", "a-revisar", "sin-seccion"];
 export const POR_PAGINA = 50;
+// Ids por pedido cuando se buscan productos encontrados (la dirección tiene un largo máximo).
+const TANDA = 200;
 
 export type Filtros = { q: string; seccion: string; estado: EstadoFiltro | ""; pagina: number };
 
@@ -32,31 +34,42 @@ export async function listarProductosAdmin(
 ): Promise<{ productos: ProductoAdmin[]; total: number }> {
   let ordenBusqueda: string[] | null = null;
   if (filtros.q) {
-    const { data, error } = await cliente.rpc("buscar_admin", { texto: filtros.q, limite: 500 });
+    // Todas las coincidencias (Supabase devuelve hasta 1000): los filtros (sección,
+    // estado) se aplican después.
+    const { data, error } = await cliente.rpc("buscar_admin", { texto: filtros.q, limite: 10000 });
     if (error) throw error;
     ordenBusqueda = data.map((f) => f.producto_id);
     if (ordenBusqueda.length === 0) return { productos: [], total: 0 };
   }
 
-  let consulta = cliente.from("productos_admin").select("*", { count: "exact" });
-  if (ordenBusqueda) consulta = consulta.in("id", ordenBusqueda);
-  // Una sección trae también los productos de sus subsecciones (spec 011, CA-6).
-  if (filtros.seccion) consulta = consulta.or(`seccion_id.eq.${filtros.seccion},seccion_padre_id.eq.${filtros.seccion}`);
-  if (filtros.estado === "ocultos") consulta = consulta.eq("visible", false);
-  if (filtros.estado === "sin-stock") consulta = consulta.eq("anadas_en_stock", 0);
-  if (filtros.estado === "a-revisar") consulta = consulta.gt("anadas_a_revisar", 0);
-  if (filtros.estado === "sin-seccion") consulta = consulta.is("seccion_id", null);
+  // Filtros de la lista. Con búsqueda se aplican a los encontrados, de a tandas: con
+  // miles de productos, los ids no entran en un solo pedido.
+  const base = () => cliente.from("productos_admin").select("*", { count: "exact" });
+  const filtrar = (consulta: ReturnType<typeof base>) => {
+    // Una sección trae también los productos de sus subsecciones (spec 011, CA-6).
+    if (filtros.seccion) consulta = consulta.or(`seccion_id.eq.${filtros.seccion},seccion_padre_id.eq.${filtros.seccion}`);
+    if (filtros.estado === "ocultos") consulta = consulta.eq("visible", false);
+    if (filtros.estado === "sin-stock") consulta = consulta.eq("anadas_en_stock", 0);
+    if (filtros.estado === "a-revisar") consulta = consulta.gt("anadas_a_revisar", 0);
+    if (filtros.estado === "sin-seccion") consulta = consulta.is("seccion_id", null);
+    return consulta;
+  };
 
   if (ordenBusqueda) {
     // Con búsqueda: orden por relevancia (lo devuelve buscar_admin), paginado acá.
-    const { data, error } = await consulta;
-    if (error) throw error;
+    const encontrados: ProductoAdmin[] = [];
+    for (let i = 0; i < ordenBusqueda.length; i += TANDA) {
+      const { data, error } = await filtrar(base().in("id", ordenBusqueda.slice(i, i + TANDA)));
+      if (error) throw error;
+      encontrados.push(...data);
+    }
     const posicion = new Map(ordenBusqueda.map((id, i) => [id, i]));
-    const ordenados = data.sort((a, b) => posicion.get(a.id!)! - posicion.get(b.id!)!);
+    const ordenados = encontrados.sort((a, b) => posicion.get(a.id!)! - posicion.get(b.id!)!);
     const desde = (filtros.pagina - 1) * POR_PAGINA;
     return { productos: ordenados.slice(desde, desde + POR_PAGINA), total: ordenados.length };
   }
 
+  const consulta = filtrar(base());
   const desde = (filtros.pagina - 1) * POR_PAGINA;
   const { data, error, count } = await consulta.order("nombre").range(desde, desde + POR_PAGINA - 1);
   if (error) throw error;

@@ -5,6 +5,7 @@ import { listarSeccionesPanel, type SeccionAdmin } from "@/lib/admin/secciones";
 import type { Database } from "@/lib/tipos-db";
 
 type Cliente = SupabaseClient<Database>;
+const TANDA = 200;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export type ProductoDestacable = {
@@ -66,21 +67,21 @@ export async function leerDestacados(cliente: Cliente, seccionId: string): Promi
 /** Productos de la sección que todavía no son destacados, por nombre, bodega o código. */
 export async function buscarDestacables(cliente: Cliente, seccionId: string, texto: string): Promise<ProductoDestacable[]> {
   if (!UUID.test(seccionId) || texto.trim().length < 2) return [];
-  const busqueda = await cliente.rpc("buscar_admin", { texto, limite: 200 });
+  // Todas las coincidencias (Supabase devuelve hasta 1000): se filtra por sección
+  // después, y con miles de productos los de la sección podrían quedar fuera de los
+  // primeros.
+  const busqueda = await cliente.rpc("buscar_admin", { texto, limite: 10000 });
   if (busqueda.error) throw busqueda.error;
   const ids = busqueda.data.map((f) => f.producto_id);
-  if (ids.length === 0) return [];
-  const { data, error } = await cliente
-    .from("productos")
-    .select(COLUMNAS)
-    .in("id", ids)
-    .eq("seccion_id", seccionId)
-    .is("orden", null);
-  if (error) throw error;
-  // Se respeta la relevancia que devolvió la búsqueda.
-  const posicion = new Map(ids.map((id, i) => [id, i]));
-  return (data as unknown as Fila[])
-    .sort((a, b) => posicion.get(a.id)! - posicion.get(b.id)!)
-    .slice(0, 10)
-    .map(aDestacable);
+  // De a tandas y en orden de relevancia (los ids no entran en un solo pedido); alcanza
+  // con los primeros 10 de la sección.
+  const resultados: ProductoDestacable[] = [];
+  for (let i = 0; i < ids.length && resultados.length < 10; i += TANDA) {
+    const tanda = ids.slice(i, i + TANDA);
+    const { data, error } = await cliente.from("productos").select(COLUMNAS).in("id", tanda).eq("seccion_id", seccionId).is("orden", null);
+    if (error) throw error;
+    const posicion = new Map(tanda.map((id, n) => [id, n]));
+    resultados.push(...(data as unknown as Fila[]).sort((a, b) => posicion.get(a.id)! - posicion.get(b.id)!).map(aDestacable));
+  }
+  return resultados.slice(0, 10);
 }

@@ -56,11 +56,13 @@ test("el buscador solo pide los resultados, nunca la carta entera", async ({ pag
 
   await page.goto("/");
   await page.getByRole("searchbox").pressSequentially("rutini", { delay: 50 });
-  await expect(page.getByRole("region", { name: "Resultados" }).getByRole("article")).toHaveCount(1);
+  // Con los productos reales de Tango hay varios Rutini (como mucho 30 resultados).
+  await expect(page.getByRole("region", { name: "Resultados" }).getByRole("article").first()).toBeVisible();
 
   expect(pedidos.length).toBeGreaterThan(0);
   expect(pedidos.every((p) => p.url.includes("/rpc/buscar_carta"))).toBe(true);
   const total = pedidos.reduce((suma, p) => suma + p.bytes, 0);
   console.log(`El buscador descargó ${total} bytes en ${pedidos.length} pedido(s).`);
-  expect(total).toBeLessThan(20_000);
+  // La carta entera pesa más de 1 MB; los resultados, unos pocos KB.
+  expect(total).toBeLessThan(60_000);
 });
