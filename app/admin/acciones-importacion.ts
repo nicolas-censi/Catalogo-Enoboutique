@@ -4,9 +4,11 @@ import { revalidatePath } from "next/cache";
 import { readSheet } from "read-excel-file/node";
 import { invalidarCarta } from "@/lib/admin/cache";
 import { leerDiccionario, leerEstadoActual } from "@/lib/admin/importacion";
+import { listarSeccionesAdmin } from "@/lib/admin/productos";
+import { nombreConSeccion } from "@/lib/admin/secciones";
 import { obtenerSesionPanel } from "@/lib/admin/sesion";
 import { crearClienteServidor } from "@/lib/supabase/server";
-import { planear, type Plan } from "@/lib/tango/plan";
+import { aplicarElecciones, planear, type EleccionSeccion, type Plan } from "@/lib/tango/plan";
 import { filasDeCsv, leerReporte } from "@/lib/tango/reporte";
 import { textos } from "@/lib/textos";
 
@@ -25,7 +27,10 @@ export type ImportacionPreparada = {
   primera: boolean;
   /** Las primeras, para mostrar (el resto se cuenta). */
   precios: Plan["precios"];
-  nuevos: { nombre: string; seccion: string | null; anadas: number }[];
+  /** Todos los productos nuevos, con la sección sugerida como elección inicial (CA-11). */
+  nuevos: { nombre: string; seccion: EleccionSeccion; anadas: number }[];
+  /** Secciones elegibles: las que no tienen subsecciones, las subsecciones y las nuevas. */
+  opciones: { valor: EleccionSeccion; etiqueta: string; grupo: string | null }[];
 };
 export type EstadoImportacion = { error: string | null; preparada: ImportacionPreparada | null };
 
@@ -62,6 +67,14 @@ export async function prepararImportacion(_estado: EstadoImportacion, formulario
   const supabase = await crearClienteServidor();
   const [estado, diccionario] = await Promise.all([leerEstadoActual(supabase), leerDiccionario(supabase)]);
   const plan = planear(reporte, estado, diccionario);
+  const secciones = await listarSeccionesAdmin(supabase);
+  // La sugerida, como valor del selector: una sección que ya existe o una que se crea.
+  const porNombre = new Map(secciones.filter((x) => x.subsecciones.length === 0).map((x) => [x.nombre.toLowerCase(), x.id]));
+  const eleccionInicial = (seccion: string | null): EleccionSeccion => {
+    if (!seccion) return "";
+    const id = porNombre.get(seccion.toLowerCase());
+    return id ? `id:${id}` : `nueva:${seccion}`;
+  };
   const { data, error } = await supabase.from("importaciones").insert({ plan }).select("id").single();
   if (error) return { error: textos.admin.errorGuardar, preparada: null };
   return {
@@ -72,15 +85,30 @@ export async function prepararImportacion(_estado: EstadoImportacion, formulario
       resumen: plan.resumen,
       primera: plan.primera,
       precios: plan.precios.slice(0, MUESTRA),
-      nuevos: plan.productosNuevos.slice(0, MUESTRA).map((p) => ({ nombre: p.nombre, seccion: p.seccion, anadas: p.anadas.length })),
+      nuevos: plan.productosNuevos.map((p) => ({ nombre: p.nombre, seccion: eleccionInicial(p.seccion), anadas: p.anadas.length })),
+      opciones: [
+        ...secciones.flatMap((s): ImportacionPreparada["opciones"] =>
+          s.subsecciones.length === 0
+            ? [{ valor: `id:${s.id}`, etiqueta: s.nombre, grupo: null }]
+            : s.subsecciones.map((h) => ({ valor: `id:${h.id}`, etiqueta: nombreConSeccion(s.nombre, h.nombre), grupo: s.nombre })),
+        ),
+        ...plan.seccionesNuevas.map((nombre) => ({ valor: `nueva:${nombre}`, etiqueta: t.seccionNueva(nombre), grupo: null })),
+      ],
     },
   };
 }
 
-/** Aplica el plan todo junto (CA-1) y muestra lo hecho (CA-10). */
-export async function confirmarImportacion(id: string): Promise<{ error: string | null }> {
+/** Aplica el plan todo junto (CA-1), con las secciones elegidas (CA-11), y muestra lo hecho (CA-10). */
+export async function confirmarImportacion(id: string, elecciones: Record<number, EleccionSeccion> = {}): Promise<{ error: string | null }> {
   await exigirEncargado();
   const supabase = await crearClienteServidor();
+  if (Object.keys(elecciones).length > 0) {
+    const guardada = await supabase.from("importaciones").select("plan").eq("id", id).eq("estado", "pendiente").maybeSingle();
+    if (guardada.error || !guardada.data) return { error: t.yaAplicada };
+    const plan = aplicarElecciones(guardada.data.plan as unknown as Plan, elecciones);
+    const actualizada = await supabase.from("importaciones").update({ plan: plan as never }).eq("id", id);
+    if (actualizada.error) return { error: textos.admin.errorGuardar };
+  }
   const { error } = await supabase.rpc("aplicar_importacion", { importacion: id });
   if (error) return { error: error.code === "23514" ? error.message : textos.admin.errorGuardar };
   invalidarCarta();

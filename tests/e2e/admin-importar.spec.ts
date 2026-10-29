@@ -11,6 +11,7 @@ test.describe.configure({ mode: "serial" });
 const admin = clienteAdmin();
 const bodega = `q${String.fromCharCode(97 + randomInt(26))}${String.fromCharCode(97 + randomInt(26))}`;
 const marca = `ZZ${prefijo.replace(/[^a-z0-9]/gi, "").toUpperCase()}`;
+const titulo = (t: string) => t.charAt(0) + t.slice(1).toLowerCase();
 const codigo = (n: number) => `VI${bodega}${prefijo}-${n}`;
 const encargados: string[] = [];
 const entrarComoEncargado = async (context: Parameters<typeof entrarComo>[0]) =>
@@ -94,4 +95,49 @@ test("CA-8: subir el reporte otra vez muestra y aplica los precios que cambian",
   await page.getByRole("button", { name: "Importar" }).click();
   await expect(page.getByRole("status").filter({ hasText: "Listo" })).toContainText("se actualizó 1 precio.");
   expect((await admin.from("anadas").select("precio").eq("codigo_tango", codigo(1)).single()).data!.precio).toBe(11000);
+});
+
+test("CA-11: elige la sección de los productos nuevos antes de importar, de a uno o de a varios", async ({ page, context }) => {
+  // Una sección con subsecciones del test, para elegir una subsección.
+  const cava = (await admin.from("secciones").insert({ nombre: `${prefijo} Cava importar`, orden: 95000 }).select().single()).data!.id;
+  const joyitas = (await admin.from("secciones").insert({ nombre: `${prefijo} Joyitas importar`, orden: 1, seccion_padre_id: cava }).select().single()).data!.id;
+  await entrarComoEncargado(context);
+  await subir(
+    page,
+    [
+      "Cód. artículo;Descripción;Código de barras;Precio",
+      `${codigo(10)};${marca} ANFORA;;100`,
+      `${codigo(11)};${marca} CUARTEL;;100`,
+      `${codigo(12)};${marca} SYRAH;;100`,
+    ].join("\n"),
+  );
+  const tabla = page.getByRole("table", { name: "Productos nuevos" });
+  const seccionDe = (nombre: string) => tabla.getByRole("combobox", { name: `Sección de ${nombre}` });
+  const anfora = `${titulo(marca)} Anfora`;
+  const cuartel = `${titulo(marca)} Cuartel`;
+  const syrah = `${titulo(marca)} Syrah`;
+  await expect(seccionDe(syrah)).toHaveValue(/^(id|nueva):/); // sugerida: Tintos
+  await expect(seccionDe(anfora)).toHaveValue("");
+
+  // Solo los que quedan sin sección, todos juntos a una subsección.
+  await page.getByLabel("Mostrar solo los que quedan sin sección").check();
+  await expect(tabla.getByRole("checkbox", { name: new RegExp(`^Elegir ${marca}`, "i") })).toHaveCount(2);
+  await page.getByRole("button", { name: "Seleccionar los 2 del filtro" }).click();
+  await page.getByLabel("Poner los seleccionados en").selectOption({ label: `${prefijo} Cava importar › ${prefijo} Joyitas importar` });
+  await page.getByRole("button", { name: "Aplicar a 2 seleccionados" }).click();
+  await page.getByLabel("Mostrar solo los que quedan sin sección").uncheck();
+  await expect(seccionDe(anfora)).toHaveValue(`id:${joyitas}`);
+  await expect(seccionDe(cuartel)).toHaveValue(`id:${joyitas}`);
+
+  // Uno solo, a mano.
+  await seccionDe(syrah).selectOption("");
+  await page.getByRole("button", { name: "Importar" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Listo" })).toBeVisible();
+  const seccionEnBase = async (nombre: string) =>
+    (await admin.from("productos").select("seccion_id").ilike("nombre", nombre).single()).data!.seccion_id;
+  expect(await seccionEnBase(anfora)).toBe(joyitas);
+  expect(await seccionEnBase(cuartel)).toBe(joyitas);
+  expect(await seccionEnBase(syrah)).toBeNull();
+  await admin.from("productos").delete().in("seccion_id", [joyitas]);
+  await admin.from("secciones").delete().in("id", [joyitas, cava]);
 });
