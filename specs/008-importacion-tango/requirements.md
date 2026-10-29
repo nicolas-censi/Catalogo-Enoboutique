@@ -1,6 +1,6 @@
 # 008 – Importación desde Tango
 
-**Estado:** Aprobada (2026-10-29)
+**Estado:** Implementada (2026-10-29)
 
 ## Objetivo
 Cargar la carta desde el reporte **"Precios por artículo"** de Tango (Excel o CSV) y

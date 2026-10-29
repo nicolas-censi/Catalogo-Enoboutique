@@ -105,6 +105,18 @@ export const textos = {
       errorBuscar: "No se pudo buscar. Probá de nuevo.",
     },
     personal: "Personal",
+    mover: {
+      elegir: (nombre: string) => `Elegir ${nombre}`,
+      elegirPagina: "Elegir todos los de esta página",
+      seleccionados: (n: number) => `${n} ${n === 1 ? "seleccionado" : "seleccionados"}`,
+      seleccionarFiltro: (n: number) => `Seleccionar los ${n} del filtro`,
+      deseleccionar: "Quitar la selección",
+      seccion: "Mover a la sección",
+      mover: "Mover",
+      moviendo: "Moviendo…",
+      elegirSeccion: "Elegí la sección.",
+      movidos: (n: number, seccion: string) => `Se ${n === 1 ? "movió 1 producto" : `movieron ${n} productos`} a ${seccion}.`,
+    },
     importar: {
       menu: "Importar",
       titulo: "Importar desde Tango",

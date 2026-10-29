@@ -14,6 +14,7 @@ const marca = `ZZ${prefijo.replace(/[^a-z0-9]/gi, "").toUpperCase()}`;
 const titulo = (t: string) => t.charAt(0) + t.slice(1).toLowerCase();
 const codigo = (n: number) => `VI${bodega}${prefijo}-${n}`;
 const encargados: string[] = [];
+const secciones: string[] = [];
 const entrarComoEncargado = async (context: Parameters<typeof entrarComo>[0]) =>
   encargados.push((await entrarComo(context, "encargado")).usuario.id);
 const csv = (precio2020: number) =>
@@ -28,6 +29,7 @@ test.afterAll(async () => {
   const { data } = await admin.from("anadas").select("producto_id").like("codigo_tango", `VI${bodega}${prefijo}%`);
   await admin.from("productos").delete().in("id", (data ?? []).map((a) => a.producto_id));
   await admin.from("bodegas").delete().eq("codigo_tango", bodega);
+  await admin.from("secciones").delete().in("id", secciones);
   // Las importaciones del test se borran: si no, la carta real dejaría de contar como
   // "primera importación".
   await admin.from("importaciones").delete().in("creada_por", encargados);
@@ -101,6 +103,7 @@ test("CA-11: elige la sección de los productos nuevos antes de importar, de a u
   // Una sección con subsecciones del test, para elegir una subsección.
   const cava = (await admin.from("secciones").insert({ nombre: `${prefijo} Cava importar`, orden: 95000 }).select().single()).data!.id;
   const joyitas = (await admin.from("secciones").insert({ nombre: `${prefijo} Joyitas importar`, orden: 1, seccion_padre_id: cava }).select().single()).data!.id;
+  secciones.push(joyitas, cava);
   await entrarComoEncargado(context);
   await subir(
     page,
@@ -138,6 +141,4 @@ test("CA-11: elige la sección de los productos nuevos antes de importar, de a u
   expect(await seccionEnBase(anfora)).toBe(joyitas);
   expect(await seccionEnBase(cuartel)).toBe(joyitas);
   expect(await seccionEnBase(syrah)).toBeNull();
-  await admin.from("productos").delete().in("seccion_id", [joyitas]);
-  await admin.from("secciones").delete().in("id", [joyitas, cava]);
 });

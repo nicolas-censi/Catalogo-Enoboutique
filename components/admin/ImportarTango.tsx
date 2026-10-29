@@ -87,9 +87,9 @@ function TablaNuevos({
       </div>
       <div className="mt-3 flex flex-wrap items-end gap-3 rounded-md border border-dorado/30 p-3">
         <span className="min-h-11 content-center">{t.seleccionados(seleccion.size)}</span>
-        <div className="flex flex-col gap-1">
+        <div className="flex w-full min-w-0 flex-col gap-1 sm:w-auto">
           <label htmlFor="poner-en" className="text-sm text-texto-suave">{t.ponerEn}</label>
-          <select id="poner-en" value={destino} onChange={(e) => setDestino(e.target.value)} className={control}>
+          <select id="poner-en" value={destino} onChange={(e) => setDestino(e.target.value)} className={`${control} w-full sm:w-auto sm:max-w-md`}>
             {opciones}
           </select>
         </div>
@@ -138,7 +138,7 @@ function TablaNuevos({
                 </td>
                 <td className="py-1 pr-4">{p.nombre}</td>
                 <td data-etiqueta={t.columnasNuevos.seccion} className="py-1 pr-4">
-                  <select aria-label={t.seccionDe(p.nombre)} value={elecciones[i]} onChange={(e) => cambiar([i], e.target.value)} className={`${control} max-w-full`}>
+                  <select aria-label={t.seccionDe(p.nombre)} value={elecciones[i]} onChange={(e) => cambiar([i], e.target.value)} className={`${control} w-full max-w-full sm:w-auto sm:max-w-xs`}>
                     {opciones}
                   </select>
                 </td>

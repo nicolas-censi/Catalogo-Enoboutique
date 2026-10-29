@@ -20,8 +20,8 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T12 — Plan con `seccionId` y `aplicar_importacion` que lo usa; tests. (CA-11)
 - [x] T13 — Importar: todos los productos nuevos con selector de sección, filtro "Sin
   sección" y asignación de a varios; e2e. (CA-11)
-- [ ] T14 — Lista de Productos: tildar (uno, la página o todos los del filtro) y mover
+- [x] T14 — Lista de Productos: tildar (uno, la página o todos los del filtro) y mover
   a una sección o subsección; e2e. (CA-12)
-- [ ] T15 — Accesibilidad y celular de la selección y del resumen. (CA-11, CA-12)
-- [ ] T10 — Prueba con el archivo real en el proyecto de desarrollo: revisar nombres,
+- [x] T15 — Accesibilidad y celular de la selección y del resumen. (CA-11, CA-12)
+- [x] T10 — Prueba con el archivo real en el proyecto de desarrollo: revisar nombres,
   secciones y bodegas con el encargado. (todos)

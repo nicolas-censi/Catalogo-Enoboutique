@@ -40,7 +40,7 @@ async function ListaProductos({ searchParams }: { searchParams: Parametros }) {
       )}
       <FiltrosProductos filtros={filtros} secciones={secciones} />
       <div className="mt-6">
-        <TablaProductos productos={productos} />
+        <TablaProductos productos={productos} total={total} filtros={filtros} secciones={secciones} />
       </div>
       {total > 0 && (
         <nav aria-label="Páginas" className="mt-4 flex items-center gap-3 text-texto-suave">

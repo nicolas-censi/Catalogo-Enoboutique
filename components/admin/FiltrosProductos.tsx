@@ -28,9 +28,9 @@ export function FiltrosProductos({
           className={control}
         />
       </label>
-      <div className="flex flex-col gap-1">
+      <div className="flex w-full min-w-0 flex-col gap-1 sm:w-auto">
         <label htmlFor="filtro-seccion" className="text-sm text-texto-suave">{textos.admin.seccion}</label>
-        <select id="filtro-seccion" name="seccion" defaultValue={filtros.seccion} className={control}>
+        <select id="filtro-seccion" name="seccion" defaultValue={filtros.seccion} className={`${control} w-full sm:w-auto sm:max-w-md`}>
           <option value="">{textos.admin.todasLasSecciones}</option>
           {/* La sección incluye sus subsecciones; también se puede elegir una sola. */}
           {secciones.flatMap((s) => [

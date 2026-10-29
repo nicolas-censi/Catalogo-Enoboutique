@@ -99,7 +99,7 @@ test.describe("CA-2: filtros en la dirección", () => {
 
   test("filtra por sección desde el formulario", async ({ page }) => {
     await page.goto(`/admin?q=${prefijo}`);
-    await page.getByLabel("Sección").selectOption({ label: `${prefijo} Tintos` });
+    await page.getByLabel("Sección", { exact: true }).selectOption({ label: `${prefijo} Tintos` });
     await page.getByRole("button", { name: "Filtrar" }).click();
     await expect(page).toHaveURL(new RegExp(`seccion=${seccionId}`));
     await expect(filas(page)).toHaveCount(3);

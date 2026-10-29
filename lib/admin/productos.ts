@@ -28,52 +28,63 @@ export function leerFiltros(parametros: Record<string, string | string[] | undef
   };
 }
 
+type Consulta = ReturnType<typeof consultaBase>;
+const consultaBase = (cliente: Cliente) => cliente.from("productos_admin").select("*", { count: "exact" });
+
+/** Filtros de la lista (sección con sus subsecciones, estado). */
+function filtrar(consulta: Consulta, filtros: Filtros): Consulta {
+  // Una sección trae también los productos de sus subsecciones (spec 011, CA-6).
+  if (filtros.seccion) consulta = consulta.or(`seccion_id.eq.${filtros.seccion},seccion_padre_id.eq.${filtros.seccion}`);
+  if (filtros.estado === "ocultos") consulta = consulta.eq("visible", false);
+  if (filtros.estado === "sin-stock") consulta = consulta.eq("anadas_en_stock", 0);
+  if (filtros.estado === "a-revisar") consulta = consulta.gt("anadas_a_revisar", 0);
+  if (filtros.estado === "sin-seccion") consulta = consulta.is("seccion_id", null);
+  return consulta;
+}
+
+/** Con búsqueda: todos los encontrados que cumplen los filtros, por relevancia. */
+async function buscados(cliente: Cliente, filtros: Filtros): Promise<ProductoAdmin[]> {
+  // Todas las coincidencias (Supabase devuelve hasta 1000): los filtros (sección,
+  // estado) se aplican después, de a tandas: con miles de productos, los ids no entran
+  // en un solo pedido.
+  const { data, error } = await cliente.rpc("buscar_admin", { texto: filtros.q, limite: 10000 });
+  if (error) throw error;
+  const orden = data.map((f) => f.producto_id);
+  const encontrados: ProductoAdmin[] = [];
+  for (let i = 0; i < orden.length; i += TANDA) {
+    const tanda = await filtrar(consultaBase(cliente).in("id", orden.slice(i, i + TANDA)), filtros);
+    if (tanda.error) throw tanda.error;
+    encontrados.push(...tanda.data);
+  }
+  const posicion = new Map(orden.map((id, i) => [id, i]));
+  return encontrados.sort((a, b) => posicion.get(a.id!)! - posicion.get(b.id!)!);
+}
+
 export async function listarProductosAdmin(
   cliente: Cliente,
   filtros: Filtros,
 ): Promise<{ productos: ProductoAdmin[]; total: number }> {
-  let ordenBusqueda: string[] | null = null;
-  if (filtros.q) {
-    // Todas las coincidencias (Supabase devuelve hasta 1000): los filtros (sección,
-    // estado) se aplican después.
-    const { data, error } = await cliente.rpc("buscar_admin", { texto: filtros.q, limite: 10000 });
-    if (error) throw error;
-    ordenBusqueda = data.map((f) => f.producto_id);
-    if (ordenBusqueda.length === 0) return { productos: [], total: 0 };
-  }
-
-  // Filtros de la lista. Con búsqueda se aplican a los encontrados, de a tandas: con
-  // miles de productos, los ids no entran en un solo pedido.
-  const base = () => cliente.from("productos_admin").select("*", { count: "exact" });
-  const filtrar = (consulta: ReturnType<typeof base>) => {
-    // Una sección trae también los productos de sus subsecciones (spec 011, CA-6).
-    if (filtros.seccion) consulta = consulta.or(`seccion_id.eq.${filtros.seccion},seccion_padre_id.eq.${filtros.seccion}`);
-    if (filtros.estado === "ocultos") consulta = consulta.eq("visible", false);
-    if (filtros.estado === "sin-stock") consulta = consulta.eq("anadas_en_stock", 0);
-    if (filtros.estado === "a-revisar") consulta = consulta.gt("anadas_a_revisar", 0);
-    if (filtros.estado === "sin-seccion") consulta = consulta.is("seccion_id", null);
-    return consulta;
-  };
-
-  if (ordenBusqueda) {
-    // Con búsqueda: orden por relevancia (lo devuelve buscar_admin), paginado acá.
-    const encontrados: ProductoAdmin[] = [];
-    for (let i = 0; i < ordenBusqueda.length; i += TANDA) {
-      const { data, error } = await filtrar(base().in("id", ordenBusqueda.slice(i, i + TANDA)));
-      if (error) throw error;
-      encontrados.push(...data);
-    }
-    const posicion = new Map(ordenBusqueda.map((id, i) => [id, i]));
-    const ordenados = encontrados.sort((a, b) => posicion.get(a.id!)! - posicion.get(b.id!)!);
-    const desde = (filtros.pagina - 1) * POR_PAGINA;
-    return { productos: ordenados.slice(desde, desde + POR_PAGINA), total: ordenados.length };
-  }
-
-  const consulta = filtrar(base());
   const desde = (filtros.pagina - 1) * POR_PAGINA;
-  const { data, error, count } = await consulta.order("nombre").range(desde, desde + POR_PAGINA - 1);
+  if (filtros.q) {
+    // Con búsqueda: orden por relevancia (lo devuelve buscar_admin), paginado acá.
+    const todos = await buscados(cliente, filtros);
+    return { productos: todos.slice(desde, desde + POR_PAGINA), total: todos.length };
+  }
+  const { data, error, count } = await filtrar(consultaBase(cliente), filtros).order("nombre").range(desde, desde + POR_PAGINA - 1);
   if (error) throw error;
   return { productos: data, total: count ?? data.length };
+}
+
+/** Ids de todos los productos que cumplen los filtros, en todas las páginas (CA-12 de la spec 008). */
+export async function idsProductosAdmin(cliente: Cliente, filtros: Filtros): Promise<string[]> {
+  if (filtros.q) return (await buscados(cliente, filtros)).map((p) => p.id!);
+  const ids: string[] = [];
+  for (let desde = 0; ; desde += 1000) {
+    const { data, error } = await filtrar(consultaBase(cliente), filtros).order("id").range(desde, desde + 999);
+    if (error) throw error;
+    ids.push(...data.map((p) => p.id!));
+    if (data.length < 1000) return ids;
+  }
 }
 
 /** Secciones de primer nivel, cada una con sus subsecciones (spec 011), en orden. */

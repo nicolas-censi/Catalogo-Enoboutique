@@ -60,7 +60,7 @@ test("CA-6: filtrar por la sección trae también sus subsecciones, y se puede f
   expect((await nombresEnLista(page)).sort()).toEqual([`Filtro Añada ${prefijo}`, `Filtro Joya ${prefijo}`]);
   await expect(page.getByRole("row").filter({ hasText: `Filtro Joya ${prefijo}` })).toContainText(`${n("Cava filtro")} › ${n("Joyitas filtro")}`);
 
-  await page.getByLabel("Sección").selectOption({ label: `${n("Cava filtro")} › ${n("Joyitas filtro")}` });
+  await page.getByLabel("Sección", { exact: true }).selectOption({ label: `${n("Cava filtro")} › ${n("Joyitas filtro")}` });
   await page.getByRole("button", { name: "Filtrar" }).click();
   await expect.poll(() => nombresEnLista(page)).toEqual([`Filtro Joya ${prefijo}`]);
 });
