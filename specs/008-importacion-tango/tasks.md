@@ -7,7 +7,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T2 — `separarAnada` y agrupación de vinos (año al final o antes del tamaño,
   combos, sin año); unit con casos del archivo real. (CA-3)
 - [x] T3 — Diccionario inicial, `nombreLegible` y `varietal`; unit. (CA-4)
-- [ ] T4 — `seccionSugerida` y bodegas por código con nombre sugerido; unit. (CA-5, CA-6)
+- [x] T4 — `seccionSugerida` y bodegas por código con nombre sugerido; unit. (CA-5, CA-6)
 - [ ] T5 — `planear` (primera importación y actualizaciones); unit. (CA-3, CA-7, CA-8)
 - [ ] T6 — Migración: `abreviaturas`, `bodegas.codigo_tango`, `importaciones` y
   `aplicar_importacion`; tests de base (atómico, permisos). (CA-1, CA-7, CA-8)
