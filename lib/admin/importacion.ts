@@ -59,3 +59,21 @@ export async function leerDiccionario(cliente: Cliente): Promise<Abreviatura[]> 
   if (error) throw error;
   return data.map((a) => ({ abreviatura: a.abreviatura, expansion: a.expansion, esVarietal: a.es_varietal }));
 }
+
+export type BodegaTango = { id: string; codigo: string; nombre: string; productos: number };
+
+/** Bodegas que vinieron de Tango, con cuántos productos tiene cada una (CA-5). */
+export async function listarBodegasTango(cliente: Cliente): Promise<BodegaTango[]> {
+  const { data, error } = await cliente
+    .from("bodegas")
+    .select("id, codigo_tango, nombre, productos(count)")
+    .not("codigo_tango", "is", null)
+    .order("codigo_tango");
+  if (error) throw error;
+  return data.map((b) => ({
+    id: b.id,
+    codigo: b.codigo_tango!,
+    nombre: b.nombre,
+    productos: (b.productos as unknown as { count: number }[])[0]?.count ?? 0,
+  }));
+}

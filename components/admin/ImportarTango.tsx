@@ -111,14 +111,14 @@ export function ImportarTango() {
   return (
     <>
       <form action={accion} className="flex flex-wrap items-end gap-3">
-        <div className="flex flex-col gap-1">
+        <div className="flex w-full min-w-0 flex-col gap-1 sm:w-auto">
           <label htmlFor="archivo-tango" className="text-sm text-texto-suave">{t.archivo}</label>
           <input
             id="archivo-tango"
             name="archivo"
             type="file"
             accept=".xlsx,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"
-            className="min-h-11 max-w-full text-base file:mr-3 file:min-h-11 file:rounded-md file:border file:border-dorado/60 file:bg-superficie file:px-4 file:text-texto"
+            className="min-h-11 w-full min-w-0 text-base file:mr-3 file:min-h-11 file:rounded-md file:border file:border-dorado/60 file:bg-superficie file:px-4 file:text-texto"
           />
         </div>
         <button type="submit" disabled={leyendo} className={principal}>

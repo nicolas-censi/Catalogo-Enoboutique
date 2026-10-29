@@ -87,3 +87,44 @@ export async function confirmarImportacion(id: string): Promise<{ error: string 
   revalidatePath("/admin", "layout");
   return { error: null };
 }
+
+export type EstadoAbreviatura = { errores: Partial<Record<"abreviatura" | "expansion", string>>; error: string | null; guardadas: number };
+
+/** Agrega una abreviatura o cambia la que ya existe con ese texto (CA-4). */
+export async function guardarAbreviatura(estado: EstadoAbreviatura, formulario: FormData): Promise<EstadoAbreviatura> {
+  await exigirEncargado();
+  const abreviatura = String(formulario.get("abreviatura") ?? "").trim().toUpperCase().replace(/\s+/g, " ");
+  const expansion = String(formulario.get("expansion") ?? "").trim();
+  const errores: EstadoAbreviatura["errores"] = {};
+  if (!abreviatura) errores.abreviatura = t.abreviaturas.faltaAbreviatura;
+  if (!expansion) errores.expansion = t.abreviaturas.faltaExpansion;
+  if (Object.keys(errores).length > 0) return { ...estado, errores, error: null };
+  const supabase = await crearClienteServidor();
+  const { error } = await supabase
+    .from("abreviaturas")
+    .upsert({ abreviatura, expansion, es_varietal: formulario.get("es_varietal") === "on" });
+  if (error) return { ...estado, errores: {}, error: textos.admin.errorGuardar };
+  revalidatePath("/admin/importar/abreviaturas");
+  return { errores: {}, error: null, guardadas: estado.guardadas + 1 };
+}
+
+export async function borrarAbreviatura(abreviatura: string): Promise<{ error: string | null }> {
+  await exigirEncargado();
+  const supabase = await crearClienteServidor();
+  const { error } = await supabase.from("abreviaturas").delete().eq("abreviatura", abreviatura);
+  if (error) return { error: textos.admin.errorGuardar };
+  revalidatePath("/admin/importar/abreviaturas");
+  return { error: null };
+}
+
+/** Corrige el nombre que la importación propuso para una bodega (CA-5). */
+export async function renombrarBodega(id: string, nombre: string): Promise<{ error: string | null }> {
+  await exigirEncargado();
+  if (!nombre.trim()) return { error: t.bodegas.faltaNombre };
+  const supabase = await crearClienteServidor();
+  const { error } = await supabase.from("bodegas").update({ nombre: nombre.trim() }).eq("id", id);
+  if (error) return { error: error.code === "23505" ? t.bodegas.repetida : textos.admin.errorGuardar };
+  invalidarCarta();
+  revalidatePath("/admin", "layout");
+  return { error: null };
+}

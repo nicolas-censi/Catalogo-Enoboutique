@@ -14,6 +14,9 @@ const pantallas: [string, string, boolean][] = [
   ["ficha de producto", "/admin/productos/5eed0000-0000-4000-8000-000000000202", true],
   ["secciones", "/admin/secciones", true],
   ["personal", "/admin/personal", true],
+  ["importar", "/admin/importar", true],
+  ["abreviaturas", "/admin/importar/abreviaturas", true],
+  ["bodegas de Tango", "/admin/importar/bodegas", true],
 ];
 
 const tamanos = [

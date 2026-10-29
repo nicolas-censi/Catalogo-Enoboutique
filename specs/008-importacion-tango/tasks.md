@@ -13,7 +13,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   `aplicar_importacion`; tests de base (atómico, permisos). (CA-1, CA-7, CA-8)
 - [x] T7 — Pantalla `/admin/importar`: subir, resumen, Importar, resultado; e2e con un
   archivo de prueba. (CA-1, CA-10)
-- [ ] T8 — Diccionario y bodegas de Tango en el panel; e2e. (CA-4, CA-5)
+- [x] T8 — Diccionario y bodegas de Tango en el panel; e2e. (CA-4, CA-5)
 - [x] T9 — Filtro "Sin sección" en la lista; e2e. (CA-6, CA-10)
 - [ ] T10 — Prueba con el archivo real en el proyecto de desarrollo: revisar nombres,
   secciones y bodegas con el encargado. (todos)
