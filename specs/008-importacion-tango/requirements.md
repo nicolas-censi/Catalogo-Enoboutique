@@ -71,6 +71,8 @@ mano. Ver "Integración con Tango" en `specs/000-vision.md`.
   expandidas según el **diccionario de abreviaturas** ("Salentein Primus Malbec",
   "Trapiche Gran Medalla Cabernet Sauvignon"), y el varietal se completa cuando se
   reconoce (Malbec, Cabernet Sauvignon…).
+- Y el diccionario inicial es la lista de abreviaturas armada por Lehonor (más algunas
+  que aparecen en el reporte).
 - Y el encargado puede ver y editar el diccionario desde el panel (agregar, cambiar o
   borrar abreviaturas). Los cambios se aplican a las próximas importaciones.
 - Y la descripción original de Tango queda guardada en cada añada como referencia.
@@ -79,9 +81,11 @@ mano. Ver "Integración con Tango" en `specs/000-vision.md`.
 - **Dado** un vino con código `VIxxx…`
 - **Cuando** se importa
 - **Entonces** queda en la bodega que corresponde a esas tres letras.
+- Y las bodegas vienen precargadas con la lista de Lehonor (140 códigos con su nombre).
+  Para un código que no está en la lista, la importación propone un nombre (la marca
+  más frecuente de esa bodega) que conviene revisar.
 - Y el encargado ve en el panel la lista de **bodegas de Tango** (código, nombre y
-  cantidad de productos) y puede corregir el nombre de cada una. La primera importación
-  propone un nombre (la marca más frecuente de esa bodega) que conviene revisar.
+  cantidad de productos) y puede corregir el nombre de cada una.
 - Y los productos que no son vino quedan sin bodega.
 
 ### CA-6: Secciones automáticas

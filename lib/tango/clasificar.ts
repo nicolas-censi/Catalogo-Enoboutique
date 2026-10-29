@@ -7,16 +7,18 @@ const tiene = (palabras: string[], frases: string[]) => {
   return frases.some((f) => texto.includes(` ${f} `));
 };
 
-const ESPUMANTE = ["ESP", "BRUT", "NAT", "SIDRA", "CH", "CHAMPAGNE", "ESPUMANTE", "ESPUMOSO"];
+const ESPUMANTE = ["ESP", "BRUT", "NAT", "SIDRA", "CH", "CHAMPAGNE", "ESPUMANTE", "ESPUMOSO", "PROS", "PROSECCO"];
 const ROSADO = ["ROSE", "ROSADO"];
 const BLANCO = [
   ...["CHARDO", "SAUV BLANC", "TORR", "VIOG", "RIESLING", "SEM", "BCO", "BLANCO", "BLANCAS", "CHENIN", "WHITE", "BLANC"],
-  ...["GEWURZT", "GEWURZTRAIMER", "P GRIGIO", "MOSCATEL", "PEDRO XIMENEZ"],
+  ...["GEWURZT", "GEWURZTRAIMER", "GEWURZ", "P GRIGIO", "MOSCATEL", "PEDRO XIMENEZ", "P XIMENEZ", "GRUNER VELT"],
+  ...["B DE BLANCAS", "B DE BLANCS"],
 ];
 // "BLEND" solo no decide si hay un varietal blanco (un blend blanco es blanco).
 const TINTO = [
   ...["MAL", "CAB", "MER", "SYRAH", "P NOIR", "TANNAT", "BON", "P VERDOT", "TTO", "TINTO", "TINTAS", "RED", "CS", "CF"],
-  ...["TEMPRANILLO", "CRIOLLA", "CARIGNAN", "TEROLDEGO", "ANCELOTTA", "CORTE"],
+  ...["TEMPRANILLO", "TEMPRA", "CRIOLLA", "CARIGNAN", "TEROLDEGO", "ANCELOTTA", "ANCELL", "CORTE", "TAN", "CARME"],
+  ...["B DE TINTAS", "B DE NOIRS"],
 ];
 
 /** Nombre de la sección sugerida, o null si no se puede decidir (queda sin sección). */

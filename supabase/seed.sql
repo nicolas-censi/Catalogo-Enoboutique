@@ -13,7 +13,6 @@ delete from public.secciones s
 where s.seccion_padre_id::text like '5eed0000-0000-4000-8000-0000000001%'
   and not exists (select 1 from public.productos p where p.seccion_id = s.id);
 delete from public.secciones where id::text like '5eed0000-0000-4000-8000-0000000001%';
-delete from public.bodegas where id::text like '5eed0000-0000-4000-8000-0000000003%';
 
 insert into public.secciones (id, nombre, orden, visible) values
   ('5eed0000-0000-4000-8000-000000000101', 'Cava', 1, true),
@@ -24,31 +23,34 @@ insert into public.secciones (id, nombre, orden, visible) values
   ('5eed0000-0000-4000-8000-000000000106', 'Almacén', 6, true),
   ('5eed0000-0000-4000-8000-000000000107', 'Próximamente', 7, false);
 
-insert into public.bodegas (id, nombre) values
-  ('5eed0000-0000-4000-8000-000000000301', 'Rutini'),
-  ('5eed0000-0000-4000-8000-000000000302', 'Salentein'),
-  ('5eed0000-0000-4000-8000-000000000303', 'Zuccardi'),
-  ('5eed0000-0000-4000-8000-000000000304', 'Trapiche');
+-- Las bodegas no se borran: pueden tener su código de Tango (spec 008). Si ya existe una
+-- con ese nombre, se usa esa.
+insert into public.bodegas (nombre) values
+  ('Rutini'),
+  ('Salentein'),
+  ('Zuccardi'),
+  ('Trapiche')
+on conflict (nombre) do nothing;
 
 insert into public.productos (id, tipo, nombre, bodega_id, varietal, seccion_id) values
   ('5eed0000-0000-4000-8000-000000000201', 'vino', 'Rutini Malbec',
-    '5eed0000-0000-4000-8000-000000000301', 'Malbec', '5eed0000-0000-4000-8000-000000000101'),
+    (select id from public.bodegas where nombre = 'Rutini'), 'Malbec', '5eed0000-0000-4000-8000-000000000101'),
   ('5eed0000-0000-4000-8000-000000000202', 'vino', 'Salentein Primus Malbec',
-    '5eed0000-0000-4000-8000-000000000302', 'Malbec', '5eed0000-0000-4000-8000-000000000101'),
+    (select id from public.bodegas where nombre = 'Salentein'), 'Malbec', '5eed0000-0000-4000-8000-000000000101'),
   ('5eed0000-0000-4000-8000-000000000203', 'vino', 'Zuccardi Q Malbec',
-    '5eed0000-0000-4000-8000-000000000303', 'Malbec', '5eed0000-0000-4000-8000-000000000102'),
+    (select id from public.bodegas where nombre = 'Zuccardi'), 'Malbec', '5eed0000-0000-4000-8000-000000000102'),
   ('5eed0000-0000-4000-8000-000000000204', 'vino', 'Costa & Pampa Sauvignon Blanc',
-    '5eed0000-0000-4000-8000-000000000304', 'Sauvignon Blanc', '5eed0000-0000-4000-8000-000000000103'),
+    (select id from public.bodegas where nombre = 'Trapiche'), 'Sauvignon Blanc', '5eed0000-0000-4000-8000-000000000103'),
   ('5eed0000-0000-4000-8000-000000000205', 'vino', 'Salentein Brut Nature',
-    '5eed0000-0000-4000-8000-000000000302', null, '5eed0000-0000-4000-8000-000000000104'),
+    (select id from public.bodegas where nombre = 'Salentein'), null, '5eed0000-0000-4000-8000-000000000104'),
   ('5eed0000-0000-4000-8000-000000000206', 'destilado', 'Glenmorangie Original',
     null, null, '5eed0000-0000-4000-8000-000000000105'),
   ('5eed0000-0000-4000-8000-000000000207', 'aceite', 'AOVE Zuccardi Picual 500 cc',
-    '5eed0000-0000-4000-8000-000000000303', null, '5eed0000-0000-4000-8000-000000000106'),
+    (select id from public.bodegas where nombre = 'Zuccardi'), null, '5eed0000-0000-4000-8000-000000000106'),
   ('5eed0000-0000-4000-8000-000000000208', 'almacen', 'Sal gourmet Salva Malbec',
     null, null, '5eed0000-0000-4000-8000-000000000106'),
   ('5eed0000-0000-4000-8000-000000000209', 'vino', 'Zuccardi Q Malbec Magnum',
-    '5eed0000-0000-4000-8000-000000000303', 'Malbec', '5eed0000-0000-4000-8000-000000000107');
+    (select id from public.bodegas where nombre = 'Zuccardi'), 'Malbec', '5eed0000-0000-4000-8000-000000000107');
 
 insert into public.anadas (producto_id, codigo_tango, descripcion_tango, tipo, anio, precio, en_stock) values
   -- Rutini Malbec: varias añadas; la 2017 sin stock no aparece en la carta.
