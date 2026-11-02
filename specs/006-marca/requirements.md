@@ -1,6 +1,6 @@
 # 006 – Marca y textos editables
 
-**Estado:** Aprobada (2026-11-02)
+**Estado:** Implementada (2026-11-02)
 
 ## Objetivo
 Que el encargado pueda cambiar desde el panel la bienvenida de la carta y el logo, sin

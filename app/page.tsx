@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { Encabezado } from "@/components/Encabezado";
 import { Buscador } from "@/components/Buscador";
-import { seccionesCarta } from "@/lib/carta-cache";
+import { marcaCarta, seccionesCarta } from "@/lib/carta-cache";
 import { textos } from "@/lib/textos";
 
 async function ListaSecciones() {
@@ -23,11 +23,20 @@ async function ListaSecciones() {
   );
 }
 
+/** Texto de bienvenida que carga el encargado (spec 006); vacío no se muestra. */
+async function Bienvenida() {
+  const { bienvenida } = await marcaCarta();
+  return bienvenida ? <p className="mb-6 text-center text-lg text-texto-suave">{bienvenida}</p> : null;
+}
+
 export default function Inicio() {
   return (
     <>
       <Encabezado />
       <main className="mx-auto max-w-xl px-4 pb-10">
+        <Suspense fallback={null}>
+          <Bienvenida />
+        </Suspense>
         <Buscador />
         <nav aria-labelledby="titulo-secciones" className="mt-8">
           <h2 id="titulo-secciones" className="font-titulos text-xl text-titulo">

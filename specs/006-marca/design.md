@@ -22,6 +22,10 @@
   de logo con vista previa local (antes de subir) y botón para volver al original.
 - Validación de archivo: PNG o WebP, hasta 2 MB (`lib/admin/marca.ts`).
 
+## Carga
+El logo y la bienvenida se leen dentro de un `Suspense`: mientras tanto se ve el logo
+original (mismo tamaño, no salta nada). Así el inicio se puede prearmar.
+
 ## Caché
 `marcaCarta()` con `"use cache"` y la etiqueta `carta`, como el resto de la carta: al
 guardar, `invalidarCarta()` (se ve al instante).
