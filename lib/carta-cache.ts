@@ -2,7 +2,7 @@
 // se ve en la carta en hasta 1 minuto (spec 002, CA-10); uno hecho desde el panel, al
 // instante, porque el panel invalida la etiqueta "carta" (spec 004, CA-11).
 import { cacheLife, cacheTag } from "next/cache";
-import { buscarEnCarta, leerProducto, leerSeccion, leerSecciones } from "@/lib/carta";
+import { buscarEnCarta, leerMarca, leerProducto, leerSeccion, leerSecciones } from "@/lib/carta";
 import { crearClientePublico } from "@/lib/supabase/publico";
 
 const unMinuto = { stale: 60, revalidate: 60, expire: 3600 };
@@ -34,4 +34,11 @@ export async function busquedaCarta(texto: string) {
   cacheLife(unMinuto);
   cacheTag(ETIQUETA_CARTA);
   return buscarEnCarta(crearClientePublico(), texto);
+}
+
+export async function marcaCarta() {
+  "use cache";
+  cacheLife(unMinuto);
+  cacheTag(ETIQUETA_CARTA);
+  return leerMarca(crearClientePublico());
 }

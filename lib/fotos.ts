@@ -5,3 +5,8 @@ const BUCKET = "fotos";
 export function urlFoto(path: string): string {
   return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path}`;
 }
+
+/** Logo que el encargado subió desde el panel (bucket público "marca", spec 006). */
+export function urlLogo(path: string): string {
+  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/marca/${path}`;
+}
