@@ -1,6 +1,6 @@
 # 013 – Rediseño de la carta y promociones
 
-**Estado:** Borrador
+**Estado:** Aprobada (2026-11-02)
 
 ## Objetivo
 Que la carta se vea y se sienta actual y cuidada (2026), a la altura de Enoboutique,
@@ -69,8 +69,8 @@ De las propuestas (canvas "Enoboutique — propuestas de rediseño"):
 - **Cuando** sube imágenes (JPG, PNG o WebP, hasta 5 MB; se achican antes de subir)
 - **Entonces** aparecen en la lista, en el orden en que se ven en la carta.
 - Y puede **ordenarlas arrastrando** (spec 005), **ocultarlas y mostrarlas** y
-  **borrarlas** (con confirmación). Cada imagen lleva una **descripción** corta para
-  quien usa lector de pantalla ("2x1 en espumantes").
+  **borrarlas** (con confirmación). Es solo la imagen, sin texto: para quien usa lector
+  de pantalla, cada una se anuncia como "Promoción 1 de 3".
 - Y los cambios se ven en la carta al instante.
 - Y solo el encargado entra a Promociones.
 
@@ -81,10 +81,10 @@ De las propuestas (canvas "Enoboutique — propuestas de rediseño"):
 - Cambios en el panel (más allá de la pantalla de Promociones).
 - Colores y tipografías nuevos.
 
-## Preguntas abiertas
-- [ ] ¿Las promociones llevan una **descripción** para lector de pantalla (CA-6)? Es
-  una línea de texto que no se ve en la carta; la pide la accesibilidad (las imágenes
-  necesitan texto alternativo). Propuesta: sí, obligatoria.
+## Decisiones tomadas en la revisión
+- **Diseño:** inicio y encabezado de sección de la propuesta C; listado de vinos de la A.
+- **Promociones:** solo la imagen (sin descripción, fechas ni enlaces), abajo de todo en
+  el inicio, ampliable a pantalla completa.
 
 ## Ideas para más adelante
 - Fechas desde/hasta para que una promoción aparezca y desaparezca sola.

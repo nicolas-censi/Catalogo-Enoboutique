@@ -19,8 +19,7 @@
 - Sin JavaScript: todo se ve igual, sin movimiento.
 
 ## Promociones
-- Tabla `promociones` (`id`, `imagen_path`, `descripcion` ≤ 120, `orden`, `visible`,
-  `creado_en`). Lectura pública de las visibles; escritura solo del encargado.
+- Tabla `promociones` (`id`, `imagen_path`, `orden`, `visible`, `creado_en`). Lectura pública de las visibles; escritura solo del encargado.
   `ordenar_promociones(ids)` como `ordenar_secciones`.
 - Bucket público `promociones` (JPG, PNG, WebP, hasta 5 MB); en el navegador se
   achican a 1600 px de lado mayor (como las fotos de productos).
@@ -29,7 +28,7 @@
   botón Pausar, indicador de posición. Pantalla completa con `<dialog>` (Cerrar, Escape,
   y el botón Atrás del celular vía `history`).
 - Panel `/admin/promociones` (encargado): subir varias, lista arrastrable (`Ordenable`),
-  ocultar/mostrar, borrar con confirmación, editar la descripción.
+  ocultar/mostrar, borrar con confirmación. Texto alternativo: "Promoción N de M".
 
 ## Tests
 - E2E: inicio y sección con el diseño nuevo (estructura y accesibilidad); carrusel
