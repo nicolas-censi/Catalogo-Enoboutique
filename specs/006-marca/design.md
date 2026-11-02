@@ -20,7 +20,7 @@
   (`public/logo-enoboutique.png`); mismo alto y texto alternativo.
 - `EditorMarca` (panel): formulario de bienvenida con contador de caracteres; subida
   de logo con vista previa local (antes de subir) y botón para volver al original.
-- Validación de archivo: PNG, SVG o WebP, hasta 2 MB (`lib/admin/validacion`).
+- Validación de archivo: PNG o WebP, hasta 2 MB (`lib/admin/marca.ts`).
 
 ## Caché
 `marcaCarta()` con `"use cache"` y la etiqueta `carta`, como el resto de la carta: al

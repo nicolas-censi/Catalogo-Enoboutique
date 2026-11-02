@@ -20,7 +20,7 @@ pedir un cambio de desarrollo.
 
 ### CA-2: Logo
 - **Dado** el encargado en **Marca**
-- **Cuando** sube un logo nuevo (PNG, SVG o WebP, hasta 2 MB; conviene con fondo
+- **Cuando** sube un logo nuevo (PNG o WebP, hasta 2 MB; conviene con fondo
   transparente)
 - **Entonces** la carta lo muestra en el encabezado de todas sus páginas, al instante,
   con el mismo texto alternativo ("Lehonor Enoboutique").
@@ -40,6 +40,7 @@ pedir un cambio de desarrollo.
 - **Textos editables:** la bienvenida del inicio.
 - **Marca:** solo el logo es editable; los colores no (se descartaron en la revisión).
 - **Quién:** solo el encargado.
+- **Formato del logo:** PNG o WebP. Se descartó SVG porque puede llevar código adentro.
 
 ## Ideas para más adelante
 - Pie con datos del local (dirección, horario, WhatsApp, Instagram) y aviso de precios.
