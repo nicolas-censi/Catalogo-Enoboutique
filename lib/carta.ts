@@ -151,3 +151,12 @@ export async function leerMarca(cliente: Cliente): Promise<MarcaCarta> {
   if (error) throw error;
   return { bienvenida: data?.bienvenida ?? null, logoPath: data?.logo_path ?? null };
 }
+
+export type Promocion = { id: string; imagenPath: string };
+
+/** Promociones visibles del inicio, en el orden que eligió el encargado (spec 013). */
+export async function leerPromociones(cliente: Cliente): Promise<Promocion[]> {
+  const { data, error } = await cliente.from("promociones").select("id, imagen_path").eq("visible", true).order("orden");
+  if (error) throw error;
+  return data.map((p) => ({ id: p.id, imagenPath: p.imagen_path }));
+}

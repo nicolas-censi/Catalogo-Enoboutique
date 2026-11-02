@@ -10,7 +10,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   movimiento; e2e de producción (3G). (CA-3)
 - [x] T5 — Migración: `promociones`, bucket y `ordenar_promociones`; tests de base.
   (CA-6)
-- [ ] T6 — Panel `/admin/promociones`: subir, ordenar, ocultar, borrar; e2e.
+- [x] T6 — Panel `/admin/promociones`: subir, ordenar, ocultar, borrar; e2e.
   (CA-6)
 - [ ] T7 — Carrusel en el inicio (pase automático, pausa, deslizar, indicador); e2e.
   (CA-4)

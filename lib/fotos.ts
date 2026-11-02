@@ -10,3 +10,8 @@ export function urlFoto(path: string): string {
 export function urlLogo(path: string): string {
   return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/marca/${path}`;
 }
+
+/** Imagen de una promoción del inicio (bucket público "promociones", spec 013). */
+export function urlPromocion(path: string): string {
+  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/promociones/${path}`;
+}

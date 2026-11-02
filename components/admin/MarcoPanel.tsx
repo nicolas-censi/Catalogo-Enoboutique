@@ -28,6 +28,7 @@ export function MarcoPanel({ sesion, children }: { sesion: SesionPanel; children
             {sesion.rol === "encargado" && (
               <>
                 <Link href="/admin/importar" className={enlace}>{textos.admin.importar.menu}</Link>
+                <Link href="/admin/promociones" className={enlace}>{textos.admin.promociones.menu}</Link>
                 <Link href="/admin/marca" className={enlace}>{textos.admin.marca.menu}</Link>
                 <Link href="/admin/personal" className={enlace}>{textos.admin.personal}</Link>
               </>
