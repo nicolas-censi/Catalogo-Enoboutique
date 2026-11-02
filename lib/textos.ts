@@ -16,6 +16,14 @@ export const textos = {
   subsecciones: "Subsecciones",
   sinResultados: (busqueda: string) => `No encontramos nada para “${busqueda}”.`,
   sinResultadosAyuda: "Probá con otro nombre o consultá al personal.",
+  promociones: {
+    titulo: "Promociones",
+    nombre: (n: number, total: number) => `Promoción ${n} de ${total}`,
+    ver: (n: number, total: number) => `Ver en grande la promoción ${n} de ${total}`,
+    pausar: "Pausar las promociones",
+    reanudar: "Reanudar las promociones",
+    cerrar: "Cerrar",
+  },
   escaner: {
     boton: "Escanear código",
     titulo: "Escanear código",

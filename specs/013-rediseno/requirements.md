@@ -1,6 +1,6 @@
 # 013 – Rediseño de la carta y promociones
 
-**Estado:** Aprobada (2026-11-02)
+**Estado:** Implementada (2026-11-02)
 
 ## Objetivo
 Que la carta se vea y se sienta actual y cuidada (2026), a la altura de Enoboutique,

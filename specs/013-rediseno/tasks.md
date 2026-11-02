@@ -12,7 +12,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   (CA-6)
 - [x] T6 — Panel `/admin/promociones`: subir, ordenar, ocultar, borrar; e2e.
   (CA-6)
-- [ ] T7 — Carrusel en el inicio (pase automático, pausa, deslizar, indicador); e2e.
+- [x] T7 — Carrusel en el inicio (pase automático, pausa, deslizar, indicador); e2e.
   (CA-4)
-- [ ] T8 — Pantalla completa (Cerrar, Escape, Atrás); e2e. (CA-5)
-- [ ] T9 — Accesibilidad y celular de todo lo nuevo. (CA-1 a CA-6)
+- [x] T8 — Pantalla completa (Cerrar, Escape, Atrás); e2e. (CA-5)
+- [x] T9 — Accesibilidad y celular de todo lo nuevo. (CA-1 a CA-6)

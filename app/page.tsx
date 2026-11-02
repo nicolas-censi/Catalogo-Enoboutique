@@ -3,7 +3,9 @@ import { Suspense } from "react";
 import { Encabezado } from "@/components/Encabezado";
 import { TransicionCarta } from "@/components/TransicionCarta";
 import { Buscador } from "@/components/Buscador";
-import { marcaCarta, seccionesCarta } from "@/lib/carta-cache";
+import { CarruselPromociones } from "@/components/CarruselPromociones";
+import { marcaCarta, promocionesCarta, seccionesCarta } from "@/lib/carta-cache";
+import { urlPromocion } from "@/lib/fotos";
 import { textos } from "@/lib/textos";
 
 async function ListaSecciones() {
@@ -30,6 +32,12 @@ async function Bienvenida() {
   return bienvenida ? <p className="mb-2 text-center font-titulos text-[0.9375rem] leading-relaxed text-texto">{bienvenida}</p> : null;
 }
 
+/** Promociones abajo de todo (spec 013); sin promociones visibles, nada. */
+async function Promociones() {
+  const promociones = await promocionesCarta();
+  return <CarruselPromociones imagenes={promociones.map((p) => urlPromocion(p.imagenPath))} />;
+}
+
 /** Inicio (spec 013, propuesta C): logo grande, bienvenida, buscador y secciones centradas. */
 export default function Inicio() {
   return (
@@ -50,6 +58,9 @@ export default function Inicio() {
             <ListaSecciones />
           </Suspense>
         </nav>
+        <Suspense fallback={null}>
+          <Promociones />
+        </Suspense>
       </main>
     </TransicionCarta>
   );

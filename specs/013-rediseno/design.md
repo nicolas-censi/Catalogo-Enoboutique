@@ -25,7 +25,8 @@
   `crear_promocion(imagen)` (al final) y `ordenar_promociones(ids)`, como en secciones.
 - Bucket público `promociones` (JPG, PNG, WebP, hasta 5 MB); en el navegador se
   achican a 1600 px de lado mayor (como las fotos de productos).
-- Carrusel (Client Component, cargado con `next/dynamic` para no pesar en la carta):
+- Carrusel (Client Component chico; las imágenes conviene diseñarlas en 16:9, 1600 × 900,
+  porque el carrusel recorta y la vista en grande las muestra enteras):
   `scroll-snap` nativo (deslizar funciona sin JavaScript), pase automático cada 5 s con
   botón Pausar, indicador de posición. Pantalla completa con `<dialog>` (Cerrar, Escape,
   y el botón Atrás del celular vía `history`).
