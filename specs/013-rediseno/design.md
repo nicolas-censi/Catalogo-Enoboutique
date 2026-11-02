@@ -9,9 +9,11 @@
   `TarjetaProducto` (estilo editorial con puntos guía).
 
 ## Movimiento
-- Transiciones entre páginas con la API de **View Transitions** (Next.js
-  `experimental.viewTransition` + `<ViewTransition>` de React): fundido + desplazamiento
-  de 8 px, 200–250 ms. Sin soporte del navegador, el cambio es inmediato.
+- Transiciones entre páginas con la API de **View Transitions** (`<ViewTransition>` de
+  React, en `TransicionCarta`): fundido + desplazamiento de 8 px, 150–250 ms. Solo en las
+  páginas de la carta: en el panel animaría cada actualización y trabaría el arrastre.
+  Sin soporte del navegador, el cambio es inmediato.
+- Páginas interiores: logo chico arriba y "‹ La carta" (o la sección) para volver.
 - Aparición escalonada de los vinos con CSS (`@starting-style` / animación con
   `animation-delay` por posición, como máximo los primeros 8).
 - Respuesta al toque: `:active` con escala 0,98 y cambio de opacidad.

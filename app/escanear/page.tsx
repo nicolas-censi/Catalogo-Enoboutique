@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Encabezado } from "@/components/Encabezado";
+import { TransicionCarta } from "@/components/TransicionCarta";
 import { EscanerDiferido } from "@/components/EscanerDiferido";
 import { Volver } from "@/components/Volver";
 import { textos } from "@/lib/textos";
@@ -35,7 +36,7 @@ function IngresoManual() {
 
 export default function PaginaEscanear() {
   return (
-    <>
+    <TransicionCarta>
       <Encabezado />
       <main className="mx-auto max-w-xl px-4 pb-10">
         <Volver />
@@ -44,6 +45,6 @@ export default function PaginaEscanear() {
         <EscanerDiferido />
         <IngresoManual />
       </main>
-    </>
+    </TransicionCarta>
   );
 }

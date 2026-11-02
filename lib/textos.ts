@@ -8,6 +8,7 @@ export const textos = {
   buscadorBoton: "Buscar",
   secciones: "Secciones",
   volverACarta: "Volver a la carta",
+  laCarta: "La carta",
   seccionNoEncontrada: "No encontramos esta sección.",
   productoNoEncontrado: "No encontramos este producto. Puede que ya no esté disponible.",
   volverA: (seccion: string) => `Volver a ${seccion}`,
