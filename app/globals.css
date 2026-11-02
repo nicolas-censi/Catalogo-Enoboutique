@@ -22,6 +22,9 @@
 
   --font-titulos: var(--font-inknut-antiqua), serif;
   --font-texto: var(--font-cabin), sans-serif;
+
+  /* Movimiento (spec 013): suave y corto. */
+  --ease-salida: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 /*
@@ -64,5 +67,58 @@
 @layer base {
   body {
     @apply bg-fondo text-texto font-texto;
+  }
+}
+
+/*
+ * Movimiento (spec 013). Cambios de página con View Transitions (React <ViewTransition>):
+ * la página nueva aparece con un fundido y un leve desplazamiento. Los vinos aparecen
+ * escalonados (--i = posición) y lo que se toca responde. Con "reducir movimiento"
+ * activado en el celular, nada de esto.
+ */
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes desaparecer {
+  to {
+    opacity: 0;
+  }
+}
+
+::view-transition-old(root) {
+  animation: 150ms ease-out both desaparecer;
+}
+::view-transition-new(root) {
+  animation: 250ms var(--ease-salida) both aparecer;
+}
+
+@layer utilities {
+  .aparecer {
+    animation: aparecer 350ms var(--ease-salida) both;
+    animation-delay: calc(min(var(--i, 0), 8) * 40ms);
+  }
+  .tocable {
+    transition:
+      transform 150ms var(--ease-salida),
+      opacity 150ms var(--ease-salida);
+  }
+  .tocable:active {
+    transform: scale(0.98);
+    opacity: 0.85;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after,
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+    transition: none !important;
   }
 }

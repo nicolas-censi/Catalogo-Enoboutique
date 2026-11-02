@@ -1,6 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Encabezado } from "@/components/Encabezado";
+import { TransicionCarta } from "@/components/TransicionCarta";
 import { ListaAnadas } from "@/components/ListaAnadas";
 import { subtituloProducto } from "@/components/TarjetaProducto";
 import { Volver } from "@/components/Volver";
@@ -24,13 +24,8 @@ async function DetalleProducto({ params }: { params: Promise<{ id: string }> }) 
   const subtitulo = subtituloProducto(producto);
   return (
     <>
-      <Link
-        href={`/seccion/${producto.seccion.id}`}
-        className="inline-flex min-h-11 items-center text-titulo before:mr-1 before:content-['‹']"
-      >
-        {textos.volverA(producto.seccion.nombre)}
-      </Link>
-      <article className="mt-2">
+      <Volver href={`/seccion/${producto.seccion.id}`} texto={producto.seccion.nombre} etiqueta={textos.volverA(producto.seccion.nombre)} />
+      <article className="aparecer mt-2">
         {producto.fotoPath && (
           <Image
             src={urlFoto(producto.fotoPath)}
@@ -42,12 +37,11 @@ async function DetalleProducto({ params }: { params: Promise<{ id: string }> }) 
             priority
           />
         )}
-        <h1 className="mt-4 font-titulos text-2xl leading-snug text-titulo">{producto.nombre}</h1>
-        {subtitulo && <p className="mt-1 text-texto-suave">{subtitulo}</p>}
-        {producto.descripcion && <p className="mt-4 leading-relaxed">{producto.descripcion}</p>}
-        <div className="mt-4 rounded-lg border border-dorado/30 bg-superficie px-4 py-2">
-          <ListaAnadas anadas={producto.anadas} />
-        </div>
+        <h1 className="mt-4 font-titulos text-[1.75rem] leading-snug text-titulo">{producto.nombre}</h1>
+        {subtitulo && <p className="mt-1 text-sm tracking-wide text-texto-suave/80">{subtitulo}</p>}
+        <span aria-hidden="true" className="my-4 block h-px w-10 bg-dorado" />
+        {producto.descripcion && <p className="mb-4 leading-relaxed">{producto.descripcion}</p>}
+        <ListaAnadas anadas={producto.anadas} />
       </article>
     </>
   );
@@ -59,11 +53,11 @@ export const instant = false;
 
 export default function PaginaProducto({ params }: PageProps<"/producto/[id]">) {
   return (
-    <>
+    <TransicionCarta>
       <Encabezado />
       <main className="mx-auto max-w-xl px-4 pb-10">
         <DetalleProducto params={params} />
       </main>
-    </>
+    </TransicionCarta>
   );
 }

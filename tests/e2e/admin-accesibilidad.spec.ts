@@ -18,6 +18,7 @@ const pantallas: [string, string, boolean][] = [
   ["abreviaturas", "/admin/importar/abreviaturas", true],
   ["bodegas de Tango", "/admin/importar/bodegas", true],
   ["marca", "/admin/marca", true],
+  ["promociones", "/admin/promociones", true],
 ];
 
 const tamanos = [

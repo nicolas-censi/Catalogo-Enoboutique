@@ -286,6 +286,30 @@ export type Database = {
           },
         ]
       }
+      promociones: {
+        Row: {
+          creado_en: string
+          id: string
+          imagen_path: string
+          orden: number
+          visible: boolean
+        }
+        Insert: {
+          creado_en?: string
+          id?: string
+          imagen_path: string
+          orden: number
+          visible?: boolean
+        }
+        Update: {
+          creado_en?: string
+          id?: string
+          imagen_path?: string
+          orden?: number
+          visible?: boolean
+        }
+        Relationships: []
+      }
       secciones: {
         Row: {
           actualizado_en: string
@@ -455,6 +479,7 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      crear_promocion: { Args: { imagen: string }; Returns: string }
       crear_subseccion: {
         Args: { nombre: string; padre: string }
         Returns: {
@@ -469,6 +494,7 @@ export type Database = {
         Args: { ids: string[]; seccion: string }
         Returns: undefined
       }
+      ordenar_promociones: { Args: { ids: string[] }; Returns: undefined }
       ordenar_secciones: { Args: { ids: string[] }; Returns: undefined }
     }
     Enums: {
