@@ -2,7 +2,7 @@
 
 Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un criterio (CA-n).
 
-- [ ] T1 — Migración: enum, tabla `sugerencias`, índice único, RLS, `tomar_cola`, bucket privado `sugerencias`; tests de DB (CA-6)
+- [x] T1 — Migración: enum, tabla `sugerencias`, índice único, RLS, `tomar_cola`, bucket privado `sugerencias`; tests de DB (CA-6)
 - [ ] T2 — `lib/ia/`: interfaz `Sugeridor`, instrucciones, esquema de respuesta (Zod) y armado del pedido sin precios ni códigos; implementación falsa (`IA_FALSA=1`); unit (CA-4)
 - [ ] T3 — Implementación real con `@google/genai` (Gemini 3.8 Flash, Google Search + URL context, fuentes de `groundingMetadata`, uso registrado) y prueba con 20 productos para medir calidad y costo real, comparando con 3.1 Pro (CA-1, CA-4, CA-7)
 - [ ] T4 — Foto: extracción de la imagen de la página, descarga segura, achicado con `sharp` y subida al bucket privado; unit de las guardas (CA-4, CA-6)

@@ -1,6 +1,6 @@
 # 007 – Sugerencias por IA (descripción y foto)
 
-**Estado:** Aprobada (2026-11-02)
+**Estado:** Aprobada (2026-11-02) — en implementación
 
 ## Objetivo
 Que el personal complete la carta sin escribir a mano ni buscar fotos de a una:
@@ -95,8 +95,9 @@ lo apruebe ("Lo humano manda" y "Solo se publica lo aprobado", visión).
 
 ## Preguntas abiertas
 - [x] ¿Qué modelo usamos? **Gemini 3.8 Flash** (decidido el 2026-11-02, ver `design.md`).
-- [ ] Derechos de las fotos: se priorizan las oficiales (bodega o distribuidor) y se
-  guarda el sitio de origen, pero el permiso de uso lo decide Lehonor.
+- [x] Derechos de las fotos: **se usan las oficiales** (bodega o distribuidor). Se guarda
+  el sitio de origen de cada una; si una bodega pide que se saque, se borra o se
+  reemplaza desde el panel (decidido el 2026-11-02).
 
 ## Ideas para más adelante
 - Sugerir automáticamente para los productos nuevos de cada importación de Tango.
