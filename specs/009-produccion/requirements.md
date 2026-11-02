@@ -1,6 +1,6 @@
 # 009 – Producción, dominio y QR
 
-**Estado:** Borrador
+**Estado:** Borrador (en pausa: falta definir dónde se aloja el sistema)
 
 ## Objetivo
 Separar la carta que usan los clientes de la base de pruebas, publicarla en
