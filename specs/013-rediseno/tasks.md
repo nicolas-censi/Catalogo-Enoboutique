@@ -8,7 +8,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
   mismo estilo; e2e y sin JavaScript. (CA-2)
 - [x] T4 — Transiciones entre páginas y aparición escalonada; e2e con reducir
   movimiento; e2e de producción (3G). (CA-3)
-- [ ] T5 — Migración: `promociones`, bucket y `ordenar_promociones`; tests de base.
+- [x] T5 — Migración: `promociones`, bucket y `ordenar_promociones`; tests de base.
   (CA-6)
 - [ ] T6 — Panel `/admin/promociones`: subir, ordenar, ocultar, borrar; e2e.
   (CA-6)

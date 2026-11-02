@@ -22,7 +22,7 @@
 
 ## Promociones
 - Tabla `promociones` (`id`, `imagen_path`, `orden`, `visible`, `creado_en`). Lectura pública de las visibles; escritura solo del encargado.
-  `ordenar_promociones(ids)` como `ordenar_secciones`.
+  `crear_promocion(imagen)` (al final) y `ordenar_promociones(ids)`, como en secciones.
 - Bucket público `promociones` (JPG, PNG, WebP, hasta 5 MB); en el navegador se
   achican a 1600 px de lado mayor (como las fotos de productos).
 - Carrusel (Client Component, cargado con `next/dynamic` para no pesar en la carta):
