@@ -1,6 +1,6 @@
 # 007 – Sugerencias por IA (descripción y foto)
 
-**Estado:** Borrador
+**Estado:** Aprobada (2026-11-02)
 
 ## Objetivo
 Que el personal complete la carta sin escribir a mano ni buscar fotos de a una:
@@ -36,8 +36,9 @@ lo apruebe ("Lo humano manda" y "Solo se publica lo aprobado", visión).
 - Y por defecto se piden solo los que **no tienen descripción o no tienen foto**; se
   puede tildar "Incluir los que ya tienen" para pedir igual.
 - Y no se piden de nuevo los que ya tienen una sugerencia esperando revisión.
-- Y al confirmar ve "Listo. Las sugerencias van a ir llegando a Para revisar (suele
-  tardar menos de una hora)."
+- Y al confirmar ve "Listo. Las sugerencias van a ir llegando a Para revisar." Se
+  procesan de a tandas, hasta 400 por día; si se piden más, siguen al día siguiente.
+- Y el pedido es de hasta 1.000 productos por vez (se puede repetir).
 
 ### CA-3: Bandeja "Para revisar"
 - **Dado** el panel
@@ -93,11 +94,12 @@ lo apruebe ("Lo humano manda" y "Solo se publica lo aprobado", visión).
 - Traducciones de las descripciones.
 
 ## Preguntas abiertas
-- [ ] ¿Qué modelo usamos? Recomendado: el más capaz (mejor criterio para elegir la foto
-  correcta y no inventar). Uno más económico cuesta cerca de la mitad. Ver `design.md`.
+- [x] ¿Qué modelo usamos? **Gemini 3.8 Flash** (decidido el 2026-11-02, ver `design.md`).
 - [ ] Derechos de las fotos: se priorizan las oficiales (bodega o distribuidor) y se
   guarda el sitio de origen, pero el permiso de uso lo decide Lehonor.
 
 ## Ideas para más adelante
 - Sugerir automáticamente para los productos nuevos de cada importación de Tango.
 - Aprobar varias seguidas con atajos de teclado.
+- Opción "usar solo las búsquedas gratis del mes" para que la carta se complete sin
+  costo de búsquedas, más despacio.
