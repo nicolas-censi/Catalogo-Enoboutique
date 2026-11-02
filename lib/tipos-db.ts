@@ -187,6 +187,27 @@ export type Database = {
         }
         Relationships: []
       }
+      marca: {
+        Row: {
+          actualizado_en: string
+          bienvenida: string | null
+          id: number
+          logo_path: string | null
+        }
+        Insert: {
+          actualizado_en?: string
+          bienvenida?: string | null
+          id?: number
+          logo_path?: string | null
+        }
+        Update: {
+          actualizado_en?: string
+          bienvenida?: string | null
+          id?: number
+          logo_path?: string | null
+        }
+        Relationships: []
+      }
       personal: {
         Row: {
           creado_en: string
