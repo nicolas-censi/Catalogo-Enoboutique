@@ -16,7 +16,7 @@ export class SugeridorFalso implements Sugeridor {
       paginaFoto: sinFoto ? null : "https://ia-falsa.invalid/producto",
       fotoUrl: sinFoto ? null : FOTO_FALSA,
       motivoSinFoto: sinFoto ? "No encontré una foto oficial." : null,
-      fuentes: ["https://ia-falsa.invalid/producto"],
+      fuentes: [{ titulo: "ia-falsa.invalid", url: "https://ia-falsa.invalid/producto" }],
       uso: { tokensEntrada: 15000, tokensSalida: 2000, busquedas: 3 },
     };
   }

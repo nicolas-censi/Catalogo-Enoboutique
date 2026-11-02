@@ -24,9 +24,11 @@ export type RespuestaIA = {
 
 export type UsoIA = { tokensEntrada: number; tokensSalida: number; busquedas: number };
 
+export type Fuente = { titulo: string; url: string };
+
 export type SugerenciaIA = RespuestaIA & {
   /** Sitios consultados (según la búsqueda, no según lo que diga el modelo). */
-  fuentes: string[];
+  fuentes: Fuente[];
   uso: UsoIA;
 };
 

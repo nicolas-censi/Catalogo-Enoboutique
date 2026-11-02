@@ -359,7 +359,7 @@ export type Database = {
           foto_path: string | null
           foto_sitio: string | null
           foto_url_origen: string | null
-          fuentes: string[]
+          fuentes: Json
           id: string
           intentos: number
           motivo_sin_descripcion: string | null
@@ -383,7 +383,7 @@ export type Database = {
           foto_path?: string | null
           foto_sitio?: string | null
           foto_url_origen?: string | null
-          fuentes?: string[]
+          fuentes?: Json
           id?: string
           intentos?: number
           motivo_sin_descripcion?: string | null
@@ -407,7 +407,7 @@ export type Database = {
           foto_path?: string | null
           foto_sitio?: string | null
           foto_url_origen?: string | null
-          fuentes?: string[]
+          fuentes?: Json
           id?: string
           intentos?: number
           motivo_sin_descripcion?: string | null
@@ -605,7 +605,7 @@ export type Database = {
           foto_path: string | null
           foto_sitio: string | null
           foto_url_origen: string | null
-          fuentes: string[]
+          fuentes: Json
           id: string
           intentos: number
           motivo_sin_descripcion: string | null
