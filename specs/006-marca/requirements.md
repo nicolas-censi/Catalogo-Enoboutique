@@ -1,15 +1,15 @@
 # 006 – Marca y textos editables
 
-**Estado:** Borrador
+**Estado:** Aprobada (2026-11-02)
 
 ## Objetivo
-Que el encargado pueda cambiar desde el panel la bienvenida de la carta, el logo y los
-colores, sin pedir un cambio de desarrollo, cuidando que la carta siga siendo legible.
+Que el encargado pueda cambiar desde el panel la bienvenida de la carta y el logo, sin
+pedir un cambio de desarrollo.
 
 ## Historias de usuario
 - Como **encargado**, quiero **escribir una bienvenida** que se vea en el inicio de la
   carta.
-- Como **encargado**, quiero **cambiar el logo** y **los colores** de la carta.
+- Como **encargado**, quiero **cambiar el logo** de la carta, por si hace falta.
 
 ## Criterios de aceptación
 ### CA-1: Bienvenida
@@ -27,45 +27,21 @@ colores, sin pedir un cambio de desarrollo, cuidando que la carta siga siendo le
 - Y se ve una vista previa sobre el color de fondo antes de guardar.
 - Y puede volver al logo original con **Volver al logo de la marca**.
 
-### CA-3: Colores
-- **Dado** el encargado en **Marca**
-- **Cuando** cambia los colores con un selector
-- **Entonces** puede elegir cuatro colores:
-  - **Fondo** de la página;
-  - **Tarjetas** (productos y buscador);
-  - **Principal** (logo, títulos, nombres de vinos, precios, botones; hoy el dorado);
-  - **Texto** (bodega, varietal, años, ayudas; hoy el crema).
-- Y ve una vista previa de una tarjeta de producto con esos colores antes de guardar.
-- Y al guardar, la carta (y el panel) usan los colores nuevos, al instante.
-
-### CA-4: Siempre legible
-- **Dado** una combinación de colores
-- **Cuando** el contraste entre el texto o el color principal y el fondo o las
-  tarjetas es menor a 4,5:1 (lo mínimo que piden las pautas de accesibilidad WCAG AA)
-- **Entonces** no se puede guardar y se explica cuál par no se lee bien ("El color
-  principal sobre las tarjetas no se lee bien: contraste 2,1:1, hace falta 4,5:1").
-- Y puede volver a los colores originales con **Volver a los colores de la marca**.
-
-### CA-5: Solo el encargado
+### CA-3: Solo el encargado
 - **Dado** un vendedor
 - **Cuando** intenta entrar a **Marca**
 - **Entonces** no tiene acceso. La carta y la base solo dejan cambiar esto al encargado.
 
 ## Fuera de alcance
-- Elegir tipografías.
+- Elegir colores o tipografías: quedan los de la marca (en el código).
 - Otros textos de la carta (pie con datos del local, aviso de precios, mensajes).
-- Colores distintos para el panel y para la carta.
-
-## Preguntas abiertas
-- [ ] ¿Los colores nuevos se aplican también al **panel**? Propuesta: sí (es la misma
-  marca y así se ve el resultado); si alguna vez queda raro, se vuelve a los colores de
-  la marca con un botón.
 
 ## Decisiones tomadas en la revisión
 - **Textos editables:** la bienvenida del inicio.
-- **Marca:** logo y colores editables, con control de contraste.
+- **Marca:** solo el logo es editable; los colores no (se descartaron en la revisión).
 - **Quién:** solo el encargado.
 
 ## Ideas para más adelante
 - Pie con datos del local (dirección, horario, WhatsApp, Instagram) y aviso de precios.
 - Elegir entre tipografías de la marca.
+- Colores editables con control de contraste (se habló y se descartó por ahora).
