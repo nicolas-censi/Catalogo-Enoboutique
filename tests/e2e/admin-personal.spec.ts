@@ -9,7 +9,13 @@ test.afterAll(limpiarUsuarios);
 
 const admin = clienteAdmin();
 const fila = (page: Page, usuario: string) =>
-  page.getByRole("table", { name: "Personal" }).getByRole("row").filter({ has: page.getByRole("cell", { name: new RegExp(`^${usuario}( \\(vos\\))?$`) }) });
+  page.getByRole("list", { name: "Personal" }).getByRole("listitem").filter({ has: page.getByRole("button", { name: `Más acciones para ${usuario}`, exact: true }) });
+/** Spec 014, CA-7: Cambiar contraseña y Dar de baja están en el menú ⋯ de cada persona. */
+async function accion(page: Page, usuario: string, cual: string) {
+  await page.waitForLoadState("networkidle");
+  await page.getByRole("button", { name: `Más acciones para ${usuario}`, exact: true }).click();
+  await page.getByRole("menuitem", { name: cual }).click();
+}
 const idDe = async (usuario: string) => {
   const { data } = await admin.auth.admin.listUsers({ perPage: 1000 });
   return data.users.find((u) => u.email === aEmailInterno(usuario))?.id ?? null;
@@ -35,7 +41,7 @@ test("un vendedor no tiene acceso a Personal", async ({ page, context }) => {
   await expect(page.getByRole("navigation", { name: "Panel" }).getByRole("link", { name: "Personal" })).toHaveCount(0);
   await page.goto("/admin/personal");
   await expect(page.getByText("No tenés acceso al panel.")).toBeVisible();
-  await expect(page.getByRole("table", { name: "Personal" })).toHaveCount(0);
+  await expect(page.getByRole("list", { name: "Personal" })).toHaveCount(0);
 });
 
 test("spec 012, CA-2 y CA-4: el encargado da de alta a alguien con usuario y contraseña, y entra enseguida", async ({ page, context, browser }) => {
@@ -87,7 +93,7 @@ test("spec 012, CA-3: el encargado cambia la contraseña de alguien y la anterio
   await entrarComo(context, "encargado");
   const otro = await crearUsuarioConSesion("vendedor");
   await page.goto("/admin/personal");
-  await fila(page, otro.nombreUsuario).getByRole("button", { name: "Cambiar contraseña" }).click();
+  await accion(page, otro.nombreUsuario, "Cambiar contraseña");
   await page.getByLabel(`Contraseña nueva de ${otro.nombreUsuario}`).fill("98");
   await page.getByRole("button", { name: "Guardar" }).click();
   await expect(page.getByLabel(`Contraseña nueva de ${otro.nombreUsuario}`)).toHaveAccessibleDescription(
@@ -103,7 +109,7 @@ test("spec 012, CA-3: el encargado cambia la contraseña de alguien y la anterio
 test("spec 012, CA-3: el encargado también puede cambiar su propia contraseña", async ({ page, context }) => {
   const yo = await entrarComo(context, "encargado");
   await page.goto("/admin/personal");
-  await fila(page, yo.nombreUsuario).getByRole("button", { name: "Cambiar contraseña" }).click();
+  await accion(page, yo.nombreUsuario, "Cambiar contraseña");
   await page.getByLabel(`Contraseña nueva de ${yo.nombreUsuario}`).fill("4321");
   await page.getByRole("button", { name: "Guardar" }).click();
   await expect(fila(page, yo.nombreUsuario).getByRole("status")).toHaveText("Contraseña cambiada.");
@@ -124,11 +130,14 @@ test("da de baja a alguien con confirmación y ya no puede entrar", async ({ pag
   const yo = await entrarComo(context, "encargado");
   const otro = await crearUsuarioConSesion("vendedor");
   await page.goto("/admin/personal");
-  await expect(fila(page, yo.nombreUsuario).getByRole("button", { name: "Dar de baja" })).toHaveCount(0);
+  await page.waitForLoadState("networkidle");
+  await page.getByRole("button", { name: `Más acciones para ${yo.nombreUsuario}`, exact: true }).click();
+  await expect(page.getByRole("menuitem", { name: "Dar de baja" })).toHaveCount(0);
+  await page.keyboard.press("Escape");
 
-  await fila(page, otro.nombreUsuario).getByRole("button", { name: "Dar de baja" }).click();
-  await expect(fila(page, otro.nombreUsuario)).toContainText(`¿Dar de baja a ${otro.nombreUsuario}? No va a poder entrar más.`);
-  await fila(page, otro.nombreUsuario).getByRole("button", { name: "Sí, dar de baja" }).click();
+  await accion(page, otro.nombreUsuario, "Dar de baja");
+  const dialogo = page.getByRole("dialog", { name: `¿Dar de baja a ${otro.nombreUsuario}? No va a poder entrar más.` });
+  await dialogo.getByRole("button", { name: "Sí, dar de baja" }).click();
   await expect(fila(page, otro.nombreUsuario)).toHaveCount(0);
   expect(await rolDe(otro.nombreUsuario)).toBeNull();
   expect(await puedeEntrar(otro.nombreUsuario, otro.password)).toBe(false);

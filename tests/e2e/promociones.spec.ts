@@ -83,8 +83,10 @@ test.describe("panel (CA-6, en computadora)", () => {
     await fila(total).getByRole("switch", { name: `En la carta: Promoción ${total}` }).click();
     await expect.poll(async () => (await nuevas()).find((p) => p.id === primera.id)!.visible).toBe(false);
 
-    await fila(total).getByRole("button", { name: `Borrar Promoción ${total}` }).click();
-    await fila(total).getByRole("button", { name: "Sí, borrar" }).click();
+    // Spec 014, CA-7: Borrar está en el menú ⋯ y pide confirmación.
+    await fila(total).getByRole("button", { name: `Más acciones para Promoción ${total}` }).click();
+    await page.getByRole("menuitem", { name: "Borrar" }).click();
+    await page.getByRole("dialog").getByRole("button", { name: "Sí, borrar" }).click();
     await expect.poll(async () => (await nuevas()).map((p) => p.id)).toEqual([segunda.id]);
   });
 });
