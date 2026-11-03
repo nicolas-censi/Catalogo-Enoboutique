@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ElegirArchivo } from "@/components/admin/ui/ElegirArchivo";
 import { useEffect, useState, useTransition } from "react";
 import { guardarBienvenida, guardarLogo, volverLogoOriginal } from "@/app/admin/acciones-marca";
 import { LARGO_BIENVENIDA, rutaLogo, validarArchivoLogo } from "@/lib/admin/marca";
@@ -67,7 +68,7 @@ function Logo({ logoPath }: { logoPath: string | null }) {
       <p className="text-sm text-texto-suave">{t.logoAyuda}</p>
       <div className="flex flex-wrap items-center gap-4">
         <span className="text-sm text-texto-suave">{t.logoActual}</span>
-        <div className="rounded-md bg-fondo p-3">
+        <div className="rounded-md bg-carta-fondo p-3">
           {logoPath ? (
             <Image src={urlLogo(logoPath)} alt={t.logoActual} width={480} height={270} className="h-14 w-auto" />
           ) : (
@@ -75,32 +76,29 @@ function Logo({ logoPath }: { logoPath: string | null }) {
           )}
         </div>
       </div>
-      <div className="flex flex-col gap-1">
-        <label htmlFor="logo-nuevo" className="text-sm text-texto-suave">{t.elegirLogo}</label>
-        <input
-          id="logo-nuevo"
-          type="file"
-          accept="image/png,image/webp,.png,.webp"
-          onChange={(e) => {
-            const elegido = e.target.files?.[0] ?? null;
-            e.target.value = "";
-            setMensaje({ error: null, aviso: null });
-            if (!elegido) return;
-            const error = validarArchivoLogo(elegido);
-            if (error) {
-              setArchivo(null);
-              setVista(null);
-              return setMensaje({ error, aviso: null });
-            }
-            setArchivo(elegido);
-            setVista(URL.createObjectURL(elegido));
-          }}
-          className="min-h-11 w-full min-w-0 text-base file:mr-3 file:min-h-11 file:rounded-md file:border file:border-control file:bg-superficie file:px-4 file:text-texto"
-        />
-      </div>
+      <ElegirArchivo
+        id="logo-nuevo"
+        etiqueta={t.elegirLogo}
+        accept="image/png,image/webp,.png,.webp"
+        mostrarNombre={false}
+        onChange={(e) => {
+          const elegido = e.target.files?.[0] ?? null;
+          e.target.value = "";
+          setMensaje({ error: null, aviso: null });
+          if (!elegido) return;
+          const error = validarArchivoLogo(elegido);
+          if (error) {
+            setArchivo(null);
+            setVista(null);
+            return setMensaje({ error, aviso: null });
+          }
+          setArchivo(elegido);
+          setVista(URL.createObjectURL(elegido));
+        }}
+      />
       {vista && (
         // Sobre el fondo de la carta, como se va a ver.
-        <div className="rounded-md border border-linea bg-fondo p-4">
+        <div className="rounded-md border border-linea bg-carta-fondo p-4">
           {/* eslint-disable-next-line @next/next/no-img-element -- vista previa local (blob:), sin optimizar */}
           <img src={vista} alt={t.vistaPrevia} className="mx-auto h-14 w-auto" />
         </div>

@@ -24,6 +24,7 @@
   --color-control: #B19750; /* borde de campos y botones secundarios */
   --color-error: #E8A08F; /* mensajes de error */
   --color-dorado-texto: #B19750; /* dorado para texto chico */
+  --color-carta-fondo: #000000; /* fondo de la carta, también dentro del panel (vista previa del logo) */
 }
 
 @theme inline {

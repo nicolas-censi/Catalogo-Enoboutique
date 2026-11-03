@@ -79,6 +79,8 @@ export const textos = {
     ui: {
       cancelar: "Cancelar",
       masAcciones: (nombre: string) => `Más acciones para ${nombre}`,
+      elegirArchivo: "Elegir archivo",
+      ningunArchivo: "Ningún archivo elegido",
     },
     nav: {
       marca: "Lehonor",

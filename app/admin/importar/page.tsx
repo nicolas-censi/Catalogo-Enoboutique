@@ -18,12 +18,12 @@ export default function PaginaImportar() {
             <h2 className="mt-10 mb-2 text-lg font-semibold text-destacado">{t.ajustes}</h2>
             <ul className="flex flex-wrap gap-x-6">
               <li>
-                <Link href="/admin/importar/abreviaturas" className="inline-flex min-h-11 items-center text-destacado hover:underline">
+                <Link href="/admin/importar/abreviaturas" className="inline-flex min-h-11 items-center underline underline-offset-4">
                   {t.abreviaturas.titulo}
                 </Link>
               </li>
               <li>
-                <Link href="/admin/importar/bodegas" className="inline-flex min-h-11 items-center text-destacado hover:underline">
+                <Link href="/admin/importar/bodegas" className="inline-flex min-h-11 items-center underline underline-offset-4">
                   {t.bodegas.titulo}
                 </Link>
               </li>

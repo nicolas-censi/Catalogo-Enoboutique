@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ElegirArchivo } from "@/components/admin/ui/ElegirArchivo";
 import { useActionState, useState, useTransition } from "react";
 import { confirmarImportacion, prepararImportacion, type EstadoImportacion, type ImportacionPreparada } from "@/app/admin/acciones-importacion";
 import { formatearPrecio } from "@/lib/formato";
@@ -241,16 +242,7 @@ export function ImportarTango() {
   return (
     <>
       <form action={accion} className="flex flex-wrap items-end gap-3">
-        <div className="flex w-full min-w-0 flex-col gap-1 sm:w-auto">
-          <label htmlFor="archivo-tango" className="text-sm text-texto-suave">{t.archivo}</label>
-          <input
-            id="archivo-tango"
-            name="archivo"
-            type="file"
-            accept=".xlsx,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"
-            className="min-h-11 w-full min-w-0 text-base file:mr-3 file:min-h-11 file:rounded-md file:border file:border-control file:bg-superficie file:px-4 file:text-texto"
-          />
-        </div>
+        <ElegirArchivo id="archivo-tango" name="archivo" etiqueta={t.archivo} accept=".xlsx,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv" />
         <button type="submit" disabled={leyendo} className={principal}>
           {leyendo ? t.leyendo : t.verCambios}
         </button>
