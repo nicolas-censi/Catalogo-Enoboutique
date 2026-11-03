@@ -81,3 +81,14 @@ describe("validarCodigoBarras (CA-6)", () => {
     expect(validarCodigoBarras(codigo).error).toBe("El código de barras tiene que tener entre 8 y 14 números.");
   });
 });
+
+describe("enlaceLista (spec 014)", () => {
+  it("arma la dirección con los filtros y vuelve a la página 1 al cambiar uno", async () => {
+    const { enlaceLista } = await import("@/lib/admin/enlaces");
+    const f = { q: "malbec rutini", seccion: "", estado: "" as const };
+    expect(enlaceLista(f)).toBe("/admin?q=malbec+rutini");
+    expect(enlaceLista(f, { estado: "sin-foto" })).toBe("/admin?q=malbec+rutini&estado=sin-foto");
+    expect(enlaceLista({ q: "", seccion: "", estado: "" })).toBe("/admin");
+    expect(enlaceLista(f, { pagina: 3 })).toBe("/admin?q=malbec+rutini&pagina=3");
+  });
+});

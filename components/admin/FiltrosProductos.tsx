@@ -1,64 +1,88 @@
-import { ESTADOS, type Filtros, type SeccionConSubsecciones } from "@/lib/admin/productos";
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { Chip } from "@/components/admin/ui/Chip";
+import { enlaceLista } from "@/lib/admin/enlaces";
+import type { EstadoFiltro, Filtros, SeccionConSubsecciones } from "@/lib/admin/productos";
 import { nombreConSeccion } from "@/lib/admin/secciones";
 import { textos } from "@/lib/textos";
 
-const control =
-  "min-h-11 rounded-md border border-control bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-texto";
+const ESTADOS: EstadoFiltro[] = ["sin-seccion", "sin-foto", "a-revisar", "ocultos", "sin-stock"];
 
-/** Búsqueda y filtros. Es un formulario GET: los filtros quedan en la dirección. */
-export function FiltrosProductos({
-  filtros,
-  secciones,
-}: {
-  filtros: Filtros;
-  secciones: SeccionConSubsecciones[];
-}) {
+/**
+ * Spec 014, CA-4: buscador (busca al escribir y con Enter; sin JavaScript, con Enter) y
+ * filtros de un toque. Todo queda en la dirección.
+ */
+export function FiltrosProductos({ filtros, secciones }: { filtros: Filtros; secciones: SeccionConSubsecciones[] }) {
+  const router = useRouter();
+  const [texto, setTexto] = useState(filtros.q);
+  const primera = useRef(true);
+
+  useEffect(() => {
+    if (primera.current) {
+      primera.current = false;
+      return;
+    }
+    if (texto.trim() === filtros.q) return;
+    const espera = setTimeout(() => router.replace(enlaceLista(filtros, { q: texto.trim() })), 400);
+    return () => clearTimeout(espera);
+  }, [texto, filtros, router]);
+
   return (
-    <form method="get" action="/admin" role="search" className="flex flex-wrap items-end gap-3">
-      <label className="flex min-w-64 flex-1 flex-col gap-1">
-        <span className="text-sm text-texto-suave">{textos.admin.buscarProductos}</span>
+    <div className="flex flex-col gap-3">
+      <form method="get" action="/admin" role="search" className="relative">
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-texto-suave">
+          <circle cx="11" cy="11" r="7" />
+          <path d="m20 20-3.5-3.5" />
+        </svg>
         <input
           type="search"
           name="q"
-          defaultValue={filtros.q}
+          value={texto}
+          onChange={(e) => setTexto(e.target.value)}
           aria-label={textos.admin.buscarProductos}
           placeholder={textos.admin.buscarProductosAyuda}
           autoFocus
           autoComplete="off"
-          className={control}
+          className="min-h-12 w-full rounded-xl border border-control bg-superficie pr-4 pl-11 text-base text-texto placeholder:text-texto-suave focus:outline-2 focus:outline-texto"
         />
-      </label>
-      <div className="flex w-full min-w-0 flex-col gap-1 sm:w-auto">
-        <label htmlFor="filtro-seccion" className="text-sm text-texto-suave">{textos.admin.seccion}</label>
-        <select id="filtro-seccion" name="seccion" defaultValue={filtros.seccion} className={`${control} w-full sm:w-auto sm:max-w-md`}>
-          <option value="">{textos.admin.todasLasSecciones}</option>
-          {/* La sección incluye sus subsecciones; también se puede elegir una sola. */}
-          {secciones.flatMap((s) => [
-            <option key={s.id} value={s.id}>
-              {s.nombre}
-            </option>,
-            ...s.subsecciones.map((h) => (
-              <option key={h.id} value={h.id}>
-                {nombreConSeccion(s.nombre, h.nombre)}
-              </option>
-            )),
-          ])}
-        </select>
+        {filtros.seccion && <input type="hidden" name="seccion" value={filtros.seccion} />}
+        {filtros.estado && <input type="hidden" name="estado" value={filtros.estado} />}
+      </form>
+      <div role="group" aria-label={textos.admin.lista.filtros} className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:px-0">
+        <Chip href={enlaceLista(filtros, { estado: "" })} activo={!filtros.estado}>
+          {textos.admin.todos}
+        </Chip>
+        {ESTADOS.map((e) => (
+          <Chip key={e} href={enlaceLista(filtros, { estado: e })} activo={filtros.estado === e}>
+            {textos.admin.estados[e]}
+          </Chip>
+        ))}
+        <span className="relative inline-flex shrink-0">
+          <select
+            aria-label={textos.admin.seccion}
+            value={filtros.seccion}
+            onChange={(e) => router.push(enlaceLista(filtros, { seccion: e.target.value }))}
+            className={`min-h-11 appearance-none rounded-full border pr-9 pl-4 text-sm ${filtros.seccion ? "border-texto bg-texto text-fondo" : "border-linea bg-superficie text-texto"}`}
+          >
+            <option value="">{`${textos.admin.seccion}: ${textos.admin.todasLasSecciones}`}</option>
+            {secciones.flatMap((s) => [
+              <option key={s.id} value={s.id}>
+                {s.nombre}
+              </option>,
+              ...s.subsecciones.map((h) => (
+                <option key={h.id} value={h.id}>
+                  {nombreConSeccion(s.nombre, h.nombre)}
+                </option>
+              )),
+            ])}
+          </select>
+          <span aria-hidden="true" className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-xs">
+            ▾
+          </span>
+        </span>
       </div>
-      <div className="flex flex-col gap-1">
-        <label htmlFor="filtro-estado" className="text-sm text-texto-suave">{textos.admin.estado}</label>
-        <select id="filtro-estado" name="estado" defaultValue={filtros.estado} className={control}>
-          <option value="">{textos.admin.todos}</option>
-          {ESTADOS.map((e) => (
-            <option key={e} value={e}>
-              {textos.admin.estados[e]}
-            </option>
-          ))}
-        </select>
-      </div>
-      <button type="submit" className="min-h-11 rounded-md bg-boton px-5 font-semibold text-boton-texto">
-        {textos.admin.filtrar}
-      </button>
-    </form>
+    </div>
   );
 }

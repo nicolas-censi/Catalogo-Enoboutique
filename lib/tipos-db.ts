@@ -510,10 +510,13 @@ export type Database = {
           foto_path: string | null
           id: string | null
           nombre: string | null
+          precio_desde: number | null
+          precio_hasta: number | null
           seccion_id: string | null
           seccion_nombre: string | null
           seccion_padre_id: string | null
           seccion_padre_nombre: string | null
+          sugerencia_lista: boolean | null
           tipo: Database["public"]["Enums"]["tipo_producto"] | null
           varietal: string | null
           visible: boolean | null

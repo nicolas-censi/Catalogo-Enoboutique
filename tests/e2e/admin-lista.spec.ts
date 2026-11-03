@@ -50,9 +50,9 @@ test.beforeEach(async ({ context }) => {
   await entrarComo(context, "vendedor");
 });
 
-const filas = (page: import("@playwright/test").Page) => page.getByRole("table").getByRole("row").filter({ hasText: prefijo });
+const filas = (page: import("@playwright/test").Page) => page.getByRole("list", { name: "Productos" }).getByRole("listitem").filter({ hasText: prefijo });
 const nombres = async (page: import("@playwright/test").Page) =>
-  (await filas(page).getByRole("link").allTextContents()).map((t) => t.replace(` ${prefijo}`, "")).sort();
+  (await filas(page).getByRole("link").locator("> span:first-child").allTextContents()).map((t) => t.replace(` ${prefijo}`, "")).sort();
 
 test("CA-2: muestra todos los productos con su estado, también ocultos y sin stock", async ({ page }) => {
   await page.goto(`/admin?q=${prefijo}`);
@@ -97,14 +97,38 @@ test.describe("CA-2: filtros en la dirección", () => {
     });
   }
 
-  test("filtra por sección desde el formulario", async ({ page }) => {
+  test("filtra por sección (spec 014: al elegirla, sin botón Filtrar)", async ({ page }) => {
     await page.goto(`/admin?q=${prefijo}`);
+    await page.waitForLoadState("networkidle");
     await page.getByLabel("Sección", { exact: true }).selectOption({ label: `${prefijo} Tintos` });
-    await page.getByRole("button", { name: "Filtrar" }).click();
     await expect(page).toHaveURL(new RegExp(`seccion=${seccionId}`));
     await expect(filas(page)).toHaveCount(3);
     expect(await nombres(page)).toEqual(["Altocedro Malbec", "Bramare Cabernet", "Durigutti Bonarda"]);
   });
+});
+
+test("spec 014, CA-4: filtros de un toque, buscar al escribir y fila con precio", async ({ page }) => {
+  await page.goto(`/admin?q=${prefijo}`);
+  await page.waitForLoadState("networkidle");
+  const filtros = page.getByRole("group", { name: "Filtros" });
+  await expect(filtros.getByRole("link", { name: "Todos" })).toHaveAttribute("aria-current", "true");
+  await filtros.getByRole("link", { name: "Ocultos" }).click();
+  await expect(page).toHaveURL(/estado=ocultos/);
+  await expect(filtros.getByRole("link", { name: "Ocultos" })).toHaveAttribute("aria-current", "true");
+  expect(await nombres(page)).toEqual(["Bramare Cabernet"]);
+  // Sin foto (los cuatro de este test no tienen).
+  await filtros.getByRole("link", { name: "Sin foto" }).click();
+  await expect(filas(page)).toHaveCount(4);
+  // Buscar al escribir (sin Enter), conservando el filtro elegido.
+  await page.getByRole("searchbox", { name: "Buscar productos" }).fill(`durigutti ${prefijo}`);
+  await expect(page).toHaveURL(/q=durigutti/);
+  await expect(page).toHaveURL(/estado=sin-foto/);
+  const durigutti = filas(page).first();
+  await expect(durigutti).toContainText("Durigutti");
+  // Fila compacta: bodega · sección · añadas, precio y los avisos.
+  await expect(durigutti).toContainText(`${prefijo} Tintos · 2 añadas`);
+  await expect(durigutti).toContainText("$ 10.000"); // las dos añadas valen lo mismo: sin "Desde"
+  await expect(durigutti).toContainText("A revisar (1)");
 });
 
 test("sin resultados lo dice", async ({ page }) => {
