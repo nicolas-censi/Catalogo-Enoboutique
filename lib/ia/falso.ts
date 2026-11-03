@@ -21,3 +21,8 @@ export class SugeridorFalso implements Sugeridor {
     };
   }
 }
+
+/** ¿Es un producto creado por los tests? (llevan el prefijo de tests/db/ayudante.ts). */
+export function esProductoDePrueba(nombre: string): boolean {
+  return /\btest-[a-z0-9]+-[0-9a-f]{6}\b/.test(nombre);
+}

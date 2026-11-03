@@ -116,3 +116,12 @@ describe("SugeridorFalso (IA_FALSA=1)", () => {
     await expect(ia.sugerir({ ...rutini, nombre: "Vino [falla]" })).rejects.toThrow();
   });
 });
+
+describe("esProductoDePrueba", () => {
+  it("solo reconoce los productos creados por los tests (con su prefijo)", async () => {
+    const { esProductoDePrueba } = await import("@/lib/ia/falso");
+    expect(esProductoDePrueba("Sugerido Malbec test-mw0qhfr1-663470")).toBe(true);
+    expect(esProductoDePrueba("Salentein Primus Malbec")).toBe(false);
+    expect(esProductoDePrueba("Vino test")).toBe(false);
+  });
+});
