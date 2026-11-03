@@ -31,12 +31,12 @@ async function ListaProductos({ searchParams }: { searchParams: Parametros }) {
   ]);
   const desde = total === 0 ? 0 : (filtros.pagina - 1) * POR_PAGINA + 1;
   const hasta = Math.min(filtros.pagina * POR_PAGINA, total);
-  const boton = "inline-flex min-h-11 items-center rounded-md border border-dorado/60 px-4";
+  const boton = "inline-flex min-h-11 items-center rounded-md border border-control px-4";
 
   return (
     <>
       {borrado && (
-        <p role="status" className="mb-4 rounded-md border border-dorado/60 px-4 py-3">
+        <p role="status" className="mb-4 rounded-md border border-control px-4 py-3">
           {textos.admin.productoBorrado(borrado)}
         </p>
       )}

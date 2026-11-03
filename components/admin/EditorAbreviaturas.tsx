@@ -7,8 +7,8 @@ import { textos } from "@/lib/textos";
 
 const t = textos.admin.importar.abreviaturas;
 const control =
-  "min-h-11 rounded-md border border-dorado/60 bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-dorado aria-[invalid=true]:border-destacado";
-const secundario = "inline-flex min-h-11 items-center rounded-md border border-dorado/60 px-4 disabled:opacity-60";
+  "min-h-11 rounded-md border border-control bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-texto aria-[invalid=true]:border-destacado";
+const secundario = "inline-flex min-h-11 items-center rounded-md border border-control px-4 disabled:opacity-60";
 const principal = "inline-flex min-h-11 items-center rounded-md bg-boton px-5 font-semibold text-boton-texto disabled:opacity-60";
 
 export function EditorAbreviaturas({ abreviaturas }: { abreviaturas: Abreviatura[] }) {
@@ -49,18 +49,18 @@ export function EditorAbreviaturas({ abreviaturas }: { abreviaturas: Abreviatura
           {e.expansion && <span id="error-expansion" className="max-w-64 text-sm text-destacado">{e.expansion}</span>}
         </div>
         <label className="mt-6 flex min-h-11 items-center gap-2">
-          <input type="checkbox" name="es_varietal" defaultChecked={editando?.esVarietal} className="size-5 accent-dorado" />
+          <input type="checkbox" name="es_varietal" defaultChecked={editando?.esVarietal} className="size-5 accent-texto" />
           <span>{t.esVarietal}</span>
         </label>
         <button type="submit" disabled={guardando} className={`${principal} mt-6`}>
           {t.guardar}
         </button>
-        {estado.error && <p role="alert" className="basis-full text-destacado">{estado.error}</p>}
+        {estado.error && <p role="alert" className="basis-full text-error">{estado.error}</p>}
       </form>
-      {error && <p role="alert" className="mt-3 text-destacado">{error}</p>}
+      {error && <p role="alert" className="mt-3 text-error">{error}</p>}
 
       <table aria-label={t.tabla} className="tabla-responsiva mt-6 w-full border-collapse text-left">
-        <thead className="border-b border-dorado/40 text-sm text-texto-suave">
+        <thead className="border-b border-linea text-sm text-texto-suave">
           <tr>
             <th scope="col" className="py-2 pr-4">{t.columnas.abreviatura}</th>
             <th scope="col" className="py-2 pr-4">{t.columnas.expansion}</th>
@@ -68,7 +68,7 @@ export function EditorAbreviaturas({ abreviaturas }: { abreviaturas: Abreviatura
             <th scope="col" className="py-2">{textos.admin.acciones}</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-dorado/20">
+        <tbody className="divide-y divide-linea">
           {abreviaturas.map((a) => (
             <tr key={a.abreviatura}>
               <td className="py-1 pr-4 font-semibold">{a.abreviatura}</td>

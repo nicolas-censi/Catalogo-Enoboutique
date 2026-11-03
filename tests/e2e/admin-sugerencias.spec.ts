@@ -156,7 +156,8 @@ test.describe("CA-8: interruptor de la IA", () => {
     await context.clearCookies();
     await entrarComo(context, "encargado");
     await page.goto("/admin");
-    await page.getByRole("navigation", { name: "Panel" }).getByRole("link", { name: "IA", exact: true }).click();
+    await page.getByRole("navigation", { name: "Panel" }).getByRole("link", { name: "Ajustes" }).click();
+    await page.getByRole("link", { name: /^IA/ }).click();
     await expect(page.getByRole("heading", { level: 1, name: "Sugerencias por IA" })).toBeVisible();
     const interruptor = page.getByRole("switch", { name: "Sugerencias por IA" });
     await expect(interruptor).toHaveAttribute("aria-checked", "true");
@@ -282,7 +283,7 @@ test.describe("CA-3 y CA-7: bandeja Para revisar", () => {
   test("desde el menú con la cantidad; revisa y aprueba ahí mismo; ve el gasto del mes", async ({ page }) => {
     await nuevo("bandejaLista", "Bandeja Lista", "lista");
     await page.goto("/admin");
-    const enlace = page.getByRole("navigation", { name: "Panel" }).getByRole("link", { name: /^Para revisar \(\d+\)$/ });
+    const enlace = page.getByRole("navigation", { name: "Panel" }).getByRole("link", { name: /revisar \(\d+\)$/i });
     await enlace.click();
     await expect(page.getByRole("heading", { level: 1, name: "Para revisar" })).toBeVisible();
     await expect(page.getByText(/^Gastado este mes \(estimado\): US\$ \d+,\d{2}\.$/)).toBeVisible();

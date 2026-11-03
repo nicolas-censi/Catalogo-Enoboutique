@@ -5,7 +5,7 @@ import { ingresar, type EstadoIngreso } from "@/app/admin/acciones-sesion";
 import { textos } from "@/lib/textos";
 
 const campo =
-  "min-h-11 w-full rounded-md border border-dorado/60 bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-dorado";
+  "min-h-11 w-full rounded-md border border-control bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-texto";
 
 export function FormularioIngreso() {
   const [estado, accion, enviando] = useActionState<EstadoIngreso, FormData>(ingresar, { error: null });
@@ -28,7 +28,7 @@ export function FormularioIngreso() {
         <input type="password" name="password" required autoComplete="current-password" className={campo} />
       </label>
       {estado.error && (
-        <p role="alert" className="text-destacado">
+        <p role="alert" className="text-error">
           {estado.error}
         </p>
       )}

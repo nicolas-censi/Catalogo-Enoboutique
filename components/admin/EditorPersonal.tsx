@@ -7,8 +7,8 @@ import { textos } from "@/lib/textos";
 
 const t = textos.admin;
 const control =
-  "min-h-11 rounded-md border border-dorado/60 bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-dorado aria-[invalid=true]:border-destacado disabled:opacity-60";
-const secundario = "inline-flex min-h-11 items-center rounded-md border border-dorado/60 px-4";
+  "min-h-11 rounded-md border border-control bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-texto aria-[invalid=true]:border-destacado disabled:opacity-60";
+const secundario = "inline-flex min-h-11 items-center rounded-md border border-control px-4";
 const principal = "inline-flex min-h-11 items-center rounded-md bg-boton px-5 font-semibold text-boton-texto disabled:opacity-60";
 const ROLES: Rol[] = ["encargado", "vendedor"];
 
@@ -148,7 +148,7 @@ function FilaPersona({ persona }: { persona: Persona }) {
           </span>
         )}
         {mensaje.error && (
-          <span role="alert" className="mt-1 block text-sm text-destacado">
+          <span role="alert" className="mt-1 block text-sm text-error">
             {mensaje.error}
           </span>
         )}
@@ -170,14 +170,14 @@ export function EditorPersonal({ personas }: { personas: Persona[] }) {
     <>
       <p className="mb-4 text-texto-suave">{t.personalAyuda}</p>
       <table aria-label={t.personal} className="tabla-responsiva w-full border-collapse text-left">
-        <thead className="border-b border-dorado/40 text-sm text-texto-suave">
+        <thead className="border-b border-linea text-sm text-texto-suave">
           <tr>
             <th scope="col" className="py-2 pr-4">{c.usuario}</th>
             <th scope="col" className="py-2 pr-4">{c.rol}</th>
             <th scope="col" className="py-2">{t.acciones}</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-dorado/20">
+        <tbody className="divide-y divide-linea">
           {personas.map((p) => (
             <FilaPersona key={p.id} persona={p} />
           ))}
@@ -225,7 +225,7 @@ export function EditorPersonal({ personas }: { personas: Persona[] }) {
         <button type="submit" disabled={enviando} className={`${principal} mt-6`}>
           {t.darDeAltaBoton}
         </button>
-        {estado.error && <p role="alert" className="basis-full text-destacado">{estado.error}</p>}
+        {estado.error && <p role="alert" className="basis-full text-error">{estado.error}</p>}
       </form>
       {estado.creado && <p role="status" className="mt-3">{t.altaLista(estado.creado)}</p>}
     </>

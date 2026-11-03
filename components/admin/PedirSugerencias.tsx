@@ -7,7 +7,7 @@ import { formatearDolares } from "@/lib/formato";
 import { textos } from "@/lib/textos";
 
 const t = textos.admin.sugerencias;
-const secundario = "inline-flex min-h-11 items-center rounded-md border border-dorado/60 px-4 disabled:opacity-60";
+const secundario = "inline-flex min-h-11 items-center rounded-md border border-control px-4 disabled:opacity-60";
 const principal = "inline-flex min-h-11 items-center rounded-md bg-boton px-5 font-semibold text-boton-texto disabled:opacity-60";
 
 type Seleccion = { ids: string[] } | { filtros: Filtros };
@@ -25,7 +25,7 @@ export function PedirSugerencias({ seleccion, cantidad, alTerminar }: { seleccio
   const [ocupado, iniciar] = useTransition();
 
   return (
-    <div className="flex basis-full flex-col gap-2 border-t border-dorado/20 pt-3">
+    <div className="flex basis-full flex-col gap-2 border-t border-linea pt-3">
       <div className="flex flex-wrap items-center gap-3">
         <label htmlFor={`${id}-completos`} className="inline-flex min-h-11 items-center gap-2">
           <input
@@ -36,7 +36,7 @@ export function PedirSugerencias({ seleccion, cantidad, alTerminar }: { seleccio
               setIncluirCompletos(e.target.checked);
               setEstimado(null);
             }}
-            className="size-5 accent-dorado"
+            className="size-5 accent-texto"
           />
           {t.incluirCompletos}
         </label>
@@ -84,7 +84,7 @@ export function PedirSugerencias({ seleccion, cantidad, alTerminar }: { seleccio
       )}
       {mensaje.aviso && <p role="status">{mensaje.aviso}</p>}
       {mensaje.error && (
-        <p role="alert" className="text-destacado">
+        <p role="alert" className="text-error">
           {mensaje.error}
         </p>
       )}

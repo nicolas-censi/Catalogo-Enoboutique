@@ -5,7 +5,7 @@ import { borrarProducto } from "@/app/admin/acciones-producto";
 import { textos } from "@/lib/textos";
 
 const t = textos.admin;
-const boton = "inline-flex min-h-11 items-center rounded-md border border-dorado/60 px-4";
+const boton = "inline-flex min-h-11 items-center rounded-md border border-control px-4";
 
 /** Botón "Borrar producto" con un diálogo de confirmación accesible (<dialog>). */
 export function BorrarProducto({ productoId, nombre, anadas }: { productoId: string; nombre: string; anadas: number }) {
@@ -21,13 +21,13 @@ export function BorrarProducto({ productoId, nombre, anadas }: { productoId: str
       <dialog
         ref={dialogo}
         aria-labelledby="titulo-borrar"
-        className="m-auto max-w-md rounded-lg border border-dorado/60 bg-superficie p-6 text-texto backdrop:bg-fondo/80"
+        className="m-auto max-w-md rounded-lg border border-control bg-superficie p-6 text-texto backdrop:bg-fondo/80"
       >
         <p id="titulo-borrar" className="text-lg">
           {t.confirmarBorrarProducto(nombre, anadas)}
         </p>
         {error && (
-          <p role="alert" className="mt-2 text-destacado">
+          <p role="alert" className="mt-2 text-error">
             {error}
           </p>
         )}

@@ -55,6 +55,14 @@
   color: var(--color-texto);
 }
 
+/* En el celular el menú del panel es una barra fija abajo: lo que se enfoca o se trae a
+   la vista no tiene que quedar tapado por ella (WCAG 2.4.11). */
+@media (width < 48rem) {
+  :root:has(.tema-panel) {
+    scroll-padding-bottom: 5rem;
+  }
+}
+
 /*
  * Tablas del panel: en pantallas angostas cada fila pasa a ser una tarjeta y cada dato
  * muestra su nombre arriba (data-etiqueta en cada celda).

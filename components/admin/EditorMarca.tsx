@@ -11,9 +11,9 @@ import logoOriginal from "@/public/logo-enoboutique.png";
 
 const t = textos.admin.marca;
 const control =
-  "rounded-md border border-dorado/60 bg-superficie px-3 py-2 text-base text-texto focus:outline-2 focus:outline-dorado";
+  "rounded-md border border-control bg-superficie px-3 py-2 text-base text-texto focus:outline-2 focus:outline-texto";
 const principal = "inline-flex min-h-11 items-center rounded-md bg-boton px-5 font-semibold text-boton-texto disabled:opacity-60";
-const secundario = "inline-flex min-h-11 cursor-pointer items-center rounded-md border border-dorado/60 px-4 disabled:opacity-60";
+const secundario = "inline-flex min-h-11 cursor-pointer items-center rounded-md border border-control px-4 disabled:opacity-60";
 type Mensaje = { error: string | null; aviso: string | null };
 
 function Bienvenida({ inicial }: { inicial: string }) {
@@ -46,7 +46,7 @@ function Bienvenida({ inicial }: { inicial: string }) {
       <div className="flex flex-wrap items-center gap-3">
         <button type="submit" disabled={guardando} className={principal}>{t.guardarBienvenida}</button>
         {mensaje.aviso && <span role="status">{mensaje.aviso}</span>}
-        {mensaje.error && <span role="alert" className="text-destacado">{mensaje.error}</span>}
+        {mensaje.error && <span role="alert" className="text-error">{mensaje.error}</span>}
       </div>
     </form>
   );
@@ -95,12 +95,12 @@ function Logo({ logoPath }: { logoPath: string | null }) {
             setArchivo(elegido);
             setVista(URL.createObjectURL(elegido));
           }}
-          className="min-h-11 w-full min-w-0 text-base file:mr-3 file:min-h-11 file:rounded-md file:border file:border-dorado/60 file:bg-superficie file:px-4 file:text-texto"
+          className="min-h-11 w-full min-w-0 text-base file:mr-3 file:min-h-11 file:rounded-md file:border file:border-control file:bg-superficie file:px-4 file:text-texto"
         />
       </div>
       {vista && (
         // Sobre el fondo de la carta, como se va a ver.
-        <div className="rounded-md border border-dorado/40 bg-fondo p-4">
+        <div className="rounded-md border border-linea bg-fondo p-4">
           {/* eslint-disable-next-line @next/next/no-img-element -- vista previa local (blob:), sin optimizar */}
           <img src={vista} alt={t.vistaPrevia} className="mx-auto h-14 w-auto" />
         </div>
@@ -145,7 +145,7 @@ function Logo({ logoPath }: { logoPath: string | null }) {
           </button>
         )}
         {mensaje.aviso && <span role="status">{mensaje.aviso}</span>}
-        {mensaje.error && <span role="alert" className="text-destacado">{mensaje.error}</span>}
+        {mensaje.error && <span role="alert" className="text-error">{mensaje.error}</span>}
       </div>
     </div>
   );

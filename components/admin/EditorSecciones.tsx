@@ -16,8 +16,8 @@ import { textos } from "@/lib/textos";
 
 const t = textos.admin;
 const control =
-  "min-h-11 rounded-md border border-dorado/60 bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-dorado aria-[invalid=true]:border-destacado";
-const secundario = "inline-flex min-h-11 items-center rounded-md border border-dorado/60 px-4";
+  "min-h-11 rounded-md border border-control bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-texto aria-[invalid=true]:border-destacado";
+const secundario = "inline-flex min-h-11 items-center rounded-md border border-control px-4";
 const principal = "inline-flex min-h-11 items-center rounded-md bg-boton px-5 font-semibold text-boton-texto disabled:opacity-60";
 
 
@@ -43,13 +43,13 @@ function InterruptorVisible({ seccion }: { seccion: SeccionAdmin }) {
           })
         }
         className={`inline-flex min-h-11 min-w-28 items-center justify-center rounded-full border px-4 font-semibold ${
-          visible ? "border-dorado bg-dorado text-boton-texto" : "border-dorado/60 text-texto-suave"
+          visible ? "border-texto bg-texto text-boton-texto" : "border-control text-texto-suave"
         }`}
       >
         {visible ? t.visible : t.oculta}
       </button>
       {error && (
-        <span role="alert" className="text-sm text-destacado">
+        <span role="alert" className="text-sm text-error">
           {error}
         </span>
       )}
@@ -148,7 +148,7 @@ function FilaSeccion({ seccion }: { seccion: SeccionAdmin }) {
           )
         )}
         {error && (
-          <span role="alert" className="mt-1 block text-sm text-destacado">
+          <span role="alert" className="mt-1 block text-sm text-error">
             {error}
           </span>
         )}
@@ -173,7 +173,7 @@ export function EditorSecciones({ secciones, padre }: { secciones: SeccionAdmin[
       <Ordenable items={secciones} onCambio={ordenarSecciones}>
         {(ordenadas) => (
           <table aria-label={padre ? t.subsecciones : t.secciones} className="tabla-responsiva w-full border-collapse text-left">
-            <thead className="border-b border-dorado/40 text-sm text-texto-suave">
+            <thead className="border-b border-linea text-sm text-texto-suave">
               <tr>
                 <th scope="col" className="py-2 pr-4">{c.orden}</th>
                 <th scope="col" className="py-2 pr-4">{c.seccion}</th>
@@ -182,7 +182,7 @@ export function EditorSecciones({ secciones, padre }: { secciones: SeccionAdmin[
                 <th scope="col" className="py-2">{t.acciones}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-dorado/20">
+            <tbody className="divide-y divide-linea">
               {ordenadas.map((s) => (
                 <FilaSeccion key={`${s.id}-${s.nombre}-${s.visible}`} seccion={s} />
               ))}
@@ -213,7 +213,7 @@ export function EditorSecciones({ secciones, padre }: { secciones: SeccionAdmin[
           </span>
         )}
         {estado.error && (
-          <p role="alert" className="basis-full text-destacado">
+          <p role="alert" className="basis-full text-error">
             {estado.error}
           </p>
         )}

@@ -3,7 +3,7 @@ import { nombreConSeccion } from "@/lib/admin/secciones";
 import { textos } from "@/lib/textos";
 
 const control =
-  "min-h-11 rounded-md border border-dorado/60 bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-dorado";
+  "min-h-11 rounded-md border border-control bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-texto";
 
 /** Búsqueda y filtros. Es un formulario GET: los filtros quedan en la dirección. */
 export function FiltrosProductos({

@@ -24,7 +24,7 @@ export function BotonSugerir({ productoId }: { productoId: string }) {
             setError((await pedirSugerencia(productoId)).error);
           })
         }
-        className="inline-flex min-h-11 items-center gap-2 rounded-md border border-dorado/60 px-4 disabled:opacity-60"
+        className="inline-flex min-h-11 items-center gap-2 rounded-md border border-control px-4 disabled:opacity-60"
       >
         <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
           <path d="M12 3v3M12 18v3M3 12h3M18 12h3M6 6l2 2M16 16l2 2M6 18l2-2M16 8l2-2" />
@@ -37,7 +37,7 @@ export function BotonSugerir({ productoId }: { productoId: string }) {
         </p>
       )}
       {error && (
-        <p role="alert" className="text-destacado">
+        <p role="alert" className="text-error">
           {error}
         </p>
       )}

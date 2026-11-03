@@ -10,7 +10,7 @@ import { textos } from "@/lib/textos";
 
 function Etiqueta({ children }: { children: React.ReactNode }) {
   return (
-    <span className="mr-1 inline-block rounded border border-dorado/60 px-2 py-0.5 text-sm text-destacado">
+    <span className="mr-1 inline-block rounded border border-control px-2 py-0.5 text-sm text-destacado">
       {children}
     </span>
   );
@@ -29,8 +29,8 @@ function Estado({ producto }: { producto: ProductoAdmin }) {
 
 const m = textos.admin.mover;
 const control =
-  "min-h-11 rounded-md border border-dorado/60 bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-dorado";
-const secundario = "inline-flex min-h-11 items-center rounded-md border border-dorado/60 px-4 disabled:opacity-60";
+  "min-h-11 rounded-md border border-control bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-texto";
+const secundario = "inline-flex min-h-11 items-center rounded-md border border-control px-4 disabled:opacity-60";
 const principal = "inline-flex min-h-11 items-center rounded-md bg-boton px-5 font-semibold text-boton-texto disabled:opacity-60";
 
 /**
@@ -75,7 +75,7 @@ export function TablaProductos({
 
   return (
     <>
-      <div className="mb-3 flex flex-wrap items-end gap-3 rounded-md border border-dorado/30 p-3">
+      <div className="mb-3 flex flex-wrap items-end gap-3 rounded-md border border-linea p-3">
         <span className="min-h-11 content-center">{m.seleccionados(cantidad)}</span>
         {total > 0 && !todoElFiltro && (
           <button type="button" onClick={() => setTodoElFiltro(true)} className={secundario}>
@@ -149,13 +149,13 @@ export function TablaProductos({
           </p>
         )}
         {mensaje.error && (
-          <p role="alert" className="basis-full text-destacado">
+          <p role="alert" className="basis-full text-error">
             {mensaje.error}
           </p>
         )}
       </div>
       <table className="tabla-responsiva w-full border-collapse text-left">
-        <thead className="border-b border-dorado/40 text-sm text-texto-suave">
+        <thead className="border-b border-linea text-sm text-texto-suave">
           <tr>
             <th scope="col" className="py-2 pr-2">
               <input
@@ -163,7 +163,7 @@ export function TablaProductos({
                 aria-label={m.elegirPagina}
                 checked={todaLaPagina}
                 onChange={(e) => alternar(idsPagina, e.target.checked)}
-                className="size-5 accent-dorado"
+                className="size-5 accent-texto"
               />
             </th>
             <th scope="col" className="py-2 pr-4">{c.producto}</th>
@@ -173,7 +173,7 @@ export function TablaProductos({
             <th scope="col" className="py-2">{c.estado}</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-dorado/20">
+        <tbody className="divide-y divide-linea">
           {productos.map((p) => (
             <tr key={p.id}>
               <td className="py-1 pr-2">
@@ -182,7 +182,7 @@ export function TablaProductos({
                   aria-label={m.elegir(p.nombre ?? "")}
                   checked={todoElFiltro || seleccion.has(p.id!)}
                   onChange={(e) => alternar([p.id!], e.target.checked)}
-                  className="size-5 accent-dorado"
+                  className="size-5 accent-texto"
                 />
               </td>
               <td className="py-1 pr-4">

@@ -9,8 +9,8 @@ import { textos } from "@/lib/textos";
 
 const t = textos.admin;
 const control =
-  "min-h-11 w-full rounded-md border border-dorado/60 bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-dorado aria-[invalid=true]:border-destacado";
-const botonSecundario = "inline-flex min-h-11 items-center rounded-md border border-dorado/60 px-4";
+  "min-h-11 w-full rounded-md border border-control bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-texto aria-[invalid=true]:border-destacado";
+const botonSecundario = "inline-flex min-h-11 items-center rounded-md border border-control px-4";
 const botonPrincipal = "inline-flex min-h-11 items-center rounded-md bg-boton px-5 font-semibold text-boton-texto disabled:opacity-60";
 const sinErrores: EstadoAnada = { errores: {}, error: null, guardados: 0 };
 const numero = new Intl.NumberFormat("es-AR", { maximumFractionDigits: 2 });
@@ -125,7 +125,7 @@ function FormularioAnada({
       <div className="flex flex-wrap items-center gap-2 self-end">
         {!anada && (
           <label className="flex min-h-11 items-center gap-2">
-            <input type="checkbox" name="enStock" defaultChecked className="size-5 accent-dorado" />
+            <input type="checkbox" name="enStock" defaultChecked className="size-5 accent-texto" />
             <span>{t.disponibleAlAgregar}</span>
           </label>
         )}
@@ -139,7 +139,7 @@ function FormularioAnada({
         )}
       </div>
       {estado.error && (
-        <p role="alert" className="text-destacado md:col-span-6">
+        <p role="alert" className="text-error md:col-span-6">
           {estado.error}
         </p>
       )}
@@ -205,7 +205,7 @@ function FilaAnada({ productoId, esVino, anada }: { productoId: string; esVino: 
           </span>
         )}
         {error && (
-          <span role="alert" className="text-sm text-destacado">
+          <span role="alert" className="text-sm text-error">
             {error}
           </span>
         )}
@@ -219,7 +219,7 @@ export function EditorAnadas({ productoId, esVino, anadas }: { productoId: strin
   return (
     <>
       <table aria-label={t.anadas} className="tabla-responsiva mt-2 w-full border-collapse text-left">
-        <thead className="border-b border-dorado/40 text-sm text-texto-suave">
+        <thead className="border-b border-linea text-sm text-texto-suave">
           <tr>
             <th scope="col" className="py-2 pr-4">{c.anada}</th>
             <th scope="col" className="py-2 pr-4">{c.codigo}</th>
@@ -228,7 +228,7 @@ export function EditorAnadas({ productoId, esVino, anadas }: { productoId: strin
             <th scope="col" className="py-2">{t.acciones}</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-dorado/20">
+        <tbody className="divide-y divide-linea">
           {anadas.map((anada) => (
             <FilaAnada key={anada.id} productoId={productoId} esVino={esVino} anada={anada} />
           ))}

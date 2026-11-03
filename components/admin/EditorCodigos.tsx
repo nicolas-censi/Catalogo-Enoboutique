@@ -6,7 +6,7 @@ import { textos } from "@/lib/textos";
 
 const t = textos.admin;
 const control =
-  "min-h-11 w-64 rounded-md border border-dorado/60 bg-superficie px-3 font-mono text-base text-texto focus:outline-2 focus:outline-dorado aria-[invalid=true]:border-destacado";
+  "min-h-11 w-64 rounded-md border border-control bg-superficie px-3 font-mono text-base text-texto focus:outline-2 focus:outline-texto aria-[invalid=true]:border-destacado";
 
 export function EditorCodigos({ productoId, codigos }: { productoId: string; codigos: string[] }) {
   const [estado, accion, enviando] = useActionState<EstadoCodigo, FormData>(agregarCodigo.bind(null, productoId), {
@@ -24,7 +24,7 @@ export function EditorCodigos({ productoId, codigos }: { productoId: string; cod
       ) : (
         <ul aria-label={t.codigosBarras} className="flex flex-wrap gap-2">
           {codigos.map((codigo) => (
-            <li key={codigo} className="flex items-center gap-2 rounded-md border border-dorado/40 py-1 pr-1 pl-3">
+            <li key={codigo} className="flex items-center gap-2 rounded-md border border-linea py-1 pr-1 pl-3">
               <span className="font-mono">{codigo}</span>
               <button
                 type="button"
@@ -40,7 +40,7 @@ export function EditorCodigos({ productoId, codigos }: { productoId: string; cod
         </ul>
       )}
       {errorQuitar && (
-        <p role="alert" className="mt-2 text-destacado">
+        <p role="alert" className="mt-2 text-error">
           {errorQuitar}
         </p>
       )}
@@ -68,7 +68,7 @@ export function EditorCodigos({ productoId, codigos }: { productoId: string; cod
           </span>
         )}
         {estado.error && (
-          <p role="alert" className="basis-full text-destacado">
+          <p role="alert" className="basis-full text-error">
             {estado.error}
           </p>
         )}

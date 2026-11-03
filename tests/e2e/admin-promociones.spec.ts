@@ -41,7 +41,8 @@ test("CA-6: un vendedor no tiene acceso a Promociones", async ({ page, context }
 test("CA-6: sube imágenes, quedan al final y se ven en la lista", async ({ page, context }) => {
   await entrarComo(context, "encargado");
   await page.goto("/admin");
-  await page.getByRole("navigation", { name: "Panel" }).getByRole("link", { name: "Promociones" }).click();
+  await page.getByRole("navigation", { name: "Panel" }).getByRole("link", { name: "Ajustes" }).click();
+  await page.getByRole("link", { name: /^Promociones/ }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Promociones" })).toBeVisible();
 
   await page.getByLabel("Subir imágenes").setInputFiles([
