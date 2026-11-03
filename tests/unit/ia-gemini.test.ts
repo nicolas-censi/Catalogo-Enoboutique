@@ -109,3 +109,17 @@ describe("costoUsd (CA-7)", () => {
     expect(preciosGemini(new Date("2027-01-01T02:59:00Z")).entradaPorMillon).toBe(0.75);
   });
 });
+
+describe("estimarCosto (CA-2)", () => {
+  it("usa el uso promedio registrado, descuenta las búsquedas gratis del mes y aplica el margen", async () => {
+    const { estimarCosto, AJUSTE_REAL, BUSQUEDAS_GRATIS_MES } = await import("@/lib/ia/costo");
+    const fecha = new Date("2026-11-03T12:00:00Z");
+    const uso = { tokensEntrada: 15000, tokensSalida: 2000, busquedas: 3 };
+    // 100 productos, búsquedas todas gratis: solo tokens.
+    expect(estimarCosto({ cantidad: 100, promedio: uso, busquedasDelMes: 0, fecha })).toBeCloseTo(100 * (0.01125 + 0.0075) * AJUSTE_REAL, 4);
+    // Sin búsquedas gratis restantes: se pagan las 300.
+    expect(estimarCosto({ cantidad: 100, promedio: uso, busquedasDelMes: BUSQUEDAS_GRATIS_MES, fecha })).toBeCloseTo(100 * (0.01125 + 0.0075 + 0.042) * AJUSTE_REAL, 4);
+    // Sin datos todavía: el uso típico.
+    expect(estimarCosto({ cantidad: 10, promedio: null, busquedasDelMes: BUSQUEDAS_GRATIS_MES, fecha })).toBeGreaterThan(0);
+  });
+});

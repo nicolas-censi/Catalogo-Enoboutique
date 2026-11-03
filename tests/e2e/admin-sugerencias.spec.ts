@@ -193,6 +193,60 @@ test.describe("CA-8: interruptor de la IA", () => {
   });
 });
 
+test.describe("CA-2: de a muchos desde la lista de Productos", () => {
+  test("tilda varios: ve cuántos y el costo estimado; confirma y quedan en la cola (sin los completos)", async ({ page }) => {
+    const crear = async (clave: string, n: string, completo: boolean) => {
+      const p = await admin
+        .from("productos")
+        .insert({ tipo: "vino", nombre: `${n} ${prefijo}`, ...(completo ? { descripcion: "Ya tiene", foto_path: "productos/x/y.webp" } : {}) })
+        .select()
+        .single();
+      ids[clave] = p.data!.id;
+    };
+    await crear("listaA", "Lote Alfa", false);
+    await crear("listaB", "Lote Beta", false);
+    await crear("listaC", "Lote Gama", true);
+
+    await page.goto(`/admin?q=${encodeURIComponent(`Lote ${prefijo}`)}`);
+    for (const n of ["Lote Alfa", "Lote Beta", "Lote Gama"]) await page.getByRole("checkbox", { name: `Elegir ${n} ${prefijo}` }).check();
+    await page.getByRole("button", { name: "Sugerir con IA" }).click();
+    const confirmar = page.getByRole("group", { name: "Sugerir con IA" });
+    await expect(confirmar).toContainText(/Vas a pedir 2 sugerencias\. Costo estimado: US\$ \d+,\d{2}\./);
+    // Cancelar no pide nada.
+    await confirmar.getByRole("button", { name: "Cancelar" }).click();
+    expect((await admin.from("sugerencias").select("id").in("producto_id", [ids.listaA, ids.listaB, ids.listaC])).data).toEqual([]);
+
+    await page.getByRole("button", { name: "Sugerir con IA" }).click();
+    await page.getByRole("group", { name: "Sugerir con IA" }).getByRole("button", { name: "Sí, pedir" }).click();
+    await expect(page.getByRole("status").filter({ hasText: "Las 2 sugerencias van a ir llegando a Para revisar." })).toBeVisible();
+    const filas = (await admin.from("sugerencias").select("producto_id, estado").in("producto_id", [ids.listaA, ids.listaB, ids.listaC])).data!;
+    expect(filas.map((f) => f.producto_id).sort()).toEqual([ids.listaA, ids.listaB].sort());
+    expect(filas.every((f) => f.estado === "en_cola")).toBe(true);
+  });
+
+  test("con Incluir los que ya tienen y todos los del filtro, pide también los completos; no repite los que ya están pedidos", async ({ page }) => {
+    await page.goto(`/admin?q=${encodeURIComponent(`Lote ${prefijo}`)}`);
+    const boton = page.getByRole("button", { name: /Seleccionar los \d+ del filtro/ });
+    const enFiltro = Number((await boton.textContent())!.match(/\d+/)![0]);
+    await boton.click();
+    await page.getByRole("checkbox", { name: "Incluir los que ya tienen descripción y foto" }).check();
+    await page.getByRole("button", { name: "Sugerir con IA" }).click();
+    // Todos los del filtro (en todas las páginas) menos los que ya tienen una pedida o lista.
+    const activas = (await admin.from("sugerencias").select("producto_id").in("estado", ["en_cola", "procesando", "lista"]).in("producto_id", Object.values(ids))).data!.length;
+    const esperados = enFiltro - activas;
+    expect(esperados).toBeGreaterThan(0);
+    await expect(page.getByRole("group", { name: "Sugerir con IA" })).toContainText(`Vas a pedir ${esperados} ${esperados === 1 ? "sugerencia" : "sugerencias"}.`);
+  });
+
+  test("con la IA apagada, la lista no ofrece pedir sugerencias", async ({ page }) => {
+    await prenderIa(false);
+    await page.goto(`/admin?q=${encodeURIComponent(`Lote ${prefijo}`)}`);
+    await expect(page.getByRole("checkbox", { name: `Elegir Lote Alfa ${prefijo}` })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Sugerir con IA" })).toHaveCount(0);
+    await prenderIa(true);
+  });
+});
+
 test.describe("CA-2: la cola desde el cron", () => {
   test("sin la clave del cron no hace nada; con la clave procesa la cola; con la IA apagada no gasta", async ({ request }) => {
     const enCola = async (n: number) => {
@@ -212,7 +266,7 @@ test.describe("CA-2: la cola desde el cron", () => {
 
     await prenderIa(true);
     const r = await request.get("/api/sugerencias/procesar", { headers: { authorization: "Bearer secreto-de-prueba-e2e" } });
-    expect(await r.json()).toMatchObject({ listas: 2, fallidas: 0, quedan: 0, motivo: "vacia" });
+    expect(await r.json()).toMatchObject({ fallidas: 0, quedan: 0, motivo: "vacia" });
     expect((await admin.from("sugerencias").select("estado").in("id", [a, b])).data!.map((s) => s.estado)).toEqual(["lista", "lista"]);
   });
 });

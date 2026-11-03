@@ -8,6 +8,7 @@ import { idsProductosAdmin, leerFiltros, type Filtros } from "@/lib/admin/produc
 import { iaActiva } from "@/lib/ia/ajustes";
 import { candidatos, encolar, procesarTanda } from "@/lib/ia/cola-servidor";
 import type { ResultadoTanda } from "@/lib/ia/cola";
+import { estimarCosto } from "@/lib/ia/costo";
 import { resolverSugerencia } from "@/lib/ia/procesar";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
@@ -186,5 +187,28 @@ export async function procesarTandaCola(): Promise<ResultadoTanda | { error: str
     return r;
   } catch {
     return { error: t.errorPedir };
+  }
+}
+
+/** Spec 007, CA-2: cuántos se van a pedir y cuánto costaría, antes de confirmar. */
+export async function estimarSugerencias(
+  seleccion: Seleccion,
+  incluirCompletos: boolean,
+): Promise<{ error: string | null; cantidad: number; recortados: number; costoUsd: number }> {
+  await exigirPersonal();
+  const supabase = await crearClienteServidor();
+  if (!(await iaActiva(supabase))) return { error: t.apagada, cantidad: 0, recortados: 0, costoUsd: 0 };
+  try {
+    const { ids, recortados } = await candidatos(supabase, await idsDe(supabase, seleccion), incluirCompletos);
+    const { data } = await supabase.rpc("resumen_ia_mes");
+    const mes = data?.[0];
+    const promedio =
+      mes && mes.promedio_entrada !== null
+        ? { tokensEntrada: mes.promedio_entrada, tokensSalida: mes.promedio_salida ?? 0, busquedas: Number(mes.promedio_busquedas ?? 0) }
+        : null;
+    const costoUsd = estimarCosto({ cantidad: ids.length, promedio, busquedasDelMes: mes?.busquedas ?? 0 });
+    return { error: ids.length ? null : t.ningunoParaPedir, cantidad: ids.length, recortados, costoUsd };
+  } catch {
+    return { error: t.errorPedir, cantidad: 0, recortados: 0, costoUsd: 0 };
   }
 }

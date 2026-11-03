@@ -9,7 +9,7 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T5 — Acción `pedirSugerencia` + `BotonSugerir` en la ficha, con espera y error; e2e (CA-1)
 - [x] T6 — `RevisarSugerencia` + acciones `aprobarSugerencia` / `descartarSugerencia`; e2e aprobar, solo foto, editar texto, descartar, se ve en la carta (CA-5, CA-6)
 - [x] T7 — Cola: acción `pedirSugerencias` (filtro "sin descripción o sin foto", tope de 1.000), `procesarCola` con tope diario y recuperación de `procesando` vencidas, ruta `/api/sugerencias/procesar` con `CRON_SECRET`; unit + DB (CA-2)
-- [ ] T8 — Confirmación con cantidad y costo estimado (con búsquedas gratis del mes) en la lista de Productos; e2e (CA-2)
+- [x] T8 — Confirmación con cantidad y costo estimado (con búsquedas gratis del mes) en la lista de Productos; e2e (CA-2)
 - [ ] T9 — Bandeja `/admin/sugerencias` con `ProcesadorCola`: listas / en cola / fallidas, volver a pedir, contador en el menú; e2e (CA-3)
 - [ ] T10 — Costo del mes (`costo_sugerencias_mes`) en la bandeja; DB + e2e (CA-7)
 - [ ] T11 — Accesibilidad (axe) y 390 px de ficha y bandeja; revisión contra los CA (todos)

@@ -145,6 +145,13 @@ export const textos = {
       apagada: "Las sugerencias por IA están apagadas.",
       apagadaVendedor: "Pedile al encargado que las prenda.",
       prenderlas: "Prenderlas",
+      incluirCompletos: "Incluir los que ya tienen descripción y foto",
+      calculando: "Calculando…",
+      confirmar: (n: number, costo: string) => `Vas a pedir ${n} ${n === 1 ? "sugerencia" : "sugerencias"}. Costo estimado: US$ ${costo}.`,
+      confirmarResto: (resto: number) => `Quedan ${resto} afuera (hasta 1.000 por vez).`,
+      siPedir: "Sí, pedir",
+      cancelar: "Cancelar",
+      pidiendo: "Pidiendo…",
       ningunoParaPedir: "Todos los elegidos ya tienen descripción y foto, o ya tienen una sugerencia pedida.",
       encolados: (n: number) =>
         `Listo. ${n === 1 ? "La sugerencia va" : `Las ${n} sugerencias van`} a ir llegando a Para revisar. Se procesan de a tandas, hasta 400 por día.`,

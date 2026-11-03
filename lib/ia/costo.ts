@@ -22,3 +22,21 @@ export function costoUsd(uso: UsoIA, fecha = new Date()): number {
     (uso.tokensEntrada * p.entradaPorMillon) / 1e6 + (uso.tokensSalida * p.salidaPorMillon) / 1e6 + uso.busquedas * p.porBusqueda;
   return Math.round(total * 1e5) / 1e5;
 }
+
+/** Búsquedas en Google gratis por mes (compartidas entre los modelos Gemini 3 y posteriores). */
+export const BUSQUEDAS_GRATIS_MES = 5000;
+/**
+ * Margen sobre lo calculado con el uso informado por Google: en la prueba de 20
+ * productos (2026-11-03) lo facturado fue un 33 % más que lo calculado.
+ */
+export const AJUSTE_REAL = 1.35;
+
+/** Costo estimado (US$) de pedir `cantidad` sugerencias (CA-2). */
+export function estimarCosto(datos: { cantidad: number; promedio: UsoIA | null; busquedasDelMes: number; fecha?: Date }): number {
+  const uso = datos.promedio ?? USO_ESTIMADO;
+  const p = preciosGemini(datos.fecha);
+  const tokens = datos.cantidad * ((uso.tokensEntrada * p.entradaPorMillon) / 1e6 + (uso.tokensSalida * p.salidaPorMillon) / 1e6);
+  const gratis = Math.max(0, BUSQUEDAS_GRATIS_MES - datos.busquedasDelMes);
+  const pagas = Math.max(0, datos.cantidad * uso.busquedas - gratis);
+  return (tokens + pagas * p.porBusqueda) * AJUSTE_REAL;
+}

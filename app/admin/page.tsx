@@ -4,6 +4,7 @@ import { ConSesion } from "@/components/admin/ConSesion";
 import { FiltrosProductos } from "@/components/admin/FiltrosProductos";
 import { TablaProductos } from "@/components/admin/TablaProductos";
 import { leerFiltros, listarProductosAdmin, listarSeccionesAdmin, POR_PAGINA, type Filtros } from "@/lib/admin/productos";
+import { iaActiva } from "@/lib/ia/ajustes";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
 
@@ -23,9 +24,10 @@ async function ListaProductos({ searchParams }: { searchParams: Parametros }) {
   const filtros = leerFiltros(parametros);
   const borrado = typeof parametros.borrado === "string" ? parametros.borrado : null;
   const cliente = await crearClienteServidor();
-  const [{ productos, total }, secciones] = await Promise.all([
+  const [{ productos, total }, secciones, iaPrendida] = await Promise.all([
     listarProductosAdmin(cliente, filtros),
     listarSeccionesAdmin(cliente),
+    iaActiva(cliente),
   ]);
   const desde = total === 0 ? 0 : (filtros.pagina - 1) * POR_PAGINA + 1;
   const hasta = Math.min(filtros.pagina * POR_PAGINA, total);
@@ -40,7 +42,7 @@ async function ListaProductos({ searchParams }: { searchParams: Parametros }) {
       )}
       <FiltrosProductos filtros={filtros} secciones={secciones} />
       <div className="mt-6">
-        <TablaProductos productos={productos} total={total} filtros={filtros} secciones={secciones} />
+        <TablaProductos productos={productos} total={total} filtros={filtros} secciones={secciones} iaActiva={iaPrendida} />
       </div>
       {total > 0 && (
         <nav aria-label="Páginas" className="mt-4 flex items-center gap-3 text-texto-suave">

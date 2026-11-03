@@ -123,3 +123,21 @@ describe("bucket sugerencias", () => {
     expect((await fetch(firmada.data!.signedUrl)).status).toBe(200);
   });
 });
+
+describe("resumen_ia_mes (CA-2, CA-7)", () => {
+  it("suma el costo y las búsquedas del mes; promedia el uso; solo para el personal", async () => {
+    const antes = ((await vendedor.rpc("resumen_ia_mes")).data as { costo_usd: number; busquedas: number; sugerencias: number }[])[0];
+    const producto = await crearProducto(8);
+    const otro = await crearProducto(9);
+    const ahora = new Date().toISOString();
+    await admin.from("sugerencias").insert([
+      { producto_id: producto, estado: "lista", procesada_en: ahora, tokens_entrada: 1000, tokens_salida: 100, busquedas: 2, costo_usd: 0.05 },
+      { producto_id: otro, estado: "fallo", procesada_en: ahora, tokens_entrada: 3000, tokens_salida: 300, busquedas: 4, costo_usd: 0.07 },
+    ]);
+    const despues = ((await vendedor.rpc("resumen_ia_mes")).data as typeof antes[])[0];
+    expect(despues.sugerencias - antes.sugerencias).toBe(2);
+    expect(despues.busquedas - antes.busquedas).toBe(6);
+    expect(Number(despues.costo_usd) - Number(antes.costo_usd)).toBeCloseTo(0.12, 5);
+    expect((await noPersonal.rpc("resumen_ia_mes")).error?.code).toBe("42501");
+  });
+});

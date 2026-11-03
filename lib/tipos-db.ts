@@ -615,6 +615,17 @@ export type Database = {
       }
       ordenar_promociones: { Args: { ids: string[] }; Returns: undefined }
       ordenar_secciones: { Args: { ids: string[] }; Returns: undefined }
+      resumen_ia_mes: {
+        Args: never
+        Returns: {
+          busquedas: number
+          costo_usd: number
+          promedio_busquedas: number
+          promedio_entrada: number
+          promedio_salida: number
+          sugerencias: number
+        }[]
+      }
       tomar_cola: {
         Args: { cantidad: number; tope_diario: number }
         Returns: {
