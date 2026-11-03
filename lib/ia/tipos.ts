@@ -35,3 +35,6 @@ export type SugerenciaIA = RespuestaIA & {
 export interface Sugeridor {
   sugerir(producto: ProductoParaSugerir): Promise<SugerenciaIA>;
 }
+
+/** Cómo quedó una sugerencia al resolverla. "apagada": la IA está apagada (CA-8), volvió a la cola. */
+export type Resultado = "lista" | "fallo" | "apagada";

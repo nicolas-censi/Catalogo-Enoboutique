@@ -8,7 +8,7 @@ import { iaActiva } from "./ajustes";
 import { costoUsd } from "./costo";
 import { obtenerFoto, rutaFotoSugerida } from "./foto";
 import { obtenerSugeridor } from "./sugeridor";
-import type { ProductoParaSugerir, UsoIA } from "./tipos";
+import type { ProductoParaSugerir, Resultado, UsoIA } from "./tipos";
 
 type Cliente = SupabaseClient<Database>;
 
@@ -27,8 +27,6 @@ function usoEnFila(uso: UsoIA | undefined) {
   if (!uso) return {};
   return { tokens_entrada: uso.tokensEntrada, tokens_salida: uso.tokensSalida, busquedas: uso.busquedas, costo_usd: costoUsd(uso) };
 }
-
-export type Resultado = "lista" | "fallo" | "apagada";
 
 /**
  * Cómo quedó la sugerencia. Nunca lanza: los errores quedan en la fila. Con la IA

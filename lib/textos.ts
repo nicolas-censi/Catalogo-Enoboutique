@@ -145,6 +145,11 @@ export const textos = {
       apagada: "Las sugerencias por IA están apagadas.",
       apagadaVendedor: "Pedile al encargado que las prenda.",
       prenderlas: "Prenderlas",
+      ningunoParaPedir: "Todos los elegidos ya tienen descripción y foto, o ya tienen una sugerencia pedida.",
+      encolados: (n: number) =>
+        `Listo. ${n === 1 ? "La sugerencia va" : `Las ${n} sugerencias van`} a ir llegando a Para revisar. Se procesan de a tandas, hasta 400 por día.`,
+      encoladosConResto: (n: number, resto: number) =>
+        `Listo. Se pidieron ${n} sugerencias (el máximo por vez); quedaron ${resto} sin pedir: pedilas después. Van a ir llegando a Para revisar.`,
     },
     ia: {
       menu: "IA",

@@ -4,7 +4,10 @@ import { revalidatePath } from "next/cache";
 import { exigirPersonal } from "@/lib/admin/acceso";
 import { invalidarCarta } from "@/lib/admin/cache";
 import { rutaFoto } from "@/lib/admin/fotos";
+import { idsProductosAdmin, leerFiltros, type Filtros } from "@/lib/admin/productos";
 import { iaActiva } from "@/lib/ia/ajustes";
+import { candidatos, encolar, procesarTanda } from "@/lib/ia/cola-servidor";
+import type { ResultadoTanda } from "@/lib/ia/cola";
 import { resolverSugerencia } from "@/lib/ia/procesar";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
@@ -142,4 +145,46 @@ export async function descartarSugerencia(id: string): Promise<{ error: string |
   revalidatePath(`/admin/productos/${s.producto_id}`);
   revalidatePath("/admin/sugerencias");
   return { error: null };
+}
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+type Seleccion = { ids: string[] } | { filtros: Filtros };
+
+async function idsDe(supabase: Awaited<ReturnType<typeof crearClienteServidor>>, seleccion: Seleccion) {
+  // Lo que llega del navegador se vuelve a validar.
+  return "ids" in seleccion
+    ? seleccion.ids.filter((id) => UUID.test(id))
+    : idsProductosAdmin(supabase, leerFiltros({ q: seleccion.filtros.q, seccion: seleccion.filtros.seccion, estado: seleccion.filtros.estado }));
+}
+
+/**
+ * Spec 007, CA-2: pone en la cola los productos elegidos (tildados o todos los del
+ * filtro). Por defecto solo los que no tienen descripción o foto; hasta 1.000 por vez.
+ */
+export async function pedirSugerencias(seleccion: Seleccion, incluirCompletos: boolean): Promise<{ error: string | null; aviso: string | null }> {
+  await exigirPersonal();
+  const supabase = await crearClienteServidor();
+  if (!(await iaActiva(supabase))) return { error: t.apagada, aviso: null };
+  try {
+    const { ids, recortados } = await candidatos(supabase, await idsDe(supabase, seleccion), incluirCompletos);
+    if (ids.length === 0) return { error: t.ningunoParaPedir, aviso: null };
+    const creadas = await encolar(supabase, ids);
+    revalidatePath("/admin", "layout");
+    return { error: null, aviso: recortados ? t.encoladosConResto(creadas, recortados) : t.encolados(creadas) };
+  } catch {
+    return { error: t.errorPedir, aviso: null };
+  }
+}
+
+/** Spec 007, CA-3: procesa una tanda de la cola (la llama la bandeja mientras está abierta). */
+export async function procesarTandaCola(): Promise<ResultadoTanda | { error: string }> {
+  await exigirPersonal();
+  try {
+    const r = await procesarTanda(await crearClienteServidor());
+    if (r.listas || r.fallidas) revalidatePath("/admin/sugerencias");
+    return r;
+  } catch {
+    return { error: t.errorPedir };
+  }
 }

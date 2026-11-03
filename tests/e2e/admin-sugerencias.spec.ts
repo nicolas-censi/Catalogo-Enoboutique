@@ -192,3 +192,27 @@ test.describe("CA-8: interruptor de la IA", () => {
     await prenderIa(true);
   });
 });
+
+test.describe("CA-2: la cola desde el cron", () => {
+  test("sin la clave del cron no hace nada; con la clave procesa la cola; con la IA apagada no gasta", async ({ request }) => {
+    const enCola = async (n: number) => {
+      const p = await admin.from("productos").insert({ tipo: "vino", nombre: `Cola ${n} ${prefijo}` }).select().single();
+      ids[`cola${n}`] = p.data!.id;
+      return (await admin.from("sugerencias").insert({ producto_id: p.data!.id }).select("id").single()).data!.id;
+    };
+    const a = await enCola(1);
+    const b = await enCola(2);
+    expect((await request.get("/api/sugerencias/procesar")).status()).toBe(401);
+    expect((await request.get("/api/sugerencias/procesar", { headers: { authorization: "Bearer otra" } })).status()).toBe(401);
+
+    await prenderIa(false);
+    const apagada = await request.get("/api/sugerencias/procesar", { headers: { authorization: "Bearer secreto-de-prueba-e2e" } });
+    expect(await apagada.json()).toMatchObject({ listas: 0, motivo: "apagada" });
+    expect((await admin.from("sugerencias").select("estado").in("id", [a, b])).data!.map((s) => s.estado)).toEqual(["en_cola", "en_cola"]);
+
+    await prenderIa(true);
+    const r = await request.get("/api/sugerencias/procesar", { headers: { authorization: "Bearer secreto-de-prueba-e2e" } });
+    expect(await r.json()).toMatchObject({ listas: 2, fallidas: 0, quedan: 0, motivo: "vacia" });
+    expect((await admin.from("sugerencias").select("estado").in("id", [a, b])).data!.map((s) => s.estado)).toEqual(["lista", "lista"]);
+  });
+});

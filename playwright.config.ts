@@ -31,6 +31,6 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
     // Spec 007: en los tests, la IA de prueba (no gasta ni sale a internet).
-    env: { IA_FALSA: "1" },
+    env: { IA_FALSA: "1", CRON_SECRET: "secreto-de-prueba-e2e" },
   },
 });
