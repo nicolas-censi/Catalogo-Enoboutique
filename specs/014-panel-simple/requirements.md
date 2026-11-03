@@ -1,6 +1,6 @@
 # 014 – Panel más simple
 
-**Estado:** Borrador
+**Estado:** Aprobada (2026-11-03)
 
 ## Objetivo
 Que el panel sea sobrio, ordenado y fácil de usar para el personal, en la computadora y
@@ -103,8 +103,7 @@ varios), aprobada con esta spec.
 - Modo oscuro del panel.
 
 ## Preguntas abiertas
-- [ ] ¿El vendedor ve Promociones? Hoy es solo del encargado; queda igual salvo que digas
-  lo contrario.
+- [x] ¿El vendedor ve Promociones? No: sigue siendo solo del encargado (2026-11-03).
 
 ## Ideas para más adelante
 - Atajos de teclado en la computadora (por ejemplo, "/" para buscar).

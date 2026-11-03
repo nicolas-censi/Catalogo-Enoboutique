@@ -2,7 +2,7 @@
 
 Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un criterio (CA-n).
 
-- [ ] T1 — Colores a `@theme` normal + tokens nuevos + `.tema-panel`; test de contraste; la carta sin cambios (capturas) (CA-2)
+- [x] T1 — Colores a `@theme` normal + tokens nuevos + `.tema-panel`; test de contraste; la carta sin cambios (capturas) (CA-2)
 - [ ] T2 — Componentes base: `Boton`, `MenuAcciones`, `Confirmar`, `Chip`, `Pestanas`; unit/e2e de teclado y foco (CA-3)
 - [ ] T3 — `MarcoPanel` nuevo (lateral y barra inferior) + `/admin/ajustes`; e2e de navegación y roles (CA-1)
 - [ ] T4 — Lista de productos: buscador, chips de filtro, filas compactas con precio (CA-4)
