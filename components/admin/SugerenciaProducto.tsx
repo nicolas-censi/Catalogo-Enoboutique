@@ -59,11 +59,43 @@ export async function SugerenciaProducto({
     );
   }
 
+  return <TarjetaRevision sugerencia={s} nombre={nombre} descripcionActual={descripcionActual} fotoActual={fotoActual} />;
+}
+
+export type SugerenciaParaRevisar = {
+  id: string;
+  descripcion: string | null;
+  motivo_sin_descripcion: string | null;
+  foto_path: string | null;
+  foto_sitio: string | null;
+  motivo_sin_foto: string | null;
+  fuentes: unknown;
+};
+
+/** Lo actual al lado de lo sugerido, para revisar (CA-5). Se usa en la ficha y en la bandeja. */
+export async function TarjetaRevision({
+  sugerencia: s,
+  nombre,
+  descripcionActual,
+  fotoActual,
+  etiqueta,
+  encabezado,
+}: {
+  etiqueta?: string;
+  encabezado?: React.ReactNode;
+  sugerencia: SugerenciaParaRevisar;
+  nombre: string;
+  descripcionActual: string | null;
+  fotoActual: string | null;
+}) {
+  const supabase = await crearClienteServidor();
   const firmada = s.foto_path ? (await supabase.storage.from("sugerencias").createSignedUrl(s.foto_path, 600)).data?.signedUrl : null;
   const fuentes = (Array.isArray(s.fuentes) ? s.fuentes : []) as unknown as Fuente[];
   return (
     <RevisarSugerencia
       key={s.id}
+      etiqueta={etiqueta}
+      encabezado={encabezado}
       id={s.id}
       descripcion={s.descripcion}
       motivoSinDescripcion={s.motivo_sin_descripcion}

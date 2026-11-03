@@ -212,3 +212,23 @@ export async function estimarSugerencias(
     return { error: t.errorPedir, cantidad: 0, recortados: 0, costoUsd: 0 };
   }
 }
+
+/** Spec 007, CA-3: vuelve a poner en la cola los productos cuya última sugerencia falló. */
+export async function reintentarFallidas(): Promise<{ error: string | null; aviso: string | null }> {
+  await exigirPersonal();
+  const supabase = await crearClienteServidor();
+  if (!(await iaActiva(supabase))) return { error: t.apagada, aviso: null };
+  const { data, error } = await supabase.from("sugerencias").select("id, producto_id").eq("estado", "fallo");
+  if (error) return { error: t.errorPedir, aviso: null };
+  const productos = [...new Set(data.map((f) => f.producto_id))];
+  try {
+    const { ids } = await candidatos(supabase, productos, true);
+    const creadas = ids.length ? await encolar(supabase, ids) : 0;
+    // Las fallidas ya reintentadas no se vuelven a mostrar.
+    await supabase.from("sugerencias").update({ estado: "descartada" }).in("id", data.map((f) => f.id)).eq("estado", "fallo");
+    revalidatePath("/admin/sugerencias");
+    return { error: null, aviso: t.reintentadas(creadas) };
+  } catch {
+    return { error: t.errorPedir, aviso: null };
+  }
+}

@@ -85,8 +85,10 @@
   La vista y funciones públicas de la carta no leen esta tabla (CA-6).
 - Bucket privado `sugerencias` (WebP, 10 MB), sin lectura pública; el panel muestra las
   fotos con URL firmada de corta duración.
-- Funciones: `tomar_cola(n)` (para `procesarCola`), `costo_sugerencias_mes()` (CA-7) y
-  `busquedas_del_mes()` (para el estimado de CA-2).
+- Funciones: `tomar_cola(cantidad, tope_diario)` (para `procesarCola`) y
+  `resumen_ia_mes()` (costo, búsquedas y uso promedio del mes: CA-2 y CA-7).
+- El costo que se muestra se multiplica por `AJUSTE_REAL` (1,35): en la prueba de 20
+  productos lo facturado fue un 33 % más que lo calculado con el uso informado.
 
 ## Rutas y pantallas
 | Ruta | Quién la usa | Qué muestra |
@@ -118,6 +120,16 @@ búsquedas gratis (≈ 1.600 productos por mes), **menos de US$ 100**.
 El estimado de CA-2 usa el promedio real registrado de tokens y búsquedas (o los
 valores de arriba si todavía no hay datos) y descuenta las búsquedas gratis que quedan
 en el mes. Conviene fijar un tope de gasto en Google AI Studio / Cloud Billing.
+
+## Prueba con 20 productos (2026-11-03)
+| Modelo | Con descripción | Con foto | Fallas | Tiempo medio | Costo calculado por producto |
+|---|---|---|---|---|---|
+| gemini-3.8-flash | 12/20 | 9/20 | 8 (demora de más de 2 min) | 89 s | US$ 0,064 |
+| gemini-3.1-pro-preview | 20/20 | 14/20 | 0 | 44 s | US$ 0,020 |
+
+Facturado en total: US$ 1,55. Pro respondió mejor, pero muchas veces sin mostrar fuentes
+(parece no buscar). La elección final del modelo queda pendiente de presupuesto; el
+modelo se cambia con `IA_MODELO`, sin tocar código.
 
 ## Decisiones y alternativas descartadas
 - **Gemini 3.8 Flash** (pedido del usuario: Gemini; elegido por calidad/precio el

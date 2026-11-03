@@ -22,7 +22,11 @@ export function RevisarSugerencia({
   fotoActual,
   fotoSugerida,
   fuentes,
+  etiqueta = t.titulo,
+  encabezado,
 }: {
+  etiqueta?: string;
+  encabezado?: ReactNode;
   id: string;
   descripcion: string | null;
   motivoSinDescripcion: string | null;
@@ -49,7 +53,8 @@ export function RevisarSugerencia({
     });
 
   return (
-    <article aria-label={t.titulo} className="flex flex-col gap-5 rounded-md border border-dorado/40 p-4">
+    <article aria-label={etiqueta} className="flex flex-col gap-5 rounded-md border border-dorado/40 p-4">
+      {encabezado}
       <div className="grid gap-4 sm:grid-cols-2">
         <section aria-label={t.descripcionActual}>
           <h3 className="text-sm text-texto-suave">{t.descripcionActual}</h3>

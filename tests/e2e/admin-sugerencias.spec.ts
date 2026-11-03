@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { clienteAdmin, limpiarDatos, limpiarUsuarios, prefijo } from "../db/ayudante";
 import { entrarComo } from "./ayudante-admin";
+import { desborde, erroresGraves, tocablesChicos } from "./chequeos-celular";
 
 // Spec 007, CA-1, CA-5, CA-6 y CA-8: sugerencia de a uno desde la ficha, revisión,
 // aprobación e interruptor de la IA (con la IA de prueba, IA_FALSA=1). El interruptor se
@@ -269,4 +270,64 @@ test.describe("CA-2: la cola desde el cron", () => {
     expect(await r.json()).toMatchObject({ fallidas: 0, quedan: 0, motivo: "vacia" });
     expect((await admin.from("sugerencias").select("estado").in("id", [a, b])).data!.map((s) => s.estado)).toEqual(["lista", "lista"]);
   });
+});
+
+test.describe("CA-3 y CA-7: bandeja Para revisar", () => {
+  const nuevo = async (clave: string, n: string, estado: "en_cola" | "lista" = "en_cola") => {
+    const p = await admin.from("productos").insert({ tipo: "vino", nombre: `${n} ${prefijo}` }).select().single();
+    ids[clave] = p.data!.id;
+    await admin.from("sugerencias").insert({ producto_id: p.data!.id, estado, ...(estado === "lista" ? { descripcion: `Texto sugerido ${n}`, motivo_sin_foto: "No encontré una foto oficial." } : {}) });
+  };
+
+  test("desde el menú con la cantidad; revisa y aprueba ahí mismo; ve el gasto del mes", async ({ page }) => {
+    await nuevo("bandejaLista", "Bandeja Lista", "lista");
+    await page.goto("/admin");
+    const enlace = page.getByRole("navigation", { name: "Panel" }).getByRole("link", { name: /^Para revisar \(\d+\)$/ });
+    await enlace.click();
+    await expect(page.getByRole("heading", { level: 1, name: "Para revisar" })).toBeVisible();
+    await expect(page.getByText(/^Gastado este mes \(estimado\): US\$ \d+,\d{2}\.$/)).toBeVisible();
+    const tarjeta = page.getByRole("article", { name: `Sugerencia para Bandeja Lista ${prefijo}` });
+    await expect(tarjeta.getByRole("link", { name: `Ver la ficha de Bandeja Lista ${prefijo}` })).toBeVisible();
+    await page.waitForLoadState("networkidle");
+    await tarjeta.getByRole("button", { name: "Aprobar" }).click();
+    await expect(page.getByRole("status").filter({ hasText: "Listo. Ya se ve en la carta." })).toBeVisible();
+    await expect(tarjeta).toHaveCount(0);
+    expect((await admin.from("productos").select("descripcion").eq("id", ids.bandejaLista).single()).data!.descripcion).toBe("Texto sugerido Bandeja Lista");
+  });
+
+  test("con la bandeja abierta la cola avanza y llegan las sugerencias; las que fallan se pueden volver a pedir", async ({ page }) => {
+    await nuevo("bandejaCola", "Bandeja Cola");
+    await nuevo("bandejaFalla", "Bandeja [falla]");
+    await page.goto("/admin/sugerencias");
+    await expect(page.getByRole("article", { name: `Sugerencia para Bandeja Cola ${prefijo}` })).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByText(/^\d+ fallaron?\.$|^1 falló\.$/)).toBeVisible({ timeout: 30_000 });
+    await page.getByRole("button", { name: "Volver a pedirlas" }).click();
+    await expect(page.getByRole("status").filter({ hasText: /Se volvi(ó|eron) a pedir/ })).toBeVisible();
+    const filas = (await admin.from("sugerencias").select("estado").eq("producto_id", ids.bandejaFalla)).data!.map((f) => f.estado);
+    expect(filas).toContain("descartada");
+  });
+
+  test("con la IA apagada la cola espera y lo dice", async ({ page }) => {
+    await nuevo("bandejaApagada", "Bandeja Apagada");
+    await prenderIa(false);
+    await page.goto("/admin/sugerencias");
+    await expect(page.getByRole("status").filter({ hasText: /^Hay \d+ en cola, esperando a que se prenda la IA\.$/ })).toBeVisible();
+    expect((await admin.from("sugerencias").select("estado").eq("producto_id", ids.bandejaApagada).single()).data!.estado).toBe("en_cola");
+    await prenderIa(true);
+  });
+});
+
+test("T11: la ficha con una sugerencia y la bandeja, en el celular: accesibles, sin scroll horizontal y tocables de 44 px", async ({ page }) => {
+  const p = await admin.from("productos").insert({ tipo: "vino", nombre: `Accesible Malbec ${prefijo}` }).select().single();
+  ids.accesible = p.data!.id;
+  await page.goto(`/admin/productos/${ids.accesible}`);
+  await page.getByRole("button", { name: "Sugerir con IA" }).click();
+  await expect(sugerencia(page)).toBeVisible();
+  for (const ruta of [`/admin/productos/${ids.accesible}`, "/admin/sugerencias"]) {
+    await page.goto(ruta);
+    await expect(page.getByRole("article").first()).toBeVisible();
+    expect(await erroresGraves(page), ruta).toEqual([]);
+    expect(await desborde(page), ruta).toBeLessThanOrEqual(0);
+    expect(await tocablesChicos(page), ruta).toEqual([]);
+  }
 });

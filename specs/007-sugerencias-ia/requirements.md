@@ -1,6 +1,6 @@
 # 007 – Sugerencias por IA (descripción y foto)
 
-**Estado:** Aprobada (2026-11-02) — en implementación
+**Estado:** Implementada (2026-11-03). Modelo por confirmar (ver `design.md`).
 
 ## Objetivo
 Que el personal complete la carta sin escribir a mano ni buscar fotos de a una:

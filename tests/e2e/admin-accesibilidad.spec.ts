@@ -20,6 +20,7 @@ const pantallas: [string, string, boolean][] = [
   ["marca", "/admin/marca", true],
   ["promociones", "/admin/promociones", true],
   ["IA", "/admin/ia", true],
+  ["para revisar", "/admin/sugerencias", true],
 ];
 
 const tamanos = [
