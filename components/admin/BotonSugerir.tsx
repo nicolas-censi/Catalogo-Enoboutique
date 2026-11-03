@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { pedirSugerencia } from "@/app/admin/acciones-sugerencias";
+import { useAvisoSugerencia } from "@/components/admin/ZonaSugerencia";
 import { textos } from "@/lib/textos";
 
 const t = textos.admin.sugerencias;
@@ -10,6 +11,7 @@ const t = textos.admin.sugerencias;
 export function BotonSugerir({ productoId }: { productoId: string }) {
   const [error, setError] = useState<string | null>(null);
   const [buscando, iniciar] = useTransition();
+  const avisar = useAvisoSugerencia();
   return (
     <div className="flex flex-col items-start gap-2">
       <button
@@ -18,6 +20,7 @@ export function BotonSugerir({ productoId }: { productoId: string }) {
         onClick={() =>
           iniciar(async () => {
             setError(null);
+            avisar(null);
             setError((await pedirSugerencia(productoId)).error);
           })
         }
