@@ -58,6 +58,11 @@ async function abrir(page: import("@playwright/test").Page, ruta: string) {
   await page.waitForLoadState("networkidle");
 }
 
+/** Spec 014, CA-6: en la ficha la sugerencia lista es un aviso; Revisar la despliega. */
+async function revisar(page: import("@playwright/test").Page) {
+  await page.getByRole("button", { name: "Revisar" }).click();
+}
+
 const sugerencia = (page: import("@playwright/test").Page) => page.getByRole("article", { name: "Sugerencia de la IA" });
 
 test("CA-1: un vendedor pide la sugerencia, ve el aviso de espera y después la sugerencia con foto y fuentes", async ({ page }) => {
@@ -87,6 +92,9 @@ test("CA-1: un vendedor pide la sugerencia, ve el aviso de espera y después la 
 
 test("CA-1: con una sugerencia esperando revisión, no se pide otra (se muestra esa)", async ({ page }) => {
   await abrir(page, `/admin/productos/${ids.producto}`);
+  await expect(page.getByText("La IA sugirió una descripción y una foto.")).toBeVisible();
+  await expect(sugerencia(page)).toHaveCount(0);
+  await revisar(page);
   await expect(sugerencia(page)).toBeVisible();
   await expect(page.getByRole("button", { name: "Sugerir con IA" })).toHaveCount(0);
 });
@@ -109,6 +117,7 @@ test("CA-1: si falla, avisa y la ficha queda como estaba (se puede volver a pedi
 test("CA-5 y CA-6: corrige el texto y aprueba todo; se ve en la carta y queda registrado quién", async ({ page }) => {
   const corregido = `Malbec de altura del Valle de Uco ${prefijo}, con crianza en roble francés.`;
   await abrir(page, `/admin/productos/${ids.producto}`);
+  await revisar(page);
   const s = sugerencia(page);
   const campo = s.getByRole("textbox", { name: "Descripción (podés corregirla)" });
   // Espera a que la página esté hidratada antes de escribir en el campo controlado.
@@ -152,6 +161,7 @@ test("CA-5: aprueba solo la foto; la descripción queda como estaba", async ({ p
 
 test("CA-5: descarta; el producto queda como estaba y se puede pedir otra", async ({ page }) => {
   await abrir(page, `/admin/productos/${ids.sinFoto}`);
+  await revisar(page);
   await sugerencia(page).getByRole("button", { name: "Descartar" }).click();
   await expect(page.getByRole("status").filter({ hasText: "Sugerencia descartada." })).toBeVisible();
   await expect(page.getByRole("button", { name: "Sugerir con IA" })).toBeVisible();
@@ -203,6 +213,7 @@ test.describe("CA-8: interruptor de la IA", () => {
     const antes = (await admin.from("sugerencias").select("id").eq("producto_id", ids.falla)).data!.length;
 
     await abrir(page, `/admin/productos/${ids.sinFoto}`);
+    await revisar(page);
     await sugerencia(page).getByRole("button", { name: "Aprobar" }).click();
     await expect(page.getByRole("status").filter({ hasText: "Listo. Ya se ve en la carta." })).toBeVisible();
     expect((await admin.from("sugerencias").select("id").eq("producto_id", ids.falla)).data!.length).toBe(antes);
@@ -355,7 +366,7 @@ test("T11: la ficha con una sugerencia y la bandeja, en el celular: accesibles, 
   await abrir(page, `/admin/productos/${ids.accesible}`);
   await page.getByRole("button", { name: "Sugerir con IA" }).click();
   await expect(sugerencia(page)).toBeVisible();
-  for (const ruta of [`/admin/productos/${ids.accesible}`, "/admin/sugerencias"]) {
+  for (const ruta of [`/admin/productos/${ids.accesible}?revisar=1`, "/admin/sugerencias"]) {
     await abrir(page, ruta);
     await expect(page.getByRole("article").first()).toBeVisible();
     expect(await erroresGraves(page), ruta).toEqual([]);

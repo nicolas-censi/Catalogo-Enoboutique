@@ -80,18 +80,19 @@ test("CA-4 y CA-8: edita un producto, elige una bodega existente y lo oculta", a
   await expect(page.getByLabel("Nombre", { exact: true })).toHaveValue(`Nicasia Malbec ${prefijo}`);
   await page.getByLabel("Nombre", { exact: true }).fill(`Nicasia Red Blend ${prefijo}`);
   await page.getByLabel("Bodega", { exact: true }).fill(`Catena Zapata ${prefijo}`);
-  await page.getByLabel("Visible en la carta", { exact: true }).uncheck();
   await page.getByRole("button", { name: "Guardar" }).click();
   await expect(page.getByRole("status")).toHaveText("Cambios guardados.");
 
   const { data } = await admin.from("productos").select("nombre, bodega_id, visible").eq("id", ids.vino).single();
-  expect(data).toEqual({ nombre: `Nicasia Red Blend ${prefijo}`, bodega_id: ids.bodega, visible: false });
+  expect(data).toEqual({ nombre: `Nicasia Red Blend ${prefijo}`, bodega_id: ids.bodega, visible: true }); // Guardar no cambia la visibilidad (spec 014)
   const bodegas = await admin.from("bodegas").select("id").like("nombre", `Catena Zapata ${prefijo}`);
   expect(bodegas.data).toHaveLength(1);
 
   await page.reload();
   await expect(page.getByLabel("Nombre", { exact: true })).toHaveValue(`Nicasia Red Blend ${prefijo}`);
-  await expect(page.getByLabel("Visible en la carta", { exact: true })).not.toBeChecked();
+  // Spec 014: "Visible en la carta" se cambia con el interruptor de arriba (ver admin-ocultar-borrar).
+  await page.getByRole("switch", { name: "Visible en la carta" }).click();
+  await expect.poll(async () => (await admin.from("productos").select("visible").eq("id", ids.vino).single()).data!.visible).toBe(false);
 });
 
 test("CA-4: un cambio que choca con las reglas muestra un mensaje claro", async ({ page }) => {

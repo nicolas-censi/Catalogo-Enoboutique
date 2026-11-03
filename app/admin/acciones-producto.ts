@@ -40,7 +40,10 @@ export async function guardarProducto(
   const valores = Object.fromEntries(
     [...formulario.entries()].filter(([, v]) => typeof v === "string") as [string, string][],
   );
-  const { datos, errores } = validarProducto({ ...valores, visible: formulario.get("visible") === "on" });
+  // La ficha (spec 014) cambia "Visible en la carta" con su propio interruptor: el
+  // formulario solo lo manda cuando lo incluye (alta de producto).
+  const conVisible = formulario.has("incluye-visible");
+  const { datos, errores } = validarProducto({ ...valores, visible: conVisible ? formulario.get("visible") === "on" : true });
   if (!datos) return { errores, error: null, guardado: false, valores };
 
   const supabase = await crearClienteServidor();
@@ -53,7 +56,8 @@ export async function guardarProducto(
   };
 
   if (productoId) {
-    const { error } = await supabase.from("productos").update(fila).eq("id", productoId);
+    const { visible, ...sinVisible } = fila;
+    const { error } = await supabase.from("productos").update(conVisible ? { ...sinVisible, visible } : sinVisible).eq("id", productoId);
     if (error) return { errores: {}, error: traducirError(error), guardado: false, valores };
     invalidarCarta();
     return { errores: {}, error: null, guardado: true, valores };
@@ -63,6 +67,16 @@ export async function guardarProducto(
   if (error) return { errores: {}, error: traducirError(error), guardado: false, valores };
   invalidarCarta();
   redirect(`/admin/productos/${data.id}`);
+}
+
+/** Spec 014, CA-6: el interruptor "Visible en la carta" de la ficha. */
+export async function cambiarVisibleProducto(productoId: string, visible: boolean): Promise<{ error: string | null }> {
+  await exigirPersonal();
+  const supabase = await crearClienteServidor();
+  const { error } = await supabase.from("productos").update({ visible }).eq("id", productoId);
+  if (error) return { error: traducirError(error) };
+  invalidarCarta();
+  return { error: null };
 }
 
 export async function borrarProducto(productoId: string): Promise<{ error: string | null }> {

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { AvisoSugerencia } from "@/components/admin/AvisoSugerencia";
 import { BotonSugerir } from "@/components/admin/BotonSugerir";
 import { RevisarSugerencia } from "@/components/admin/RevisarSugerencia";
 import { iaActiva } from "@/lib/ia/ajustes";
@@ -20,7 +21,10 @@ export async function SugerenciaProducto({
   descripcionActual,
   fotoActual,
   esEncargado,
+  revisar = false,
 }: {
+  /** La sugerencia se acaba de pedir: se muestra desplegada (spec 014). */
+  revisar?: boolean;
   esEncargado: boolean;
   productoId: string;
   nombre: string;
@@ -59,7 +63,11 @@ export async function SugerenciaProducto({
     );
   }
 
-  return <TarjetaRevision sugerencia={s} nombre={nombre} descripcionActual={descripcionActual} fotoActual={fotoActual} />;
+  return (
+    <AvisoSugerencia abiertaAlInicio={revisar} texto={t.aviso(s.descripcion !== null, s.foto_path !== null)}>
+      <TarjetaRevision sugerencia={s} nombre={nombre} descripcionActual={descripcionActual} fotoActual={fotoActual} />
+    </AvisoSugerencia>
+  );
 }
 
 export type SugerenciaParaRevisar = {

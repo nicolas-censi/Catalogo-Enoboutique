@@ -33,7 +33,7 @@ const anadasEnBase = async (productoId: string) =>
   (await admin.from("anadas").select("codigo_tango, tipo, anio, precio, en_stock").eq("producto_id", productoId).order("codigo_tango")).data;
 
 test("CA-5: agrega una añada con precio escrito como en Argentina", async ({ page }) => {
-  await page.goto(`/admin/productos/${ids.vino}`);
+  await page.goto(`/admin/productos/${ids.vino}?pestana=anadas`);
   const form = agregar(page);
   await form.getByLabel("Tipo de añada", { exact: true }).selectOption("con_anio");
   await form.getByLabel("Año", { exact: true }).fill("2022");
@@ -56,7 +56,7 @@ test("CA-5: agrega una añada con precio escrito como en Argentina", async ({ pa
 });
 
 test("CA-5: los choques con las reglas muestran mensajes claros", async ({ page }) => {
-  await page.goto(`/admin/productos/${ids.vino}`);
+  await page.goto(`/admin/productos/${ids.vino}?pestana=anadas`);
   const form = agregar(page);
   await form.getByLabel("Tipo de añada", { exact: true }).selectOption("con_anio");
   await form.getByLabel("Año", { exact: true }).fill("2021");
@@ -75,7 +75,7 @@ test("CA-5: los choques con las reglas muestran mensajes claros", async ({ page 
 });
 
 test("CA-5: a una añada sin especificar se le pone el año y el precio", async ({ page }) => {
-  await page.goto(`/admin/productos/${ids.vino}`);
+  await page.goto(`/admin/productos/${ids.vino}?pestana=anadas`);
   const sinAnio = fila(page, `${prefijo}-qsin`);
   await sinAnio.getByRole("button", { name: "Editar" }).click();
   await sinAnio.getByLabel("Tipo de añada", { exact: true }).selectOption("con_anio");
@@ -91,7 +91,7 @@ test("CA-5: a una añada sin especificar se le pone el año y el precio", async 
 });
 
 test("CA-5: borra una añada con confirmación", async ({ page }) => {
-  await page.goto(`/admin/productos/${ids.vino}`);
+  await page.goto(`/admin/productos/${ids.vino}?pestana=anadas`);
   const anada = fila(page, `${prefijo}-q2021`);
   await anada.getByRole("button", { name: "Borrar" }).click();
   await expect(anada.getByText("¿Borrar la añada 2021?")).toBeVisible();
@@ -105,7 +105,7 @@ test("CA-5: borra una añada con confirmación", async ({ page }) => {
 });
 
 test("CA-5: un aceite no admite una segunda presentación", async ({ page }) => {
-  await page.goto(`/admin/productos/${ids.aceite}`);
+  await page.goto(`/admin/productos/${ids.aceite}?pestana=anadas`);
   const form = agregar(page, "Agregar presentación");
   // En productos que no son vino no se elige tipo ni año.
   await expect(form.getByLabel("Tipo de añada", { exact: true })).toHaveCount(0);

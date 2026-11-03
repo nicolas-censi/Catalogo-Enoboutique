@@ -35,26 +35,32 @@ test.beforeEach(async ({ context }) => {
 
 test("CA-8: ocultar saca el producto de la carta pero queda en el panel, y se puede volver a mostrar", async ({ page }) => {
   await page.goto(`/admin/productos/${ids.ocultar}`);
-  await page.getByLabel("Visible en la carta", { exact: true }).uncheck();
-  await page.getByRole("button", { name: "Guardar", exact: true }).click();
-  await expect(page.getByRole("status")).toHaveText("Cambios guardados.");
+  await page.waitForLoadState("networkidle");
+  // Spec 014, CA-6: interruptor arriba de la ficha; se guarda al tocarlo.
+  const visible = page.getByRole("switch", { name: "Visible en la carta" });
+  await visible.click();
+  await expect(visible).toHaveAttribute("aria-checked", "false");
+  await expect.poll(async () => (await admin.from("productos").select("visible").eq("id", ids.ocultar).single()).data!.visible).toBe(false);
 
   await page.goto(`/producto/${ids.ocultar}`);
   await expect(page.getByText("No encontramos este producto")).toBeVisible();
   await page.goto(`/admin?q=${prefijo}`);
-  await expect(page.getByRole("row").filter({ hasText: "Luigi Bosca" })).toContainText("Oculto");
+  await expect(page.getByRole("list", { name: "Productos" }).getByRole("listitem").filter({ hasText: "Luigi Bosca" })).toContainText("Oculto");
 
   await page.goto(`/admin/productos/${ids.ocultar}`);
-  await page.getByLabel("Visible en la carta", { exact: true }).check();
-  await page.getByRole("button", { name: "Guardar", exact: true }).click();
-  await expect(page.getByRole("status")).toHaveText("Cambios guardados.");
+  await page.waitForLoadState("networkidle");
+  await page.getByRole("switch", { name: "Visible en la carta" }).click();
+  await expect.poll(async () => (await admin.from("productos").select("visible").eq("id", ids.ocultar).single()).data!.visible).toBe(true);
   await page.goto(`/producto/${ids.ocultar}`);
   await expect(page.getByRole("heading", { level: 1, name: `Luigi Bosca Malbec ${prefijo}` })).toBeVisible();
 });
 
 test("CA-8: borrar pide confirmación y se puede cancelar", async ({ page }) => {
   await page.goto(`/admin/productos/${ids.borrar}`);
-  await page.getByRole("button", { name: "Borrar producto" }).click();
+  await page.waitForLoadState("networkidle");
+  // Spec 014, CA-3: borrar está en el menú ⋯ y pide confirmación.
+  await page.getByRole("button", { name: /^Más acciones para / }).click();
+  await page.getByRole("menuitem", { name: "Borrar producto" }).click();
   const dialogo = page.getByRole("dialog");
   await expect(dialogo).toContainText(`¿Borrar Lagarde Primeras Viñas ${prefijo} y sus 2 añadas? No se puede deshacer.`);
   await dialogo.getByRole("button", { name: "Cancelar" }).click();
@@ -65,7 +71,10 @@ test("CA-8: borrar pide confirmación y se puede cancelar", async ({ page }) => 
 
 test("CA-8: borrar elimina el producto con sus añadas y códigos, y vuelve a la lista", async ({ page }) => {
   await page.goto(`/admin/productos/${ids.borrar}`);
-  await page.getByRole("button", { name: "Borrar producto" }).click();
+  await page.waitForLoadState("networkidle");
+  // Spec 014, CA-3: borrar está en el menú ⋯ y pide confirmación.
+  await page.getByRole("button", { name: /^Más acciones para / }).click();
+  await page.getByRole("menuitem", { name: "Borrar producto" }).click();
   await page.getByRole("dialog").getByRole("button", { name: "Sí, borrar" }).click();
 
   await expect(page).toHaveURL(/\/admin(\?.*)?$/);

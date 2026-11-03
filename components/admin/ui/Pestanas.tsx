@@ -15,7 +15,7 @@ export function Pestanas({ etiqueta, pestanas, activa, href }: { etiqueta: strin
           href={href(p.id)}
           scroll={false}
           aria-current={p.id === activa ? "page" : undefined}
-          className={`inline-flex min-h-11 shrink-0 items-center ${
+          className={`inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center ${
             p.id === activa ? "font-semibold text-texto shadow-[inset_0_-2px_0_var(--color-texto)]" : "text-texto-suave"
           }`}
         >

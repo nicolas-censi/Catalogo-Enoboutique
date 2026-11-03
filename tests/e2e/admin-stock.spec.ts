@@ -32,7 +32,7 @@ test.afterAll(async () => {
 
 test("CA-3: el interruptor cambia el stock al toque y queda guardado", async ({ page, context }) => {
   await entrarComo(context, "vendedor");
-  await page.goto(`/admin/productos/${ids.producto}`);
+  await page.goto(`/admin/productos/${ids.producto}?pestana=anadas`);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(`Escorihuela Gascón Malbec ${prefijo}`);
 
   const s2021 = page.getByRole("switch", { name: "Stock de 2021" });
