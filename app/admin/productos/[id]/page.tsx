@@ -6,9 +6,13 @@ import { FormularioProducto } from "@/components/admin/FormularioProducto";
 import { EditorAnadas } from "@/components/admin/EditorAnadas";
 import { EditorCodigos } from "@/components/admin/EditorCodigos";
 import { SubirFoto } from "@/components/admin/SubirFoto";
+import { SugerenciaProducto } from "@/components/admin/SugerenciaProducto";
 import { leerFichaProducto, listarBodegas, listarSeccionesAdmin } from "@/lib/admin/productos";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
+
+// Spec 007: pedir una sugerencia a la IA puede tardar cerca de un minuto.
+export const maxDuration = 300;
 
 async function Ficha({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -35,7 +39,9 @@ async function Ficha({ params }: { params: Promise<{ id: string }> }) {
     <>
       {volver}
       <h1 className="mt-2 font-titulos text-2xl text-titulo">{producto.nombre}</h1>
-      <h2 className="mt-6 mb-3 text-lg font-semibold text-destacado">{textos.admin.datosProducto}</h2>
+      <h2 className="mt-6 mb-3 text-lg font-semibold text-destacado">{textos.admin.sugerencias.titulo}</h2>
+      <SugerenciaProducto productoId={producto.id} nombre={producto.nombre} descripcionActual={producto.descripcion} fotoActual={producto.foto_path} />
+      <h2 className="mt-8 mb-3 text-lg font-semibold text-destacado">{textos.admin.datosProducto}</h2>
       <FormularioProducto
         productoId={producto.id}
         inicial={{
