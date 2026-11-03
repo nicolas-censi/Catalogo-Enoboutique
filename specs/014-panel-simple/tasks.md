@@ -12,4 +12,4 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T8 — Secciones y sección: filas con interruptor y ⋯ (CA-7)
 - [x] T9 — Personal y Promociones: filas con ⋯ y alta como acción principal (CA-7)
 - [x] T10 — Importar, Marca, IA, Para revisar e ingreso con el estilo nuevo (CA-2, CA-3)
-- [ ] T11 — Accesibilidad y 390 px en todas las pantallas; suite completa; capturas finales (CA-8)
+- [x] T11 — Accesibilidad y 390 px en todas las pantallas; suite completa; capturas finales (CA-8)

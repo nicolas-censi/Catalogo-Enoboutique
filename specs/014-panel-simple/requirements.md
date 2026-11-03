@@ -1,6 +1,6 @@
 # 014 – Panel más simple
 
-**Estado:** Aprobada (2026-11-03)
+**Estado:** Implementada (2026-11-03)
 
 ## Objetivo
 Que el panel sea sobrio, ordenado y fácil de usar para el personal, en la computadora y

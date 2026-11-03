@@ -47,6 +47,6 @@ test("CA-3: la sección de la carta con subsecciones, en el celular", async ({ p
 test("CA-5: la pantalla de la sección en el panel, en el celular", async ({ page, context }) => {
   await entrarComo(context, "vendedor");
   await page.goto(`/admin/secciones/${cava}`);
-  await expect(page.getByRole("table", { name: "Subsecciones" })).toBeVisible();
+  await expect(page.getByRole("list", { name: "Subsecciones" })).toBeVisible();
   await revisar(page);
 });
