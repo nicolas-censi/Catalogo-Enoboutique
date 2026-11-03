@@ -87,7 +87,21 @@ lo apruebe ("Lo humano manda" y "Solo se publica lo aprobado", visión).
 - **Entonces** ve cuánto se gastó en sugerencias en el mes (en dólares, estimado según
   el uso registrado).
 
-## Fuera de alcance
+### CA-8: Apagar la IA
+- **Dado** el encargado en **IA** (panel)
+- **Cuando** apaga las sugerencias por IA
+- **Entonces** no se hace ningún pedido más a la IA (ni de a uno, ni de la cola): no hay
+  gasto mientras esté apagada. Lo que ya estaba en camino termina; lo que está en cola
+  espera hasta que se vuelva a prender.
+- Y en la ficha, en lugar de **Sugerir con IA**, se ve "Las sugerencias por IA están
+  apagadas." (al encargado, con un enlace para prenderlas; al vendedor, "Pedile al
+  encargado que las prenda.").
+- Y las sugerencias ya listas se pueden seguir revisando, aprobando y descartando (no
+  gastan).
+- Y solo el encargado puede prenderla o apagarla; queda registrado quién y cuándo.
+- Y empieza **apagada**: hay que prenderla a propósito.
+
+
 - Sugerir otros datos (nombre, bodega, varietal, precios, secciones, códigos).
 - Aprobación automática o en bloque sin mirar cada sugerencia.
 - Pedidos programados (por ejemplo, sugerir sola cada vez que se importa de Tango).

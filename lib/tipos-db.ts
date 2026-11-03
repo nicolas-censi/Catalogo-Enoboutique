@@ -32,6 +32,27 @@ export type Database = {
         }
         Relationships: []
       }
+      ajustes_ia: {
+        Row: {
+          activa: boolean
+          cambiada_en: string | null
+          cambiada_por: string | null
+          id: number
+        }
+        Insert: {
+          activa?: boolean
+          cambiada_en?: string | null
+          cambiada_por?: string | null
+          id?: number
+        }
+        Update: {
+          activa?: boolean
+          cambiada_en?: string | null
+          cambiada_por?: string | null
+          id?: number
+        }
+        Relationships: []
+      }
       anadas: {
         Row: {
           actualizado_en: string
@@ -576,6 +597,7 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      cambiar_ia: { Args: { activa: boolean }; Returns: undefined }
       crear_promocion: { Args: { imagen: string }; Returns: string }
       crear_subseccion: {
         Args: { nombre: string; padre: string }

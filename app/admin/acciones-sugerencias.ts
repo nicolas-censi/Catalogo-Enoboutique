@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { exigirPersonal } from "@/lib/admin/acceso";
 import { invalidarCarta } from "@/lib/admin/cache";
 import { rutaFoto } from "@/lib/admin/fotos";
+import { iaActiva } from "@/lib/ia/ajustes";
 import { resolverSugerencia } from "@/lib/ia/procesar";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
@@ -17,6 +18,7 @@ const t = textos.admin.sugerencias;
 export async function pedirSugerencia(productoId: string): Promise<{ error: string | null }> {
   await exigirPersonal();
   const supabase = await crearClienteServidor();
+  if (!(await iaActiva(supabase))) return { error: t.apagada };
   const activa = await supabase
     .from("sugerencias")
     .select("id, estado")
@@ -48,9 +50,21 @@ export async function pedirSugerencia(productoId: string): Promise<{ error: stri
     id = nueva.data.id;
   }
 
-  const ok = await resolverSugerencia(supabase, id, productoId);
+  const resultado = await resolverSugerencia(supabase, id, productoId);
   revalidatePath(`/admin/productos/${productoId}`);
-  return { error: ok ? null : t.errorPedir };
+  return { error: resultado === "lista" ? null : resultado === "apagada" ? t.apagada : t.errorPedir };
+}
+
+/** Spec 007, CA-8: el encargado prende o apaga la IA. */
+export async function cambiarIa(activa: boolean): Promise<{ error: string | null }> {
+  const sesion = await exigirPersonal();
+  if (sesion.rol !== "encargado") return { error: textos.admin.sinAcceso };
+  const supabase = await crearClienteServidor();
+  const { error } = await supabase.rpc("cambiar_ia", { activa });
+  if (error) return { error: textos.admin.errorGuardar };
+  revalidatePath("/admin/ia");
+  revalidatePath("/admin/productos/[id]", "page");
+  return { error: null };
 }
 
 const MAXIMO_DESCRIPCION = 1000;

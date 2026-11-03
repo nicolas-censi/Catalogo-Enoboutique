@@ -2,13 +2,16 @@ import { expect, test } from "@playwright/test";
 import { clienteAdmin, limpiarDatos, limpiarUsuarios, prefijo } from "../db/ayudante";
 import { entrarComo } from "./ayudante-admin";
 
-// Spec 007, CA-1, CA-5 y CA-6: sugerencia de a uno desde la ficha, revisión y aprobación
-// (con la IA de prueba, IA_FALSA=1).
+// Spec 007, CA-1, CA-5, CA-6 y CA-8: sugerencia de a uno desde la ficha, revisión,
+// aprobación e interruptor de la IA (con la IA de prueba, IA_FALSA=1). El interruptor se
+// prende para estos tests y al final vuelve a como estaba.
 test.describe.configure({ mode: "serial" });
 
 const admin = clienteAdmin();
 const ids: Record<string, string> = {};
 const nombre = `Rutini Malbec ${prefijo}`;
+let iaPrevia = false;
+const prenderIa = (activa: boolean) => admin.from("ajustes_ia").update({ activa }).eq("id", 1);
 
 const fotosSugeridas = async (id: string) => ((await admin.storage.from("sugerencias").list(id)).data ?? []).map((f) => `${id}/${f.name}`);
 const fotosPublicas = async (id: string) => ((await admin.storage.from("fotos").list(`productos/${id}`)).data ?? []).map((f) => `productos/${id}/${f.name}`);
@@ -23,6 +26,8 @@ async function borrarFotosSugeridas() {
 }
 
 test.beforeAll(async () => {
+  iaPrevia = (await admin.from("ajustes_ia").select("activa").eq("id", 1).single()).data!.activa;
+  await prenderIa(true);
   const seccion = await admin.from("secciones").insert({ nombre: `${prefijo} Sugerencias`, orden: 96 }).select().single();
   for (const [clave, n] of [["producto", nombre], ["falla", `Vino [falla] ${prefijo}`], ["sinFoto", `Vino [sin foto] ${prefijo}`], ["soloFoto", `Catena Malbec ${prefijo}`]] as const) {
     const p = await admin.from("productos").insert({ tipo: "vino", nombre: n, seccion_id: seccion.data!.id }).select().single();
@@ -32,6 +37,7 @@ test.beforeAll(async () => {
 });
 
 test.afterAll(async () => {
+  await prenderIa(iaPrevia);
   await borrarFotosSugeridas();
   await limpiarDatos();
   await limpiarUsuarios();
@@ -137,4 +143,52 @@ test("CA-5: descarta; el producto queda como estaba y se puede pedir otra", asyn
   const fila = (await admin.from("sugerencias").select("estado, revisada_por").eq("producto_id", ids.sinFoto).single()).data!;
   expect(fila.estado).toBe("descartada");
   expect(fila.revisada_por).toBeTruthy();
+});
+
+test.describe("CA-8: interruptor de la IA", () => {
+  test("un vendedor no tiene acceso a IA", async ({ page }) => {
+    await page.goto("/admin/ia");
+    await expect(page.getByText("No tenés acceso al panel.")).toBeVisible();
+  });
+
+  test("el encargado la apaga: en la ficha no se puede pedir y no se crea nada; la prende de nuevo", async ({ page, context }) => {
+    await context.clearCookies();
+    await entrarComo(context, "encargado");
+    await page.goto("/admin");
+    await page.getByRole("navigation", { name: "Panel" }).getByRole("link", { name: "IA", exact: true }).click();
+    await expect(page.getByRole("heading", { level: 1, name: "Sugerencias por IA" })).toBeVisible();
+    const interruptor = page.getByRole("switch", { name: "Sugerencias por IA" });
+    await expect(interruptor).toHaveAttribute("aria-checked", "true");
+    await interruptor.click();
+    await expect(interruptor).toHaveAttribute("aria-checked", "false");
+    await expect(interruptor).toHaveText("Apagadas");
+    expect((await admin.from("ajustes_ia").select("activa").eq("id", 1).single()).data!.activa).toBe(false);
+
+    await page.goto(`/admin/productos/${ids.falla}`);
+    await expect(page.getByText("Las sugerencias por IA están apagadas.")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Sugerir con IA" })).toHaveCount(0);
+    await page.getByRole("link", { name: "Prenderlas" }).click();
+    await expect(page).toHaveURL(/\/admin\/ia$/);
+    await page.getByRole("switch", { name: "Sugerencias por IA" }).click();
+    await expect(page.getByRole("switch", { name: "Sugerencias por IA" })).toHaveAttribute("aria-checked", "true");
+    await expect(page.getByText(/Último cambio: /)).toBeVisible();
+  });
+
+  test("apagada, el vendedor ve el aviso y las sugerencias listas se siguen pudiendo revisar", async ({ page }) => {
+    // Una sugerencia lista (llegó antes de apagar).
+    await page.goto(`/admin/productos/${ids.sinFoto}`);
+    await page.getByRole("button", { name: "Sugerir con IA" }).click();
+    await expect(sugerencia(page)).toBeVisible();
+    await prenderIa(false);
+
+    await page.goto(`/admin/productos/${ids.falla}`);
+    await expect(page.getByText("Las sugerencias por IA están apagadas. Pedile al encargado que las prenda.")).toBeVisible();
+    const antes = (await admin.from("sugerencias").select("id").eq("producto_id", ids.falla)).data!.length;
+
+    await page.goto(`/admin/productos/${ids.sinFoto}`);
+    await sugerencia(page).getByRole("button", { name: "Aprobar" }).click();
+    await expect(page.getByRole("status").filter({ hasText: "Listo. Ya se ve en la carta." })).toBeVisible();
+    expect((await admin.from("sugerencias").select("id").eq("producto_id", ids.falla)).data!.length).toBe(antes);
+    await prenderIa(true);
+  });
 });

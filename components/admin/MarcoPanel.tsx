@@ -4,7 +4,7 @@ import { salir } from "@/app/admin/acciones-sesion";
 import type { SesionPanel } from "@/lib/admin/sesion";
 import { textos } from "@/lib/textos";
 
-const enlace = "inline-flex min-h-11 items-center px-3 text-destacado hover:underline";
+const enlace = "inline-flex min-h-11 min-w-11 items-center justify-center px-3 text-destacado hover:underline";
 
 export function BotonSalir() {
   return (
@@ -30,6 +30,7 @@ export function MarcoPanel({ sesion, children }: { sesion: SesionPanel; children
                 <Link href="/admin/importar" className={enlace}>{textos.admin.importar.menu}</Link>
                 <Link href="/admin/promociones" className={enlace}>{textos.admin.promociones.menu}</Link>
                 <Link href="/admin/marca" className={enlace}>{textos.admin.marca.menu}</Link>
+                <Link href="/admin/ia" className={enlace}>{textos.admin.ia.menu}</Link>
                 <Link href="/admin/personal" className={enlace}>{textos.admin.personal}</Link>
               </>
             )}

@@ -142,6 +142,19 @@ export const textos = {
       descripcionLarga: "La descripción es demasiado larga (hasta 1.000 caracteres).",
       eligiAlgo: "Elegí la descripción, la foto o las dos.",
       yaRevisada: "Esta sugerencia ya se revisó. Volvé a cargar la página.",
+      apagada: "Las sugerencias por IA están apagadas.",
+      apagadaVendedor: "Pedile al encargado que las prenda.",
+      prenderlas: "Prenderlas",
+    },
+    ia: {
+      menu: "IA",
+      titulo: "Sugerencias por IA",
+      ayuda:
+        "Mientras estén apagadas no se hace ningún pedido a la IA, así que no hay gasto. Las sugerencias que ya llegaron se pueden seguir revisando.",
+      interruptor: "Sugerencias por IA",
+      prendida: "Prendidas",
+      apagada: "Apagadas",
+      cambiada: (quien: string, cuando: string) => `Último cambio: ${quien}, ${cuando}.`,
     },
     promociones: {
       menu: "Promociones",

@@ -13,3 +13,4 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [ ] T9 — Bandeja `/admin/sugerencias` con `ProcesadorCola`: listas / en cola / fallidas, volver a pedir, contador en el menú; e2e (CA-3)
 - [ ] T10 — Costo del mes (`costo_sugerencias_mes`) en la bandeja; DB + e2e (CA-7)
 - [ ] T11 — Accesibilidad (axe) y 390 px de ficha y bandeja; revisión contra los CA (todos)
+- [x] T12 — Interruptor de la IA: `ajustes_ia` + `cambiar_ia`, chequeo en `resolverSugerencia` y en `pedirSugerencia`, página `/admin/ia` (solo encargado), aviso en la ficha; DB + e2e (CA-8)

@@ -4,6 +4,7 @@ import "server-only";
 // y la cola (T7).
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Json } from "@/lib/tipos-db";
+import { iaActiva } from "./ajustes";
 import { costoUsd } from "./costo";
 import { obtenerFoto, rutaFotoSugerida } from "./foto";
 import { obtenerSugeridor } from "./sugeridor";
@@ -27,8 +28,17 @@ function usoEnFila(uso: UsoIA | undefined) {
   return { tokens_entrada: uso.tokensEntrada, tokens_salida: uso.tokensSalida, busquedas: uso.busquedas, costo_usd: costoUsd(uso) };
 }
 
-/** Devuelve true si quedó "lista". Nunca lanza: los errores quedan en la fila. */
-export async function resolverSugerencia(cliente: Cliente, sugerenciaId: string, productoId: string): Promise<boolean> {
+export type Resultado = "lista" | "fallo" | "apagada";
+
+/**
+ * Cómo quedó la sugerencia. Nunca lanza: los errores quedan en la fila. Con la IA
+ * apagada (CA-8) no llama a la IA y la sugerencia vuelve a la cola, sin gastar.
+ */
+export async function resolverSugerencia(cliente: Cliente, sugerenciaId: string, productoId: string): Promise<Resultado> {
+  if (!(await iaActiva(cliente))) {
+    await cliente.from("sugerencias").update({ estado: "en_cola", tomada_en: null }).eq("id", sugerenciaId).eq("estado", "procesando");
+    return "apagada";
+  }
   try {
     const producto = await leerProductoParaSugerir(cliente, productoId);
     if (!producto) throw new Error("El producto ya no existe.");
@@ -62,7 +72,7 @@ export async function resolverSugerencia(cliente: Cliente, sugerenciaId: string,
       .eq("id", sugerenciaId)
       .eq("estado", "procesando");
     if (error) throw error;
-    return true;
+    return "lista";
   } catch (error) {
     const uso = (error as { uso?: UsoIA }).uso;
     await cliente
@@ -75,6 +85,6 @@ export async function resolverSugerencia(cliente: Cliente, sugerenciaId: string,
       })
       .eq("id", sugerenciaId)
       .eq("estado", "procesando");
-    return false;
+    return "fallo";
   }
 }

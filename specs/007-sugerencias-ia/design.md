@@ -59,6 +59,17 @@
   (`sugerir(producto)`); con `IA_FALSA=1` (tests y previews sin clave) se usa una
   implementación falsa determinista que devuelve texto y una foto local.
 
+## Interruptor de la IA (CA-8)
+- Tabla `ajustes_ia` de una sola fila (`id = 1`): `activa boolean default false`,
+  `cambiada_por`, `cambiada_en`. La lee el personal; la cambia solo el encargado
+  (función `cambiar_ia(activa)`).
+- El chequeo está en el servidor, en el único lugar que llama a la IA
+  (`resolverSugerencia`, que usan el pedido de a uno y la cola): si está apagada no llama
+  y la sugerencia vuelve a la cola sin gastar. La acción de a uno corta antes de crear
+  la fila. La prueba manual (`npm run ia:piloto`) no pasa por acá: la corre solo quien
+  tiene la clave.
+- Página `/admin/ia` (solo encargado, en el menú como **IA**) con el interruptor.
+
 ## Datos
 - Enum `estado_sugerencia`: `en_cola`, `procesando`, `lista`, `fallo`, `aprobada`,
   `descartada`.

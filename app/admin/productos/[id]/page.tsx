@@ -15,7 +15,7 @@ import { textos } from "@/lib/textos";
 // Spec 007: pedir una sugerencia a la IA puede tardar cerca de un minuto.
 export const maxDuration = 300;
 
-async function Ficha({ params }: { params: Promise<{ id: string }> }) {
+async function Ficha({ params, esEncargado }: { params: Promise<{ id: string }>; esEncargado: boolean }) {
   const { id } = await params;
   const cliente = await crearClienteServidor();
   const [producto, secciones, bodegas] = await Promise.all([
@@ -42,7 +42,7 @@ async function Ficha({ params }: { params: Promise<{ id: string }> }) {
       <h1 className="mt-2 font-titulos text-2xl text-titulo">{producto.nombre}</h1>
       <h2 className="mt-6 mb-3 text-lg font-semibold text-destacado">{textos.admin.sugerencias.titulo}</h2>
       <ZonaSugerencia>
-        <SugerenciaProducto productoId={producto.id} nombre={producto.nombre} descripcionActual={producto.descripcion} fotoActual={producto.foto_path} />
+        <SugerenciaProducto esEncargado={esEncargado} productoId={producto.id} nombre={producto.nombre} descripcionActual={producto.descripcion} fotoActual={producto.foto_path} />
       </ZonaSugerencia>
       <h2 className="mt-8 mb-3 text-lg font-semibold text-destacado">{textos.admin.datosProducto}</h2>
       <FormularioProducto
@@ -74,7 +74,7 @@ async function Ficha({ params }: { params: Promise<{ id: string }> }) {
 export default function PaginaProductoAdmin({ params }: PageProps<"/admin/productos/[id]">) {
   return (
     <Suspense fallback={null}>
-      <ConSesion>{() => <Ficha params={params} />}</ConSesion>
+      <ConSesion>{(sesion) => <Ficha params={params} esEncargado={sesion.rol === "encargado"} />}</ConSesion>
     </Suspense>
   );
 }

@@ -1,6 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
 import { BotonSugerir } from "@/components/admin/BotonSugerir";
 import { RevisarSugerencia } from "@/components/admin/RevisarSugerencia";
+import { iaActiva } from "@/lib/ia/ajustes";
 import type { Fuente } from "@/lib/ia/tipos";
 import { urlFoto } from "@/lib/fotos";
 import { crearClienteServidor } from "@/lib/supabase/server";
@@ -17,7 +19,9 @@ export async function SugerenciaProducto({
   nombre,
   descripcionActual,
   fotoActual,
+  esEncargado,
 }: {
+  esEncargado: boolean;
   productoId: string;
   nombre: string;
   descripcionActual: string | null;
@@ -32,6 +36,21 @@ export async function SugerenciaProducto({
     .maybeSingle();
 
   if (!s || s.estado !== "lista") {
+    // Spec 007, CA-8: con la IA apagada no se ofrece pedir.
+    if (!(await iaActiva(supabase))) {
+      return (
+        <p>
+          {t.apagada}{" "}
+          {esEncargado ? (
+            <Link href="/admin/ia" className="inline-flex min-h-11 items-center underline">
+              {t.prenderlas}
+            </Link>
+          ) : (
+            t.apagadaVendedor
+          )}
+        </p>
+      );
+    }
     return (
       <div className="flex flex-col gap-2">
         {s?.estado === "en_cola" && <p>{t.enCola}</p>}
