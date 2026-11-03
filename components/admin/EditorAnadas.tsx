@@ -3,15 +3,18 @@
 import { useActionState, useState, useTransition } from "react";
 import { borrarAnada, guardarAnada, type EstadoAnada } from "@/app/admin/acciones-anadas";
 import { InterruptorStock } from "@/components/admin/InterruptorStock";
+import { claseBoton } from "@/components/admin/ui/boton";
+import { Confirmar } from "@/components/admin/ui/Confirmar";
+import { MenuAcciones } from "@/components/admin/ui/MenuAcciones";
 import type { AnadaAdmin } from "@/lib/admin/productos";
 import { formatearPrecio } from "@/lib/formato";
 import { textos } from "@/lib/textos";
 
 const t = textos.admin;
 const control =
-  "min-h-11 w-full rounded-md border border-control bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-texto aria-[invalid=true]:border-destacado";
-const botonSecundario = "inline-flex min-h-11 items-center rounded-md border border-control px-4";
-const botonPrincipal = "inline-flex min-h-11 items-center rounded-md bg-boton px-5 font-semibold text-boton-texto disabled:opacity-60";
+  "min-h-11 w-full rounded-md border border-control bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-texto aria-[invalid=true]:border-error";
+const botonSecundario = claseBoton("secundario");
+const botonPrincipal = claseBoton("principal");
 const sinErrores: EstadoAnada = { errores: {}, error: null, guardados: 0 };
 const numero = new Intl.NumberFormat("es-AR", { maximumFractionDigits: 2 });
 
@@ -49,7 +52,7 @@ function Campo({
       </label>
       {children({ id, name: nombre, "aria-invalid": !!error, "aria-describedby": error ? idError : undefined, className: control })}
       {error && (
-        <span id={idError} className="text-sm text-destacado">
+        <span id={idError} className="text-sm text-error">
           {error}
         </span>
       )}
@@ -155,86 +158,60 @@ function FilaAnada({ productoId, esVino, anada }: { productoId: string; esVino: 
 
   if (modo === "editar") {
     return (
-      <tr>
-        <td colSpan={5} className="py-3">
-          <span className="sr-only">{anada.codigo_tango}</span>
-          <FormularioAnada productoId={productoId} esVino={esVino} anada={anada} alTerminar={() => setModo("ver")} />
-        </td>
-      </tr>
+      <li className="px-3 py-3 md:px-4">
+        <span className="sr-only">{anada.codigo_tango}</span>
+        <FormularioAnada productoId={productoId} esVino={esVino} anada={anada} alTerminar={() => setModo("ver")} />
+      </li>
     );
   }
 
   return (
-    <tr>
-      <td data-etiqueta={t.columnasAnadas.anada} className="py-1 pr-4">{etiqueta}</td>
-      <td data-etiqueta={t.columnasAnadas.codigo} className="py-1 pr-4 font-mono text-sm">{anada.codigo_tango}</td>
-      <td data-etiqueta={t.columnasAnadas.precio} className="py-1 pr-4 tabular-nums md:text-right">{formatearPrecio(anada.precio)}</td>
-      <td data-etiqueta={t.columnasAnadas.stock} className="py-1 pr-4">
-        <InterruptorStock key={`${anada.id}-${anada.en_stock}`} anadaId={anada.id} etiqueta={etiqueta} enStock={anada.en_stock} />
-      </td>
-      <td data-etiqueta={t.acciones} className="py-1">
-        {modo === "borrar" ? (
-          <span className="flex flex-wrap items-center gap-2">
-            <span>{t.confirmarBorrarAnada(etiqueta)}</span>
-            <button
-              type="button"
-              disabled={borrando}
-              className={botonPrincipal}
-              onClick={() =>
-                iniciar(async () => {
-                  const r = await borrarAnada(productoId, anada.id);
-                  setError(r.error);
-                  if (r.error) setModo("ver");
-                })
-              }
-            >
-              {t.siBorrar}
-            </button>
-            <button type="button" onClick={() => setModo("ver")} className={botonSecundario}>
-              {t.cancelar}
-            </button>
-          </span>
-        ) : (
-          <span className="flex gap-2">
-            <button type="button" onClick={() => setModo("editar")} className={botonSecundario}>
-              {t.editar}
-            </button>
-            <button type="button" onClick={() => setModo("borrar")} className={botonSecundario}>
-              {t.borrar}
-            </button>
-          </span>
-        )}
-        {error && (
-          <span role="alert" className="text-sm text-error">
-            {error}
-          </span>
-        )}
-      </td>
-    </tr>
+    <li className="flex flex-wrap items-center gap-x-4 gap-y-1 px-3 py-2 md:px-4">
+      <span className="min-w-0 flex-1">
+        <span className="block font-semibold">{etiqueta}</span>
+        <span className="block font-mono text-sm text-texto-suave">{anada.codigo_tango}</span>
+      </span>
+      <span className="tabular-nums">{formatearPrecio(anada.precio)}</span>
+      <InterruptorStock key={`${anada.id}-${anada.en_stock}`} anadaId={anada.id} etiqueta={etiqueta} enStock={anada.en_stock} />
+      <MenuAcciones
+        etiqueta={t.ui.masAcciones(etiqueta)}
+        acciones={[
+          { etiqueta: t.editar, alElegir: () => setModo("editar") },
+          { etiqueta: t.borrar, peligro: true, alElegir: () => setModo("borrar") },
+        ]}
+      />
+      {error && (
+        <span role="alert" className="basis-full text-sm text-error">
+          {error}
+        </span>
+      )}
+      <Confirmar
+        abierto={modo === "borrar"}
+        titulo={t.confirmarBorrarAnada(etiqueta)}
+        confirmar={t.siBorrar}
+        ocupado={borrando}
+        alCancelar={() => setModo("ver")}
+        alConfirmar={() =>
+          iniciar(async () => {
+            const r = await borrarAnada(productoId, anada.id);
+            setError(r.error);
+            if (r.error) setModo("ver");
+          })
+        }
+      />
+    </li>
   );
 }
 
 export function EditorAnadas({ productoId, esVino, anadas }: { productoId: string; esVino: boolean; anadas: AnadaAdmin[] }) {
-  const c = t.columnasAnadas;
   return (
     <>
-      <table aria-label={t.anadas} className="tabla-responsiva mt-2 w-full border-collapse text-left">
-        <thead className="border-b border-linea text-sm text-texto-suave">
-          <tr>
-            <th scope="col" className="py-2 pr-4">{c.anada}</th>
-            <th scope="col" className="py-2 pr-4">{c.codigo}</th>
-            <th scope="col" className="py-2 pr-4 text-right">{c.precio}</th>
-            <th scope="col" className="py-2 pr-4">{c.stock}</th>
-            <th scope="col" className="py-2">{t.acciones}</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-linea">
-          {anadas.map((anada) => (
-            <FilaAnada key={anada.id} productoId={productoId} esVino={esVino} anada={anada} />
-          ))}
-        </tbody>
-      </table>
-      <h3 className="mt-6 mb-2 font-semibold text-destacado">{esVino ? t.agregarAnada : t.agregarPresentacion}</h3>
+      <ul aria-label={t.anadas} className="divide-y divide-linea rounded-xl border border-linea bg-superficie empty:hidden">
+        {anadas.map((anada) => (
+          <FilaAnada key={anada.id} productoId={productoId} esVino={esVino} anada={anada} />
+        ))}
+      </ul>
+      <h3 className="mt-8 mb-3 font-semibold">{esVino ? t.agregarAnada : t.agregarPresentacion}</h3>
       <FormularioAnada productoId={productoId} esVino={esVino} anada={null} />
     </>
   );

@@ -25,7 +25,13 @@ test.beforeEach(async ({ context }) => {
   await entrarComo(context, "vendedor");
 });
 
-const fila = (page: Page, nombre: string) => page.getByRole("table", { name: "Secciones" }).getByRole("row").filter({ hasText: nombre });
+const fila = (page: Page, nombre: string) => page.getByRole("list", { name: "Secciones" }).getByRole("listitem").filter({ hasText: nombre });
+/** Spec 014, CA-7: Renombrar y Borrar están en el menú ⋯ de cada fila. */
+async function accion(page: Page, nombre: string, cual: "Renombrar" | "Borrar") {
+  await page.getByRole("button", { name: `Más acciones para ${nombre}` }).click();
+  await page.getByRole("menuitem", { name: cual }).click();
+}
+
 const enCarta = async (page: Page) => {
   await page.goto("/");
   const enlaces = page.getByRole("navigation", { name: "Secciones" }).getByRole("link");
@@ -55,10 +61,10 @@ test("CA-9: no crea una sección sin nombre", async ({ page }) => {
 
 test("CA-9: renombra una sección", async ({ page }) => {
   await page.goto("/admin/secciones");
-  const f = fila(page, `${prefijo} Orgánicos`);
-  await f.getByRole("button", { name: "Renombrar" }).click();
+  await page.waitForLoadState("networkidle");
+  await accion(page, `${prefijo} Orgánicos`, "Renombrar");
   // En modo edición el nombre está dentro de un campo (la fila ya no lo tiene como texto).
-  const tabla = page.getByRole("table", { name: "Secciones" });
+  const tabla = page.getByRole("list", { name: "Secciones" });
   await tabla.getByLabel("Nombre", { exact: true }).fill(`${prefijo} Naturales`);
   await tabla.getByRole("button", { name: "Guardar" }).click();
   await expect(fila(page, `${prefijo} Naturales`)).toHaveCount(1);
@@ -84,7 +90,8 @@ test("CA-9: una sección con productos no se borra; se ofrece ocultarla", async 
   await page.goto("/admin/secciones");
   const f = fila(page, `${prefijo} Con productos`);
   await expect(f).toContainText("1 producto");
-  await f.getByRole("button", { name: "Borrar" }).click();
+  await page.waitForLoadState("networkidle");
+  await accion(page, `${prefijo} Con productos`, "Borrar");
   await expect(f.getByRole("alert")).toHaveText("Tiene 1 producto: no se puede borrar. Podés ocultarla.");
   const { data } = await admin.from("secciones").select("id").eq("id", ids.conProductos);
   expect(data).toHaveLength(1);
@@ -92,9 +99,9 @@ test("CA-9: una sección con productos no se borra; se ofrece ocultarla", async 
 
 test("CA-9: borra una sección vacía con confirmación", async ({ page }) => {
   await page.goto("/admin/secciones");
-  const f = fila(page, `${prefijo} Naturales`);
-  await f.getByRole("button", { name: "Borrar" }).click();
-  await f.getByRole("button", { name: "Sí, borrar" }).click();
+  await page.waitForLoadState("networkidle");
+  await accion(page, `${prefijo} Naturales`, "Borrar");
+  await page.getByRole("dialog").getByRole("button", { name: "Sí, borrar" }).click();
   await expect(fila(page, `${prefijo} Naturales`)).toHaveCount(0);
   const { data } = await admin.from("secciones").select("id").eq("id", ids.nueva);
   expect(data).toEqual([]);
