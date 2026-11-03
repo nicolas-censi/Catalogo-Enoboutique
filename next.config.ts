@@ -15,9 +15,13 @@ const nextConfig: NextConfig = {
     // En entornos con proxy de red (como el de Claude Code en la nube) el optimizador de
     // imágenes no puede descargar las fotos: ahí se sirven tal cual. En Vercel, optimizadas.
     unoptimized: process.env.IMAGENES_SIN_OPTIMIZAR === "1",
-    // Fotos de productos servidas desde Supabase Storage.
+    // Fotos de productos servidas desde Supabase Storage (y las sugeridas por la IA, con
+    // dirección firmada, solo en el panel: spec 007).
     remotePatterns: supabase
-      ? [{ protocol: "https", hostname: supabase.hostname, pathname: "/storage/v1/object/public/**" }]
+      ? [
+          { protocol: "https", hostname: supabase.hostname, pathname: "/storage/v1/object/public/**" },
+          { protocol: "https", hostname: supabase.hostname, pathname: "/storage/v1/object/sign/**" },
+        ]
       : [],
   },
 };

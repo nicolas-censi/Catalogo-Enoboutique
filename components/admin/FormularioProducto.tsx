@@ -127,7 +127,7 @@ export function FormularioProducto({
       </label>
       <div className="flex flex-col gap-1 md:col-span-2">
         <label htmlFor="producto-descripcion">{t.descripcion}</label>
-        <textarea id="producto-descripcion" name="descripcion" defaultValue={v.descripcion} rows={4} className={`${control} py-2`} />
+        <textarea id="producto-descripcion" name="descripcion" defaultValue={v.descripcion} key={`descripcion-${v.descripcion}`} rows={4} className={`${control} py-2`} />
       </div>
       <div className="flex items-center gap-4 md:col-span-2">
         <button type="submit" disabled={enviando} className="min-h-11 rounded-md bg-boton px-6 font-semibold text-boton-texto disabled:opacity-60">

@@ -32,6 +32,27 @@ export type Database = {
         }
         Relationships: []
       }
+      ajustes_ia: {
+        Row: {
+          activa: boolean
+          cambiada_en: string | null
+          cambiada_por: string | null
+          id: number
+        }
+        Insert: {
+          activa?: boolean
+          cambiada_en?: string | null
+          cambiada_por?: string | null
+          id?: number
+        }
+        Update: {
+          activa?: boolean
+          cambiada_en?: string | null
+          cambiada_por?: string | null
+          id?: number
+        }
+        Relationships: []
+      }
       anadas: {
         Row: {
           actualizado_en: string
@@ -348,6 +369,103 @@ export type Database = {
           },
         ]
       }
+      sugerencias: {
+        Row: {
+          busquedas: number | null
+          costo_usd: number | null
+          creado_en: string
+          descripcion: string | null
+          error: string | null
+          estado: Database["public"]["Enums"]["estado_sugerencia"]
+          foto_path: string | null
+          foto_sitio: string | null
+          foto_url_origen: string | null
+          fuentes: Json
+          id: string
+          intentos: number
+          motivo_sin_descripcion: string | null
+          motivo_sin_foto: string | null
+          pedida_por: string | null
+          procesada_en: string | null
+          producto_id: string
+          revisada_en: string | null
+          revisada_por: string | null
+          tokens_entrada: number | null
+          tokens_salida: number | null
+          tomada_en: string | null
+        }
+        Insert: {
+          busquedas?: number | null
+          costo_usd?: number | null
+          creado_en?: string
+          descripcion?: string | null
+          error?: string | null
+          estado?: Database["public"]["Enums"]["estado_sugerencia"]
+          foto_path?: string | null
+          foto_sitio?: string | null
+          foto_url_origen?: string | null
+          fuentes?: Json
+          id?: string
+          intentos?: number
+          motivo_sin_descripcion?: string | null
+          motivo_sin_foto?: string | null
+          pedida_por?: string | null
+          procesada_en?: string | null
+          producto_id: string
+          revisada_en?: string | null
+          revisada_por?: string | null
+          tokens_entrada?: number | null
+          tokens_salida?: number | null
+          tomada_en?: string | null
+        }
+        Update: {
+          busquedas?: number | null
+          costo_usd?: number | null
+          creado_en?: string
+          descripcion?: string | null
+          error?: string | null
+          estado?: Database["public"]["Enums"]["estado_sugerencia"]
+          foto_path?: string | null
+          foto_sitio?: string | null
+          foto_url_origen?: string | null
+          fuentes?: Json
+          id?: string
+          intentos?: number
+          motivo_sin_descripcion?: string | null
+          motivo_sin_foto?: string | null
+          pedida_por?: string | null
+          procesada_en?: string | null
+          producto_id?: string
+          revisada_en?: string | null
+          revisada_por?: string | null
+          tokens_entrada?: number | null
+          tokens_salida?: number | null
+          tomada_en?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sugerencias_producto_id_fkey"
+            columns: ["producto_id"]
+            isOneToOne: false
+            referencedRelation: "carta_publica"
+            referencedColumns: ["producto_id"]
+          },
+          {
+            foreignKeyName: "sugerencias_producto_id_fkey"
+            columns: ["producto_id"]
+            isOneToOne: false
+            referencedRelation: "productos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sugerencias_producto_id_fkey"
+            columns: ["producto_id"]
+            isOneToOne: false
+            referencedRelation: "productos_admin"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       carta_publica: {
@@ -479,6 +597,7 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      cambiar_ia: { Args: { activa: boolean }; Returns: undefined }
       crear_promocion: { Args: { imagen: string }; Returns: string }
       crear_subseccion: {
         Args: { nombre: string; padre: string }
@@ -496,8 +615,59 @@ export type Database = {
       }
       ordenar_promociones: { Args: { ids: string[] }; Returns: undefined }
       ordenar_secciones: { Args: { ids: string[] }; Returns: undefined }
+      resumen_ia_mes: {
+        Args: never
+        Returns: {
+          busquedas: number
+          costo_usd: number
+          promedio_busquedas: number
+          promedio_entrada: number
+          promedio_salida: number
+          sugerencias: number
+        }[]
+      }
+      tomar_cola: {
+        Args: { cantidad: number; tope_diario: number }
+        Returns: {
+          busquedas: number | null
+          costo_usd: number | null
+          creado_en: string
+          descripcion: string | null
+          error: string | null
+          estado: Database["public"]["Enums"]["estado_sugerencia"]
+          foto_path: string | null
+          foto_sitio: string | null
+          foto_url_origen: string | null
+          fuentes: Json
+          id: string
+          intentos: number
+          motivo_sin_descripcion: string | null
+          motivo_sin_foto: string | null
+          pedida_por: string | null
+          procesada_en: string | null
+          producto_id: string
+          revisada_en: string | null
+          revisada_por: string | null
+          tokens_entrada: number | null
+          tokens_salida: number | null
+          tomada_en: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "sugerencias"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
     }
     Enums: {
+      estado_sugerencia:
+        | "en_cola"
+        | "procesando"
+        | "lista"
+        | "fallo"
+        | "aprobada"
+        | "descartada"
       tipo_anada: "con_anio" | "sin_especificar" | "sin_anada"
       tipo_producto: "vino" | "destilado" | "aceite" | "almacen"
     }
@@ -627,6 +797,14 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      estado_sugerencia: [
+        "en_cola",
+        "procesando",
+        "lista",
+        "fallo",
+        "aprobada",
+        "descartada",
+      ],
       tipo_anada: ["con_anio", "sin_especificar", "sin_anada"],
       tipo_producto: ["vino", "destilado", "aceite", "almacen"],
     },

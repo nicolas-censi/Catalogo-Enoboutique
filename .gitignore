@@ -51,3 +51,6 @@ next-env.d.ts
 
 # lector de códigos (se copia desde node_modules al levantar o armar la app)
 /public/zxing/
+
+# Spec 007: informes del piloto de IA
+/piloto-ia/

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { moverProductos } from "@/app/admin/acciones-mover";
+import { PedirSugerencias } from "@/components/admin/PedirSugerencias";
 import type { Filtros, ProductoAdmin, SeccionConSubsecciones } from "@/lib/admin/productos";
 import { nombreConSeccion } from "@/lib/admin/secciones";
 import { textos } from "@/lib/textos";
@@ -41,7 +42,9 @@ export function TablaProductos({
   total,
   filtros,
   secciones,
+  iaActiva = false,
 }: {
+  iaActiva?: boolean;
   productos: ProductoAdmin[];
   total: number;
   filtros: Filtros;
@@ -130,6 +133,16 @@ export function TablaProductos({
         >
           {moviendo ? m.moviendo : m.mover}
         </button>
+        {iaActiva && (
+          <PedirSugerencias
+            seleccion={todoElFiltro ? { filtros } : { ids: [...seleccion] }}
+            cantidad={cantidad}
+            alTerminar={() => {
+              setSeleccion(new Set());
+              setTodoElFiltro(false);
+            }}
+          />
+        )}
         {mensaje.aviso && (
           <p role="status" className="basis-full">
             {mensaje.aviso}
