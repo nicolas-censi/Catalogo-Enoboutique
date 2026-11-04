@@ -17,10 +17,13 @@
 `scripts/copiar-a-produccion.mjs` (una sola vez, con confirmación):
 1. Lee de desarrollo y escribe en producción por la API de administración (SQL), en
    orden de dependencias: `secciones` (primero las de primer nivel), `bodegas`,
-   `abreviaturas`, `productos`, `anadas`, `codigos_barras`, `importaciones`.
+   `abreviaturas`, `productos`, `anadas`, `codigos_barras`, `importaciones`, `marca`,
+   `promociones`, `sugerencias` (solo `en_cola` y `lista`), sin lo creado por los tests
+   (nombres o usuarios con el prefijo `test-`). `ajustes_ia` queda con la IA apagada.
 2. Usuarios: copia de `auth.users` e `auth.identities` las cuentas del personal (con el
    hash de la contraseña, así entran igual) y después `personal`.
-3. Fotos: copia los archivos del bucket `fotos` (mismas rutas).
+3. Archivos: copia los buckets `fotos`, `marca`, `promociones` y `sugerencias` (mismas
+   rutas).
 4. Compara cantidades por tabla y lo informa.
 Luego `npm run db:seed -- --solo-ejemplo` deja desarrollo con los datos de ejemplo
 (borra lo que no es de ejemplo), recién cuando producción esté verificada.
@@ -38,9 +41,11 @@ Luego `npm run db:seed -- --solo-ejemplo` deja desarrollo con los datos de ejemp
   panel se oculta al imprimir. Colores de marca (tokens): fondo negro, logo y QR dorados
   sobre fondo claro para que lo lea cualquier celular (el QR necesita contraste: módulos
   oscuros sobre fondo claro).
-- URL de la carta: `NEXT_PUBLIC_URL_CARTA` (por defecto `https://enoboutique.lehonor.com`).
-- `vercel.json`: `crons: [{ path: "/api/salud", schedule: "0 12 * * *" }]` (una vez por
-  día; el plan Hobby de Vercel lo permite).
+- URL de la carta: `NEXT_PUBLIC_URL_CARTA` (por defecto `https://cava.lehonor.com`).
+- `vercel.json`: dos crons diarios (el plan Hobby permite hasta dos, una vez por día):
+  `/api/salud` (CA-5) y `/api/sugerencias/procesar` (CA-6, con `CRON_SECRET`, que Vercel
+  manda en `Authorization`).
+- IA por entorno: `GEMINI_API_KEY` solo en Production; `IA_FALSA=1` en Preview.
 - `scripts/respaldo.mjs` (`npm run db:respaldo`): descarga cada tabla de producción a
   `respaldos/AAAA-MM-DD/<tabla>.json` (carpeta ignorada por git).
 
