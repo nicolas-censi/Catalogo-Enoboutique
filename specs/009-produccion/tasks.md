@@ -2,7 +2,7 @@
 
 Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un criterio (CA-n).
 
-- [ ] T1 — Scripts `db:*` con `--produccion` (variables separadas y confirmación);
+- [x] T1 — Scripts `db:*` con `--produccion` (variables separadas y confirmación);
   `.env.example` y README. (CA-1)
 - [ ] T2 — Crear el proyecto de producción y aplicar las migraciones; tipos iguales a
   desarrollo. (CA-1)

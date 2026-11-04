@@ -3,11 +3,16 @@
 // directa a Postgres. Registra cada migración en supabase_migrations.schema_migrations,
 // igual que `supabase db push`, así que las dos formas se pueden combinar.
 //
-// Uso: npm run db:migrar   (requiere SUPABASE_ACCESS_TOKEN y SUPABASE_PROJECT_REF)
+// Uso: npm run db:migrar                  (desarrollo)
+//      npm run db:migrar -- --produccion   (producción; pide confirmación, spec 009)
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { ejecutarSql as sql } from "./api-sql.mjs";
+import { ejecutarSql as sql, proyecto } from "./api-sql.mjs";
+import { confirmarProduccion } from "./proyecto.mjs";
 import { migracionesPendientes } from "./migraciones.mjs";
+
+if (proyecto.produccion) await confirmarProduccion("aplicar migraciones");
+console.log(`Proyecto: ${proyecto.produccion ? "PRODUCCIÓN" : "desarrollo"} (${proyecto.ref})`);
 
 /** @param {string} texto */
 const literal = (texto) => `'${texto.replaceAll("'", "''")}'`;

@@ -1,6 +1,6 @@
 # 009 – Producción, dominio y QR
 
-**Estado:** Borrador
+**Estado:** Aprobada (2026-11-04)
 
 ## Objetivo
 Separar la carta que usan los clientes de la base de pruebas, publicarla en

@@ -1,20 +1,22 @@
 // Ejecuta SQL en el proyecto de Supabase por la API de administración (HTTPS).
 // Lo usan los scripts de migraciones y seed, y los tests que necesitan SQL directo.
 import nextEnv from "@next/env";
+import { elegirProyecto } from "./proyecto.mjs";
 
 nextEnv.loadEnvConfig(process.cwd());
+
+/** Proyecto al que apunta este script (desarrollo, o producción con --produccion). */
+export const proyecto = elegirProyecto({ argv: process.argv, env: process.env });
 
 /**
  * @param {string} query
  * @returns {Promise<any[]>}
  */
 export async function ejecutarSql(query) {
-  const { SUPABASE_ACCESS_TOKEN, SUPABASE_PROJECT_REF } = process.env;
-  if (!SUPABASE_ACCESS_TOKEN || !SUPABASE_PROJECT_REF) {
-    throw new Error("Faltan SUPABASE_ACCESS_TOKEN o SUPABASE_PROJECT_REF (ver .env.example).");
-  }
+  const { SUPABASE_ACCESS_TOKEN } = process.env;
+  if (!SUPABASE_ACCESS_TOKEN) throw new Error("Falta SUPABASE_ACCESS_TOKEN (ver .env.example).");
   const respuesta = await fetch(
-    `https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_REF}/database/query`,
+    `https://api.supabase.com/v1/projects/${proyecto.ref}/database/query`,
     {
       method: "POST",
       headers: {
