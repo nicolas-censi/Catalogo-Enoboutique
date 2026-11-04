@@ -76,7 +76,7 @@ publicada y los tests comparten la misma base: cada corrida de tests toca datos 
 - Estadísticas de visitas.
 
 ## Lo que tiene que hacer el encargado (no lo puedo hacer desde acá)
-- **DNS:** crear en `lehonor.com` un registro `CNAME` `enoboutique` →
+- **DNS:** crear en `lehonor.com` un registro `CNAME` con nombre `cava` →
   `cname.vercel-dns.com` con nombre `cava` (o el valor que muestre Vercel).
 - **Vercel:** agregar el dominio al proyecto y cargar las variables de producción (las
   claves del proyecto nuevo, copiadas desde el panel de Supabase; nunca por el chat).
