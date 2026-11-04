@@ -5,6 +5,7 @@ import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Json } from "@/lib/tipos-db";
 import { iaActiva } from "./ajustes";
+import { esProductoDePrueba } from "./falso";
 import { costoUsd } from "./costo";
 import { obtenerFoto, rutaFotoSugerida } from "./foto";
 import { obtenerSugeridor } from "./sugeridor";
@@ -33,9 +34,16 @@ function usoEnFila(uso: UsoIA | undefined) {
  * apagada (CA-8) no llama a la IA y la sugerencia vuelve a la cola, sin gastar.
  */
 export async function resolverSugerencia(cliente: Cliente, sugerenciaId: string, productoId: string): Promise<Resultado> {
-  if (!(await iaActiva(cliente))) {
+  const devolverALaCola = async () => {
     await cliente.from("sugerencias").update({ estado: "en_cola", tomada_en: null }).eq("id", sugerenciaId).eq("estado", "procesando");
-    return "apagada";
+    return "apagada" as const;
+  };
+  if (!(await iaActiva(cliente))) return devolverALaCola();
+  // La base de desarrollo es compartida: la IA de prueba solo procesa productos de los
+  // tests. Los pedidos reales quedan en la cola para la IA de verdad.
+  if (process.env.IA_FALSA === "1") {
+    const { data } = await cliente.from("productos").select("nombre").eq("id", productoId).maybeSingle();
+    if (!esProductoDePrueba(data?.nombre ?? "")) return devolverALaCola();
   }
   try {
     const producto = await leerProductoParaSugerir(cliente, productoId);
