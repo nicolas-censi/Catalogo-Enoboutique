@@ -54,3 +54,6 @@ next-env.d.ts
 
 # Spec 007: informes del piloto de IA
 /piloto-ia/
+
+# Spec 009: copias de seguridad (datos reales: nunca al repositorio)
+/respaldos/
