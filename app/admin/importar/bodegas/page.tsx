@@ -5,6 +5,7 @@ import { EditorBodegasTango } from "@/components/admin/EditorBodegasTango";
 import { listarBodegasTango } from "@/lib/admin/importacion";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
+import { Cargando } from "@/components/admin/ui/Cargando";
 
 const t = textos.admin.importar;
 
@@ -14,7 +15,7 @@ async function Bodegas() {
 
 export default function PaginaBodegasTango() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Cargando />}>
       <ConSesion soloEncargado>
         {() => (
           <>

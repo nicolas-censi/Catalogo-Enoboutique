@@ -4,6 +4,7 @@ import { EditorSecciones } from "@/components/admin/EditorSecciones";
 import { listarSeccionesPanel } from "@/lib/admin/secciones";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
+import { Cargando } from "@/components/admin/ui/Cargando";
 
 async function Secciones() {
   return <EditorSecciones secciones={await listarSeccionesPanel(await crearClienteServidor(), null)} />;
@@ -11,7 +12,7 @@ async function Secciones() {
 
 export default function PaginaSecciones() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Cargando />}>
       <ConSesion>
         {() => (
           <>

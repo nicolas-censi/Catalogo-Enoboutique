@@ -3,13 +3,14 @@ import { Suspense } from "react";
 import { ConSesion } from "@/components/admin/ConSesion";
 import { CuentaPanel } from "@/components/admin/MarcoPanel";
 import { textos } from "@/lib/textos";
+import { Cargando } from "@/components/admin/ui/Cargando";
 
 const t = textos.admin.ajustes;
 
 /** Spec 014, CA-1: lo que se usa de vez en cuando (encargado) y la cuenta (todos). */
 export default function PaginaAjustes() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Cargando />}>
       <ConSesion>
         {(sesion) => {
           const esEncargado = sesion.rol === "encargado";

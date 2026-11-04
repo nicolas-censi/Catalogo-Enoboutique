@@ -3,6 +3,7 @@ import { ConSesion } from "@/components/admin/ConSesion";
 import { EditorPromociones } from "@/components/admin/EditorPromociones";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
+import { Cargando } from "@/components/admin/ui/Cargando";
 
 const t = textos.admin.promociones;
 
@@ -15,7 +16,7 @@ async function Promociones() {
 
 export default function PaginaPromociones() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Cargando />}>
       <ConSesion soloEncargado>
         {() => (
           <>

@@ -10,9 +10,10 @@
   "No tenés acceso" se muestran sin menú.
 - Las páginas dejan de usar `MarcoPanel`; `ConSesion` solo verifica el acceso (y
   `soloEncargado`) y devuelve el contenido.
-- `app/admin/loading.tsx` (y el `fallback` de los Suspense de las páginas):
-  `<Cargando />`, un indicador circular animado con "Cargando…" (`role="status"`), sin
-  animación con `prefers-reduced-motion`.
+- El `fallback` de los Suspense de las páginas (y del layout) es `<Cargando />`, un
+  indicador circular animado con "Cargando…" (`role="status"`), sin animación con
+  `prefers-reduced-motion`. Se probó además un `app/admin/loading.tsx` y se descartó:
+  retrasaba el contenido (llegaba en un segundo envío) sin mejorar lo que se ve.
 - `NavPanel` marca la opción tocada al instante (`useLinkStatus` / estado optimista).
 
 ## IA en segundo plano (CA-3)
@@ -28,8 +29,11 @@
 - `GET /api/sugerencias/estado` (sesión del personal): cantidad de listas, en cola y
   procesando, y las sugerencias listas o fallidas desde un momento dado
   (`?desde=<iso>`) con el nombre del producto.
-- `AvisosSugerencias` (cliente, en el layout): consulta cada 10 s mientras haya en cola
-  o procesando (y cada 60 s si no), actualiza el contador del menú y muestra los avisos
+- `ActividadIA` (cliente, en el layout): consulta cada 5 s mientras haya en cola o
+  procesando (y cada 60 s si no; enseguida al pedir una), toma el corte de tiempo al
+  empezar la consulta y descarta avisos repetidos; si una tanda de la cola no avanzó
+  (tope del día o pedidos que no se pueden tomar) espera al próximo turno (nunca en
+  bucle); actualiza el contador del menú y muestra los avisos
   (`role="status"`, se cierran solos a los 10 s o con **Cerrar**; enlace **Revisar** a la
   ficha con `?revisar=1` o a **Para revisar** si son varias). `router.refresh()` cuando
   llega algo, para que la pantalla actual se actualice.

@@ -1,6 +1,6 @@
 # 015 – Panel más ágil
 
-**Estado:** Borrador
+**Estado:** Aprobada (2026-11-04)
 
 ## Objetivo
 Que moverse por el panel sea rápido y sin saltos, y que pedir una sugerencia a la IA no

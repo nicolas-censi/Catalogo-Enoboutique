@@ -3,12 +3,13 @@ import { Suspense } from "react";
 import { ConSesion } from "@/components/admin/ConSesion";
 import { ImportarTango } from "@/components/admin/ImportarTango";
 import { textos } from "@/lib/textos";
+import { Cargando } from "@/components/admin/ui/Cargando";
 
 const t = textos.admin.importar;
 
 export default function PaginaImportar() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Cargando />}>
       <ConSesion soloEncargado>
         {() => (
           <>

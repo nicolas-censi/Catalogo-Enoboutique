@@ -1,5 +1,6 @@
 // Spec 007: IA de prueba (IA_FALSA=1). Determinista y sin gastar: para los tests y las
-// previews sin clave. "[sin foto]" en el nombre simula que no hay foto; "[falla]", un error.
+// previews sin clave. "[sin foto]" en el nombre simula que no hay foto; "[falla]", un error;
+// "[lenta]", que tarda unos segundos.
 import type { ProductoParaSugerir, SugerenciaIA, Sugeridor } from "./tipos";
 
 /** Dirección que la descarga de fotos reconoce en modo de prueba (T4). */
@@ -8,6 +9,8 @@ export const FOTO_FALSA = "https://ia-falsa.invalid/foto.png";
 export class SugeridorFalso implements Sugeridor {
   async sugerir(producto: ProductoParaSugerir): Promise<SugerenciaIA> {
     if (producto.nombre.includes("[falla]")) throw new Error("Falla simulada de la IA.");
+    // "[lenta]": tarda como la IA de verdad (spec 015: se busca en segundo plano).
+    if (producto.nombre.includes("[lenta]")) await new Promise((listo) => setTimeout(listo, 6_000));
     const sinFoto = producto.nombre.includes("[sin foto]");
     const de = producto.bodega ? ` de ${producto.bodega}` : "";
     return {

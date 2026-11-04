@@ -1,8 +1,9 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { pedirSugerencia } from "@/app/admin/acciones-sugerencias";
+import { EVENTO_PEDIDA } from "@/components/admin/ActividadIA";
 import { useAvisoSugerencia } from "@/components/admin/ZonaSugerencia";
 import { textos } from "@/lib/textos";
 
@@ -14,7 +15,6 @@ export function BotonSugerir({ productoId }: { productoId: string }) {
   const [buscando, iniciar] = useTransition();
   const avisar = useAvisoSugerencia();
   const router = useRouter();
-  const ruta = usePathname();
   return (
     <div className="flex flex-col items-start gap-2">
       <button
@@ -26,8 +26,10 @@ export function BotonSugerir({ productoId }: { productoId: string }) {
             avisar(null);
             const r = await pedirSugerencia(productoId);
             setError(r.error);
-            // Recién pedida: se muestra desplegada para revisarla (spec 014, CA-6).
-            if (!r.error) router.replace(`${ruta}?revisar=1`, { scroll: false });
+            if (!r.error) {
+              window.dispatchEvent(new Event(EVENTO_PEDIDA));
+              router.refresh();
+            }
           })
         }
         className="inline-flex min-h-11 items-center gap-2 rounded-md border border-control px-4 disabled:opacity-60"

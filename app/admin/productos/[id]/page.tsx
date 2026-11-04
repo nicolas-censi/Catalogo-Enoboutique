@@ -16,6 +16,7 @@ import { nombreConSeccion } from "@/lib/admin/secciones";
 import { urlFoto } from "@/lib/fotos";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
+import { Cargando } from "@/components/admin/ui/Cargando";
 
 // Spec 007: pedir una sugerencia a la IA puede tardar cerca de un minuto.
 export const maxDuration = 300;
@@ -117,7 +118,7 @@ async function Ficha({ params, searchParams, esEncargado }: { params: Promise<{ 
 
 export default function PaginaProductoAdmin({ params, searchParams }: PageProps<"/admin/productos/[id]">) {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Cargando />}>
       <ConSesion>{(sesion) => <Ficha params={params} searchParams={searchParams} esEncargado={sesion.rol === "encargado"} />}</ConSesion>
     </Suspense>
   );

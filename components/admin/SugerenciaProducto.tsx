@@ -58,7 +58,7 @@ export async function SugerenciaProducto({
     return (
       <div className="flex flex-col gap-2">
         {s?.estado === "en_cola" && <p>{t.enCola}</p>}
-        {s?.estado === "procesando" ? <p>{t.enProceso}</p> : <BotonSugerir productoId={productoId} />}
+        {s?.estado === "procesando" ? <p role="status">{t.enProceso}</p> : <BotonSugerir productoId={productoId} />}
       </div>
     );
   }

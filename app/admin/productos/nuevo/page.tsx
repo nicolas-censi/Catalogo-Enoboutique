@@ -5,6 +5,7 @@ import { FormularioProducto } from "@/components/admin/FormularioProducto";
 import { listarBodegas, listarSeccionesAdmin } from "@/lib/admin/productos";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
+import { Cargando } from "@/components/admin/ui/Cargando";
 
 async function Alta() {
   const cliente = await crearClienteServidor();
@@ -27,7 +28,7 @@ async function Alta() {
 
 export default function PaginaNuevoProducto() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Cargando />}>
       <ConSesion>{() => <Alta />}</ConSesion>
     </Suspense>
   );
