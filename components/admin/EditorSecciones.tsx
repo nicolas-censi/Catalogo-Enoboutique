@@ -11,14 +11,16 @@ import {
   type EstadoSeccion,
 } from "@/app/admin/acciones-secciones";
 import { ManijaOrdenable, Ordenable, useElementoOrdenable } from "@/components/admin/Ordenable";
+import { claseBoton } from "@/components/admin/ui/boton";
+import { Confirmar } from "@/components/admin/ui/Confirmar";
+import { MenuAcciones } from "@/components/admin/ui/MenuAcciones";
 import type { SeccionAdmin } from "@/lib/admin/secciones";
 import { textos } from "@/lib/textos";
 
 const t = textos.admin;
 const control =
-  "min-h-11 rounded-md border border-dorado/60 bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-dorado aria-[invalid=true]:border-destacado";
-const secundario = "inline-flex min-h-11 items-center rounded-md border border-dorado/60 px-4";
-const principal = "inline-flex min-h-11 items-center rounded-md bg-boton px-5 font-semibold text-boton-texto disabled:opacity-60";
+  "min-h-11 rounded-md border border-control bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-texto aria-[invalid=true]:border-error";
+const principal = claseBoton("principal");
 
 
 function InterruptorVisible({ seccion }: { seccion: SeccionAdmin }) {
@@ -43,13 +45,13 @@ function InterruptorVisible({ seccion }: { seccion: SeccionAdmin }) {
           })
         }
         className={`inline-flex min-h-11 min-w-28 items-center justify-center rounded-full border px-4 font-semibold ${
-          visible ? "border-dorado bg-dorado text-boton-texto" : "border-dorado/60 text-texto-suave"
+          visible ? "border-texto bg-texto text-boton-texto" : "border-control text-texto-suave"
         }`}
       >
         {visible ? t.visible : t.oculta}
       </button>
       {error && (
-        <span role="alert" className="text-sm text-destacado">
+        <span role="alert" className="text-sm text-error">
           {error}
         </span>
       )}
@@ -73,87 +75,73 @@ function FilaSeccion({ seccion }: { seccion: SeccionAdmin }) {
   }
 
   return (
-    <tr ref={ref} style={estilo} className={arrastrando ? "bg-superficie shadow-lg" : undefined}>
-      <td data-etiqueta={t.columnasSecciones.orden} className="py-1 pr-4">
-        <ManijaOrdenable manija={manija} />
-      </td>
-      <td data-etiqueta={t.columnasSecciones.seccion} className="py-1 pr-4">
-        {modo === "renombrar" ? (
-          <form
-            className="flex flex-wrap gap-2"
-            onSubmit={(e) => {
-              e.preventDefault();
-              iniciar(async () => {
-                const r = await renombrarSeccion(seccion.id, nombre);
-                setError(r.error);
-                if (!r.error) setModo("ver");
-              });
-            }}
-          >
-            <label htmlFor={`renombrar-${seccion.id}`} className="sr-only">
-              {t.nombre}
-            </label>
-            <input id={`renombrar-${seccion.id}`} value={nombre} onChange={(e) => setNombre(e.target.value)} className={control} autoFocus />
-            <button type="submit" disabled={ocupado} className={principal}>
-              {t.guardar}
-            </button>
-            <button type="button" onClick={() => setModo("ver")} className={secundario}>
-              {t.cancelar}
-            </button>
-          </form>
-        ) : (
-          <Link href={`/admin/secciones/${seccion.id}`} className="inline-flex min-h-11 min-w-11 items-center text-titulo underline-offset-4 hover:underline">
+    <li ref={ref} style={estilo} className={`flex flex-wrap items-center gap-x-3 gap-y-1 px-2 py-2 md:px-3 ${arrastrando ? "bg-fondo shadow-lg" : ""}`}>
+      <ManijaOrdenable manija={manija} />
+      {modo === "renombrar" ? (
+        <form
+          className="flex min-w-0 flex-1 flex-wrap gap-2"
+          onSubmit={(e) => {
+            e.preventDefault();
+            iniciar(async () => {
+              const r = await renombrarSeccion(seccion.id, nombre);
+              setError(r.error);
+              if (!r.error) setModo("ver");
+            });
+          }}
+        >
+          <label htmlFor={`renombrar-${seccion.id}`} className="sr-only">
+            {t.nombre}
+          </label>
+          <input id={`renombrar-${seccion.id}`} value={nombre} onChange={(e) => setNombre(e.target.value)} className={`${control} min-w-0 flex-1`} autoFocus />
+          <button type="submit" disabled={ocupado} className={claseBoton("principal")}>
+            {t.guardar}
+          </button>
+          <button type="button" onClick={() => setModo("ver")} className={claseBoton("secundario")}>
+            {t.cancelar}
+          </button>
+        </form>
+      ) : (
+        <span className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3">
+          <Link href={`/admin/secciones/${seccion.id}`} className="inline-flex min-h-11 min-w-11 items-center truncate font-semibold underline-offset-4 hover:underline">
             {seccion.nombre}
           </Link>
-        )}
-      </td>
-      <td data-etiqueta={t.columnasSecciones.productos} className="py-1 pr-4 text-texto-suave">
-        {seccion.subsecciones > 0 ? t.cantidadSubsecciones(seccion.subsecciones) : t.cantidadProductos(seccion.productos)}
-      </td>
-      <td data-etiqueta={t.columnasSecciones.visible} className="py-1 pr-4">
-        <InterruptorVisible seccion={seccion} />
-      </td>
-      <td data-etiqueta={t.acciones} className="py-1">
-        {modo === "borrar" ? (
-          <span className="flex flex-wrap items-center gap-2">
-            <span>{t.confirmarBorrarSeccion(seccion.nombre)}</span>
-            <button
-              type="button"
-              disabled={ocupado}
-              className={principal}
-              onClick={() =>
-                iniciar(async () => {
-                  const r = await borrarSeccion(seccion.id);
-                  setError(r.error);
-                  if (r.error) setModo("ver");
-                })
-              }
-            >
-              {t.siBorrar}
-            </button>
-            <button type="button" onClick={() => setModo("ver")} className={secundario}>
-              {t.cancelar}
-            </button>
+          <span className="text-sm text-texto-suave">
+            {seccion.subsecciones > 0 ? t.cantidadSubsecciones(seccion.subsecciones) : t.cantidadProductos(seccion.productos)}
           </span>
-        ) : (
-          modo === "ver" && (
-            <span className="flex gap-2">
-              <button type="button" onClick={() => setModo("renombrar")} className={secundario}>
-                {t.renombrar}
-              </button>
-              <button type="button" onClick={pedirBorrar} className={secundario}>
-                {t.borrar}
-              </button>
-            </span>
-          )
-        )}
-        {error && (
-          <span role="alert" className="mt-1 block text-sm text-destacado">
-            {error}
-          </span>
-        )}
-      </td>
-    </tr>
+        </span>
+      )}
+      {modo !== "renombrar" && (
+        <>
+          <InterruptorVisible seccion={seccion} />
+          <MenuAcciones
+            etiqueta={t.ui.masAcciones(seccion.nombre)}
+            acciones={[
+              { etiqueta: t.renombrar, alElegir: () => setModo("renombrar") },
+              { etiqueta: t.borrar, peligro: true, alElegir: pedirBorrar },
+            ]}
+          />
+        </>
+      )}
+      {error && (
+        <span role="alert" className="basis-full pl-14 text-sm text-error">
+          {error}
+        </span>
+      )}
+      <Confirmar
+        abierto={modo === "borrar"}
+        titulo={t.confirmarBorrarSeccion(seccion.nombre)}
+        confirmar={t.siBorrar}
+        ocupado={ocupado}
+        alCancelar={() => setModo("ver")}
+        alConfirmar={() =>
+          iniciar(async () => {
+            const r = await borrarSeccion(seccion.id);
+            setError(r.error);
+            if (r.error) setModo("ver");
+          })
+        }
+      />
+    </li>
   );
 }
 
@@ -165,29 +153,17 @@ export function EditorSecciones({ secciones, padre }: { secciones: SeccionAdmin[
     aviso: null,
     guardados: 0,
   });
-  const c = t.columnasSecciones;
   return (
     <>
       <p className="mb-4 max-w-prose text-texto-suave">{padre ? t.ordenSubsecciones : t.ordenSecciones}</p>
       {padre && secciones.length === 0 && <p className="mb-4">{t.sinSubsecciones}</p>}
       <Ordenable items={secciones} onCambio={ordenarSecciones}>
         {(ordenadas) => (
-          <table aria-label={padre ? t.subsecciones : t.secciones} className="tabla-responsiva w-full border-collapse text-left">
-            <thead className="border-b border-dorado/40 text-sm text-texto-suave">
-              <tr>
-                <th scope="col" className="py-2 pr-4">{c.orden}</th>
-                <th scope="col" className="py-2 pr-4">{c.seccion}</th>
-                <th scope="col" className="py-2 pr-4">{c.productos}</th>
-                <th scope="col" className="py-2 pr-4">{c.visible}</th>
-                <th scope="col" className="py-2">{t.acciones}</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-dorado/20">
-              {ordenadas.map((s) => (
-                <FilaSeccion key={`${s.id}-${s.nombre}-${s.visible}`} seccion={s} />
-              ))}
-            </tbody>
-          </table>
+          <ul aria-label={padre ? t.subsecciones : t.secciones} className="divide-y divide-linea rounded-xl border border-linea bg-superficie empty:hidden">
+            {ordenadas.map((s) => (
+              <FilaSeccion key={`${s.id}-${s.nombre}-${s.visible}`} seccion={s} />
+            ))}
+          </ul>
         )}
       </Ordenable>
       <form action={accion} key={estado.guardados} noValidate className="mt-6 flex flex-wrap items-end gap-3">
@@ -208,12 +184,12 @@ export function EditorSecciones({ secciones, padre }: { secciones: SeccionAdmin[
           {padre ? t.crearSubseccion : t.crearSeccion}
         </button>
         {estado.errorCampo && (
-          <span id="error-seccion-nueva" className="basis-full text-sm text-destacado">
+          <span id="error-seccion-nueva" className="basis-full text-sm text-error">
             {estado.errorCampo}
           </span>
         )}
         {estado.error && (
-          <p role="alert" className="basis-full text-destacado">
+          <p role="alert" className="basis-full text-error">
             {estado.error}
           </p>
         )}

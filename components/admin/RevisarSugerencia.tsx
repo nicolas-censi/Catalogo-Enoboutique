@@ -7,7 +7,7 @@ import { textos } from "@/lib/textos";
 
 const t = textos.admin.sugerencias;
 const principal = "inline-flex min-h-11 items-center rounded-md bg-boton px-5 font-semibold text-boton-texto disabled:opacity-60";
-const secundario = "inline-flex min-h-11 items-center rounded-md border border-dorado/60 px-4 disabled:opacity-60";
+const secundario = "inline-flex min-h-11 items-center rounded-md border border-control px-4 disabled:opacity-60";
 
 /**
  * Spec 007, CA-5: lo actual al lado de lo sugerido; se corrige el texto, se elige qué
@@ -53,7 +53,7 @@ export function RevisarSugerencia({
     });
 
   return (
-    <article aria-label={etiqueta} className="flex flex-col gap-5 rounded-md border border-dorado/40 p-4">
+    <article aria-label={etiqueta} className="flex flex-col gap-5 rounded-md border border-linea p-4">
       {encabezado}
       <div className="grid gap-4 sm:grid-cols-2">
         <section aria-label={t.descripcionActual}>
@@ -72,7 +72,7 @@ export function RevisarSugerencia({
                 value={texto}
                 onChange={(e) => setTexto(e.target.value)}
                 rows={5}
-                className="mt-1 w-full rounded-md border border-dorado/60 bg-fondo px-3 py-2"
+                className="mt-1 w-full rounded-md border border-control bg-fondo px-3 py-2"
               />
             </>
           ) : (
@@ -93,13 +93,13 @@ export function RevisarSugerencia({
         <legend className="mb-1 text-sm text-texto-suave">{t.usar}</legend>
         {descripcion !== null && (
           <label className="inline-flex min-h-11 items-center gap-2">
-            <input type="checkbox" checked={usarDescripcion} onChange={(e) => setUsarDescripcion(e.target.checked)} className="size-5 accent-dorado" />
+            <input type="checkbox" checked={usarDescripcion} onChange={(e) => setUsarDescripcion(e.target.checked)} className="size-5 accent-texto" />
             {t.usarDescripcion}
           </label>
         )}
         {hayFoto && (
           <label className="inline-flex min-h-11 items-center gap-2">
-            <input type="checkbox" checked={usarFoto} onChange={(e) => setUsarFoto(e.target.checked)} className="size-5 accent-dorado" />
+            <input type="checkbox" checked={usarFoto} onChange={(e) => setUsarFoto(e.target.checked)} className="size-5 accent-texto" />
             {t.usarFoto}
           </label>
         )}
@@ -118,7 +118,7 @@ export function RevisarSugerencia({
         </button>
       </div>
       {error && (
-        <p role="alert" className="text-destacado">
+        <p role="alert" className="text-error">
           {error}
         </p>
       )}

@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { pedirSugerencia } from "@/app/admin/acciones-sugerencias";
 import { useAvisoSugerencia } from "@/components/admin/ZonaSugerencia";
@@ -12,6 +13,8 @@ export function BotonSugerir({ productoId }: { productoId: string }) {
   const [error, setError] = useState<string | null>(null);
   const [buscando, iniciar] = useTransition();
   const avisar = useAvisoSugerencia();
+  const router = useRouter();
+  const ruta = usePathname();
   return (
     <div className="flex flex-col items-start gap-2">
       <button
@@ -21,10 +24,13 @@ export function BotonSugerir({ productoId }: { productoId: string }) {
           iniciar(async () => {
             setError(null);
             avisar(null);
-            setError((await pedirSugerencia(productoId)).error);
+            const r = await pedirSugerencia(productoId);
+            setError(r.error);
+            // Recién pedida: se muestra desplegada para revisarla (spec 014, CA-6).
+            if (!r.error) router.replace(`${ruta}?revisar=1`, { scroll: false });
           })
         }
-        className="inline-flex min-h-11 items-center gap-2 rounded-md border border-dorado/60 px-4 disabled:opacity-60"
+        className="inline-flex min-h-11 items-center gap-2 rounded-md border border-control px-4 disabled:opacity-60"
       >
         <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
           <path d="M12 3v3M12 18v3M3 12h3M18 12h3M6 6l2 2M16 16l2 2M6 18l2-2M16 8l2-2" />
@@ -37,7 +43,7 @@ export function BotonSugerir({ productoId }: { productoId: string }) {
         </p>
       )}
       {error && (
-        <p role="alert" className="text-destacado">
+        <p role="alert" className="text-error">
           {error}
         </p>
       )}

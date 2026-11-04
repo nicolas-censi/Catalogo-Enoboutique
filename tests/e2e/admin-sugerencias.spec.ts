@@ -58,6 +58,11 @@ async function abrir(page: import("@playwright/test").Page, ruta: string) {
   await page.waitForLoadState("networkidle");
 }
 
+/** Spec 014, CA-6: en la ficha la sugerencia lista es un aviso; Revisar la despliega. */
+async function revisar(page: import("@playwright/test").Page) {
+  await page.getByRole("button", { name: "Revisar" }).click();
+}
+
 const sugerencia = (page: import("@playwright/test").Page) => page.getByRole("article", { name: "Sugerencia de la IA" });
 
 test("CA-1: un vendedor pide la sugerencia, ve el aviso de espera y después la sugerencia con foto y fuentes", async ({ page }) => {
@@ -87,6 +92,9 @@ test("CA-1: un vendedor pide la sugerencia, ve el aviso de espera y después la 
 
 test("CA-1: con una sugerencia esperando revisión, no se pide otra (se muestra esa)", async ({ page }) => {
   await abrir(page, `/admin/productos/${ids.producto}`);
+  await expect(page.getByText("La IA sugirió una descripción y una foto.")).toBeVisible();
+  await expect(sugerencia(page)).toHaveCount(0);
+  await revisar(page);
   await expect(sugerencia(page)).toBeVisible();
   await expect(page.getByRole("button", { name: "Sugerir con IA" })).toHaveCount(0);
 });
@@ -109,6 +117,7 @@ test("CA-1: si falla, avisa y la ficha queda como estaba (se puede volver a pedi
 test("CA-5 y CA-6: corrige el texto y aprueba todo; se ve en la carta y queda registrado quién", async ({ page }) => {
   const corregido = `Malbec de altura del Valle de Uco ${prefijo}, con crianza en roble francés.`;
   await abrir(page, `/admin/productos/${ids.producto}`);
+  await revisar(page);
   const s = sugerencia(page);
   const campo = s.getByRole("textbox", { name: "Descripción (podés corregirla)" });
   // Espera a que la página esté hidratada antes de escribir en el campo controlado.
@@ -152,6 +161,7 @@ test("CA-5: aprueba solo la foto; la descripción queda como estaba", async ({ p
 
 test("CA-5: descarta; el producto queda como estaba y se puede pedir otra", async ({ page }) => {
   await abrir(page, `/admin/productos/${ids.sinFoto}`);
+  await revisar(page);
   await sugerencia(page).getByRole("button", { name: "Descartar" }).click();
   await expect(page.getByRole("status").filter({ hasText: "Sugerencia descartada." })).toBeVisible();
   await expect(page.getByRole("button", { name: "Sugerir con IA" })).toBeVisible();
@@ -171,7 +181,8 @@ test.describe("CA-8: interruptor de la IA", () => {
     await context.clearCookies();
     await entrarComo(context, "encargado");
     await abrir(page, "/admin");
-    await page.getByRole("navigation", { name: "Panel" }).getByRole("link", { name: "IA", exact: true }).click();
+    await page.getByRole("navigation", { name: "Panel" }).getByRole("link", { name: "Ajustes" }).click();
+    await page.getByRole("link", { name: /^IA/ }).click();
     await expect(page.getByRole("heading", { level: 1, name: "Sugerencias por IA" })).toBeVisible();
     const interruptor = page.getByRole("switch", { name: "Sugerencias por IA" });
     await expect(interruptor).toHaveAttribute("aria-checked", "true");
@@ -202,6 +213,7 @@ test.describe("CA-8: interruptor de la IA", () => {
     const antes = (await admin.from("sugerencias").select("id").eq("producto_id", ids.falla)).data!.length;
 
     await abrir(page, `/admin/productos/${ids.sinFoto}`);
+    await revisar(page);
     await sugerencia(page).getByRole("button", { name: "Aprobar" }).click();
     await expect(page.getByRole("status").filter({ hasText: "Listo. Ya se ve en la carta." })).toBeVisible();
     expect((await admin.from("sugerencias").select("id").eq("producto_id", ids.falla)).data!.length).toBe(antes);
@@ -210,6 +222,10 @@ test.describe("CA-8: interruptor de la IA", () => {
 });
 
 test.describe("CA-2: de a muchos desde la lista de Productos", () => {
+  // Spec 014, CA-5: "Elegir varios" y la barra de abajo; Sugerir con IA abre una ventana.
+  const acciones = (page: import("@playwright/test").Page) => page.getByRole("region", { name: "Acciones con los elegidos" });
+  const ventana = (page: import("@playwright/test").Page) => page.getByRole("dialog", { name: "Sugerir con IA" });
+
   test("tilda varios: ve cuántos y el costo estimado; confirma y quedan en la cola (sin los completos)", async ({ page }) => {
     const crear = async (clave: string, n: string, completo: boolean) => {
       const p = await admin
@@ -224,16 +240,17 @@ test.describe("CA-2: de a muchos desde la lista de Productos", () => {
     await crear("listaC", "Lote Gama", true);
 
     await abrir(page, `/admin?q=${encodeURIComponent(`Lote ${prefijo}`)}`);
+    await page.getByRole("button", { name: "Elegir varios" }).click();
     for (const n of ["Lote Alfa", "Lote Beta", "Lote Gama"]) await page.getByRole("checkbox", { name: `Elegir ${n} ${prefijo}` }).check();
-    await page.getByRole("button", { name: "Sugerir con IA" }).click();
-    const confirmar = page.getByRole("group", { name: "Sugerir con IA" });
-    await expect(confirmar).toContainText(/Vas a pedir 2 sugerencias\. Costo estimado: US\$ \d+,\d{2}\./);
+    await acciones(page).getByRole("button", { name: "Sugerir con IA" }).click();
+    await expect(ventana(page).getByRole("status")).toHaveText(/Vas a pedir 2 sugerencias\. Costo estimado: US\$ \d+,\d{2}\./);
     // Cancelar no pide nada.
-    await confirmar.getByRole("button", { name: "Cancelar" }).click();
+    await ventana(page).getByRole("button", { name: "Cancelar" }).click();
     expect((await admin.from("sugerencias").select("id").in("producto_id", [ids.listaA, ids.listaB, ids.listaC])).data).toEqual([]);
 
-    await page.getByRole("button", { name: "Sugerir con IA" }).click();
-    await page.getByRole("group", { name: "Sugerir con IA" }).getByRole("button", { name: "Sí, pedir" }).click();
+    await acciones(page).getByRole("button", { name: "Sugerir con IA" }).click();
+    await expect(ventana(page).getByRole("status")).toContainText("Vas a pedir 2 sugerencias.");
+    await ventana(page).getByRole("button", { name: "Sí, pedir" }).click();
     await expect(page.getByRole("status").filter({ hasText: "Las 2 sugerencias van a ir llegando a Para revisar." })).toBeVisible();
     const filas = (await admin.from("sugerencias").select("producto_id, estado").in("producto_id", [ids.listaA, ids.listaB, ids.listaC])).data!;
     expect(filas.map((f) => f.producto_id).sort()).toEqual([ids.listaA, ids.listaB].sort());
@@ -242,22 +259,25 @@ test.describe("CA-2: de a muchos desde la lista de Productos", () => {
 
   test("con Incluir los que ya tienen y todos los del filtro, pide también los completos; no repite los que ya están pedidos", async ({ page }) => {
     await abrir(page, `/admin?q=${encodeURIComponent(`Lote ${prefijo}`)}`);
-    const boton = page.getByRole("button", { name: /Seleccionar los \d+ del filtro/ });
-    const enFiltro = Number((await boton.textContent())!.match(/\d+/)![0]);
+    await page.getByRole("button", { name: "Elegir varios" }).click();
+    const boton = acciones(page).getByRole("button", { name: /Elegir los \d+ del filtro/ });
+    const enFiltro = Number((await boton.textContent())!.replace(/\./g, "").match(/\d+/)![0]);
     await boton.click();
-    await page.getByRole("checkbox", { name: "Incluir los que ya tienen descripción y foto" }).check();
-    await page.getByRole("button", { name: "Sugerir con IA" }).click();
+    await acciones(page).getByRole("button", { name: "Sugerir con IA" }).click();
+    await ventana(page).getByRole("checkbox", { name: "Incluir los que ya tienen descripción y foto" }).check();
     // Todos los del filtro (en todas las páginas) menos los que ya tienen una pedida o lista.
     const activas = (await admin.from("sugerencias").select("producto_id").in("estado", ["en_cola", "procesando", "lista"]).in("producto_id", Object.values(ids))).data!.length;
     const esperados = enFiltro - activas;
     expect(esperados).toBeGreaterThan(0);
-    await expect(page.getByRole("group", { name: "Sugerir con IA" })).toContainText(`Vas a pedir ${esperados} ${esperados === 1 ? "sugerencia" : "sugerencias"}.`);
+    await expect(ventana(page).getByRole("status")).toContainText(`Vas a pedir ${esperados} ${esperados === 1 ? "sugerencia" : "sugerencias"}.`);
   });
 
   test("con la IA apagada, la lista no ofrece pedir sugerencias", async ({ page }) => {
     await prenderIa(false);
     await abrir(page, `/admin?q=${encodeURIComponent(`Lote ${prefijo}`)}`);
+    await page.getByRole("button", { name: "Elegir varios" }).click();
     await expect(page.getByRole("checkbox", { name: `Elegir Lote Alfa ${prefijo}` })).toBeVisible();
+    await expect(acciones(page).getByRole("button", { name: "Mover" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Sugerir con IA" })).toHaveCount(0);
     await prenderIa(true);
   });
@@ -305,7 +325,7 @@ test.describe("CA-3 y CA-7: bandeja Para revisar", () => {
   test("desde el menú con la cantidad; revisa y aprueba ahí mismo; ve el gasto del mes", async ({ page }) => {
     await nuevo("bandejaLista", "Bandeja Lista", "lista");
     await abrir(page, "/admin");
-    const enlace = page.getByRole("navigation", { name: "Panel" }).getByRole("link", { name: /^Para revisar \(\d+\)$/ });
+    const enlace = page.getByRole("navigation", { name: "Panel" }).getByRole("link", { name: /revisar \(\d+\)$/i });
     await enlace.click();
     await expect(page.getByRole("heading", { level: 1, name: "Para revisar" })).toBeVisible();
     await expect(page.getByText(/^Gastado este mes \(estimado\): US\$ \d+,\d{2}\.$/)).toBeVisible();
@@ -346,7 +366,7 @@ test("T11: la ficha con una sugerencia y la bandeja, en el celular: accesibles, 
   await abrir(page, `/admin/productos/${ids.accesible}`);
   await page.getByRole("button", { name: "Sugerir con IA" }).click();
   await expect(sugerencia(page)).toBeVisible();
-  for (const ruta of [`/admin/productos/${ids.accesible}`, "/admin/sugerencias"]) {
+  for (const ruta of [`/admin/productos/${ids.accesible}?revisar=1`, "/admin/sugerencias"]) {
     await abrir(page, ruta);
     await expect(page.getByRole("article").first()).toBeVisible();
     expect(await erroresGraves(page), ruta).toEqual([]);

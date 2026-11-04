@@ -32,7 +32,7 @@ test.beforeEach(async ({ context }) => {
   await entrarComo(context, "vendedor");
 });
 
-const filas = (page: Page) => page.getByRole("table", { name: "Secciones" }).getByRole("row");
+const filas = (page: Page) => page.getByRole("list", { name: "Secciones" }).getByRole("listitem");
 const manija = (page: Page, nombre: string) => page.getByRole("button", { name: `Mover ${nombre}` });
 const ordenEnBase = async () => {
   const { data } = await admin.from("secciones").select("nombre").in("id", Object.values(ids)).order("orden");
@@ -42,7 +42,7 @@ const ordenEnPantalla = async (page: Page) =>
   (await filas(page).filter({ hasText: `${prefijo} Orden` }).allTextContents()).map((t) => (t.includes("primera") ? primera : segunda));
 /** Toma la sección con Espacio, la sube un lugar con la flecha y la suelta. */
 async function subirConTeclado(page: Page, nombre: string) {
-  const nombres = await page.getByRole("table", { name: "Secciones" }).getByRole("button", { name: /^Mover / }).evaluateAll((b) =>
+  const nombres = await page.getByRole("list", { name: "Secciones" }).getByRole("button", { name: /^Mover / }).evaluateAll((b) =>
     b.map((e) => e.getAttribute("aria-label")),
   );
   const posicion = nombres.indexOf(`Mover ${nombre}`) + 1;

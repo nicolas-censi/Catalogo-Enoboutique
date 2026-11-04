@@ -6,11 +6,12 @@
  * Tema elegido (opción 2B con fondo negro puro): dorado del logo para títulos, nombres
  * y precios, y crema para el texto secundario.
  */
-@theme inline {
+@theme {
   /* Colores de marca */
   --color-dorado: #B19750; /* el del logo: logo, bordes y detalles */
 
-  /* Colores por función */
+  /* Colores por función. En @theme (no inline): las clases usan var(--color-…), así el
+     panel puede tener su propio tema (.tema-panel, spec 014) sin tocar la carta. */
   --color-fondo: #000000; /* fondo de la página: negro puro (en Samsung #111111 se veía verdoso) */
   --color-superficie: #1C1C1C; /* tarjetas y buscador */
   --color-texto: #F3EDE0; /* texto general */
@@ -19,12 +20,48 @@
   --color-titulo: #B19750; /* títulos y enlaces */
   --color-boton: #B19750;
   --color-boton-texto: #000000;
+  --color-linea: #3A3A3A; /* separadores finos */
+  --color-control: #B19750; /* borde de campos y botones secundarios */
+  --color-error: #E8A08F; /* mensajes de error */
+  --color-dorado-texto: #B19750; /* dorado para texto chico */
+  --color-carta-fondo: #000000; /* fondo de la carta, también dentro del panel (vista previa del logo) */
+}
 
+@theme inline {
   --font-titulos: var(--font-inknut-antiqua), serif;
   --font-texto: var(--font-cabin), sans-serif;
 
   /* Movimiento (spec 013): suave y corto. */
   --ease-salida: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/*
+ * Tema del panel (spec 014): los colores de la carta invertidos, sobrio. El dorado queda
+ * como detalle. Contraste AA verificado en tests/unit/tema-panel.test.ts.
+ */
+.tema-panel {
+  --color-fondo: #F6F2E9;
+  --color-superficie: #FFFFFF;
+  --color-texto: #1B1A17;
+  --color-destacado: #1B1A17;
+  --color-texto-suave: #5E584C;
+  --color-titulo: #1B1A17;
+  --color-boton: #1B1A17;
+  --color-boton-texto: #F6F2E9;
+  --color-linea: #E3DBCB;
+  --color-control: #8A8170;
+  --color-error: #A23A2A;
+  --color-dorado-texto: #7A6428;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+/* En el celular el menú del panel es una barra fija abajo: lo que se enfoca o se trae a
+   la vista no tiene que quedar tapado por ella (WCAG 2.4.11). */
+@media (width < 48rem) {
+  :root:has(.tema-panel) {
+    scroll-padding-bottom: 5rem;
+  }
 }
 
 /*

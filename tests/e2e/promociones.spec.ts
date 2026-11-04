@@ -45,7 +45,8 @@ test.describe("panel (CA-6, en computadora)", () => {
   test("CA-6: sube imágenes, quedan al final y se ven en la lista", async ({ page, context }) => {
     await entrarComo(context, "encargado");
     await page.goto("/admin");
-    await page.getByRole("navigation", { name: "Panel" }).getByRole("link", { name: "Promociones" }).click();
+    await page.getByRole("navigation", { name: "Panel" }).getByRole("link", { name: "Ajustes" }).click();
+    await page.getByRole("link", { name: /^Promociones/ }).click();
     await expect(page.getByRole("heading", { level: 1, name: "Promociones" })).toBeVisible();
 
     await page.getByLabel("Subir imágenes").setInputFiles([
@@ -82,8 +83,10 @@ test.describe("panel (CA-6, en computadora)", () => {
     await fila(total).getByRole("switch", { name: `En la carta: Promoción ${total}` }).click();
     await expect.poll(async () => (await nuevas()).find((p) => p.id === primera.id)!.visible).toBe(false);
 
-    await fila(total).getByRole("button", { name: `Borrar Promoción ${total}` }).click();
-    await fila(total).getByRole("button", { name: "Sí, borrar" }).click();
+    // Spec 014, CA-7: Borrar está en el menú ⋯ y pide confirmación.
+    await fila(total).getByRole("button", { name: `Más acciones para Promoción ${total}` }).click();
+    await page.getByRole("menuitem", { name: "Borrar" }).click();
+    await page.getByRole("dialog").getByRole("button", { name: "Sí, borrar" }).click();
     await expect.poll(async () => (await nuevas()).map((p) => p.id)).toEqual([segunda.id]);
   });
 });

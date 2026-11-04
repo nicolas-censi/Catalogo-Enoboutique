@@ -36,7 +36,8 @@ test("CA-3: un vendedor no tiene acceso a Marca", async ({ page, context }) => {
 test("CA-1: la bienvenida se ve en el inicio, y vacía no se muestra", async ({ page, context }) => {
   await entrarComo(context, "encargado");
   await page.goto("/admin");
-  await page.getByRole("navigation", { name: "Panel" }).getByRole("link", { name: "Marca" }).click();
+  await page.getByRole("navigation", { name: "Panel" }).getByRole("link", { name: "Ajustes" }).click();
+  await page.getByRole("link", { name: /^Marca/ }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Marca" })).toBeVisible();
 
   const texto = `Bienvenidos a nuestra cava ${prefijo}`;

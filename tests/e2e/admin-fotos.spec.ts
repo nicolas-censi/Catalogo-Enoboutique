@@ -36,7 +36,7 @@ const subir = (page: Page, archivo: string) => page.getByLabel("Subir foto", { e
 
 test("CA-7: sin foto, el panel lo marca y la carta se ve bien", async ({ page }) => {
   await page.goto(`/admin?q=${prefijo}`);
-  await expect(page.getByRole("row").filter({ hasText: nombre })).toContainText("Sin foto");
+  await expect(page.getByRole("list", { name: "Productos" }).getByRole("listitem").filter({ hasText: nombre })).toContainText("Sin foto");
   await page.goto(`/admin/productos/${ids.producto}`);
   await expect(page.getByText("Este producto no tiene foto.")).toBeVisible();
   await page.goto(`/producto/${ids.producto}`);
@@ -66,7 +66,7 @@ test("CA-7: sube una foto grande, se achica y se ve en la carta", async ({ page 
   // Que la imagen haya cargado de verdad (no solo que esté el elemento).
   await expect.poll(() => enCarta.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth)).toBeGreaterThan(0);
   await page.goto(`/admin?q=${prefijo}`);
-  await expect(page.getByRole("row").filter({ hasText: nombre })).not.toContainText("Sin foto");
+  await expect(page.getByRole("list", { name: "Productos" }).getByRole("listitem").filter({ hasText: nombre })).not.toContainText("Sin foto");
 });
 
 test("CA-7: reemplazar la foto borra la anterior", async ({ page }) => {

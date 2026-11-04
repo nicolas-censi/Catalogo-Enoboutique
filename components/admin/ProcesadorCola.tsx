@@ -44,7 +44,7 @@ export function ProcesadorCola({ enCola, iaActiva }: { enCola: number; iaActiva:
   const texto =
     estado.tipo === "buscando" ? t.buscando(estado.quedan) : estado.tipo === "apagada" ? t.colaApagada(estado.quedan) : estado.tipo === "tope" ? t.tope : t.error;
   return (
-    <p role="status" className="rounded-md border border-dorado/40 px-4 py-3">
+    <p role="status" className="rounded-md border border-linea px-4 py-3">
       {texto}
     </p>
   );

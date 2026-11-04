@@ -9,7 +9,7 @@ import { crearClienteNavegador } from "@/lib/supabase/client";
 import { textos } from "@/lib/textos";
 
 const t = textos.admin;
-const boton = "inline-flex min-h-11 cursor-pointer items-center rounded-md border border-dorado/60 px-4";
+const boton = "inline-flex min-h-11 cursor-pointer items-center rounded-md border border-control px-4";
 
 export function SubirFoto({ productoId, nombre, fotoPath }: { productoId: string; nombre: string; fotoPath: string | null }) {
   const [error, setError] = useState<string | null>(null);
@@ -39,7 +39,7 @@ export function SubirFoto({ productoId, nombre, fotoPath }: { productoId: string
           alt={t.fotoDe(nombre)}
           width={160}
           height={213}
-          className="h-52 w-auto rounded-md border border-dorado/40 object-contain"
+          className="h-52 w-auto rounded-md border border-linea object-contain"
         />
       ) : (
         <p className="text-texto-suave">{t.sinFotoFicha}</p>
@@ -71,7 +71,7 @@ export function SubirFoto({ productoId, nombre, fotoPath }: { productoId: string
         </div>
         <p className="text-sm text-texto-suave">{t.fotoAyuda}</p>
         {error && (
-          <p role="alert" className="text-destacado">
+          <p role="alert" className="text-error">
             {error}
           </p>
         )}

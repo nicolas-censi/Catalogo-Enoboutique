@@ -8,7 +8,7 @@ import { textos } from "@/lib/textos";
 
 const t = textos.admin;
 const control =
-  "min-h-11 w-full rounded-md border border-dorado/60 bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-dorado aria-[invalid=true]:border-destacado";
+  "min-h-11 w-full rounded-md border border-control bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-texto aria-[invalid=true]:border-error";
 
 export type ValoresProducto = {
   tipo: string;
@@ -23,7 +23,7 @@ export type ValoresProducto = {
 function ErrorCampo({ id, mensaje }: { id: string; mensaje?: string }) {
   if (!mensaje) return null;
   return (
-    <span id={id} className="text-sm text-destacado">
+    <span id={id} className="text-sm text-error">
       {mensaje}
     </span>
   );
@@ -34,7 +34,10 @@ export function FormularioProducto({
   inicial,
   secciones,
   bodegas,
+  conVisible = true,
 }: {
+  /** En la ficha (spec 014) "Visible en la carta" va arriba, con su interruptor. */
+  conVisible?: boolean;
   productoId: string | null;
   inicial: ValoresProducto;
   secciones: SeccionConSubsecciones[];
@@ -121,10 +124,13 @@ export function FormularioProducto({
           )}
         </select>
       </div>
-      <label className="flex min-h-11 items-center gap-3 self-end">
-        <input type="checkbox" name="visible" defaultChecked={v.visible} key={`visible-${v.visible}`} className="size-5 accent-dorado" />
-        <span>{t.visibleEnCarta}</span>
-      </label>
+      {conVisible && (
+        <label className="flex min-h-11 items-center gap-3 self-end">
+          <input type="hidden" name="incluye-visible" value="1" />
+          <input type="checkbox" name="visible" defaultChecked={v.visible} key={`visible-${v.visible}`} className="size-5 accent-texto" />
+          <span>{t.visibleEnCarta}</span>
+        </label>
+      )}
       <div className="flex flex-col gap-1 md:col-span-2">
         <label htmlFor="producto-descripcion">{t.descripcion}</label>
         <textarea id="producto-descripcion" name="descripcion" defaultValue={v.descripcion} key={`descripcion-${v.descripcion}`} rows={4} className={`${control} py-2`} />
@@ -134,7 +140,7 @@ export function FormularioProducto({
           {enviando ? t.guardando : t.guardar}
         </button>
         {estado.error && (
-          <p role="alert" className="text-destacado">
+          <p role="alert" className="text-error">
             {estado.error}
           </p>
         )}

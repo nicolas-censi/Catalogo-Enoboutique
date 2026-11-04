@@ -31,13 +31,13 @@ export function InterruptorStock({ anadaId, etiqueta, enStock }: { anadaId: stri
         aria-label={textos.admin.stockDe(etiqueta)}
         onClick={alternar}
         className={`inline-flex min-h-11 min-w-32 items-center justify-center rounded-full border px-4 font-semibold ${
-          visible ? "border-dorado bg-dorado text-boton-texto" : "border-dorado/60 text-texto-suave"
+          visible ? "border-texto bg-texto text-boton-texto" : "border-control text-texto-suave"
         }`}
       >
         {visible ? textos.admin.disponible : textos.admin.sinStock}
       </button>
       {error && (
-        <span role="alert" className="text-sm text-destacado">
+        <span role="alert" className="text-sm text-error">
           {error}
         </span>
       )}

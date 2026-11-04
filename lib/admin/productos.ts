@@ -4,8 +4,9 @@ import type { Database } from "@/lib/tipos-db";
 
 type Cliente = SupabaseClient<Database>;
 export type ProductoAdmin = Database["public"]["Views"]["productos_admin"]["Row"];
-export type EstadoFiltro = "ocultos" | "sin-stock" | "a-revisar" | "sin-seccion";
-export const ESTADOS: EstadoFiltro[] = ["ocultos", "sin-stock", "a-revisar", "sin-seccion"];
+export type EstadoFiltro = "sin-seccion" | "sin-foto" | "a-revisar" | "ocultos" | "sin-stock";
+/** En el orden de los filtros de un toque (spec 014, CA-4). */
+export const ESTADOS: EstadoFiltro[] = ["sin-seccion", "sin-foto", "a-revisar", "ocultos", "sin-stock"];
 export const POR_PAGINA = 50;
 // Ids por pedido cuando se buscan productos encontrados (la dirección tiene un largo máximo).
 const TANDA = 200;
@@ -39,6 +40,7 @@ function filtrar(consulta: Consulta, filtros: Filtros): Consulta {
   if (filtros.estado === "sin-stock") consulta = consulta.eq("anadas_en_stock", 0);
   if (filtros.estado === "a-revisar") consulta = consulta.gt("anadas_a_revisar", 0);
   if (filtros.estado === "sin-seccion") consulta = consulta.is("seccion_id", null);
+  if (filtros.estado === "sin-foto") consulta = consulta.is("foto_path", null);
   return consulta;
 }
 

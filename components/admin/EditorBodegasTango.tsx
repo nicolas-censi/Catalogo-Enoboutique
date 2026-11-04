@@ -7,8 +7,8 @@ import { textos } from "@/lib/textos";
 
 const t = textos.admin.importar.bodegas;
 const control =
-  "min-h-11 rounded-md border border-dorado/60 bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-dorado";
-const secundario = "inline-flex min-h-11 items-center rounded-md border border-dorado/60 px-4 disabled:opacity-60";
+  "min-h-11 rounded-md border border-control bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-texto";
+const secundario = "inline-flex min-h-11 items-center rounded-md border border-control px-4 disabled:opacity-60";
 
 function FilaBodega({ bodega }: { bodega: BodegaTango }) {
   const [nombre, setNombre] = useState(bodega.nombre);
@@ -37,7 +37,7 @@ function FilaBodega({ bodega }: { bodega: BodegaTango }) {
             {t.guardar}
           </button>
           {mensaje.guardado && <span role="status" className="text-sm text-texto-suave">{textos.admin.guardado}</span>}
-          {mensaje.error && <span role="alert" className="text-sm text-destacado">{mensaje.error}</span>}
+          {mensaje.error && <span role="alert" className="text-sm text-error">{mensaje.error}</span>}
         </form>
       </td>
       <td data-etiqueta={t.columnas.productos} className="py-1 text-texto-suave">{textos.admin.cantidadProductos(bodega.productos)}</td>
@@ -49,14 +49,14 @@ export function EditorBodegasTango({ bodegas }: { bodegas: BodegaTango[] }) {
   if (bodegas.length === 0) return <p>{t.vacia}</p>;
   return (
     <table aria-label={t.tabla} className="tabla-responsiva w-full border-collapse text-left">
-      <thead className="border-b border-dorado/40 text-sm text-texto-suave">
+      <thead className="border-b border-linea text-sm text-texto-suave">
         <tr>
           <th scope="col" className="py-2 pr-4">{t.columnas.codigo}</th>
           <th scope="col" className="py-2 pr-4">{t.columnas.nombre}</th>
           <th scope="col" className="py-2">{t.columnas.productos}</th>
         </tr>
       </thead>
-      <tbody className="divide-y divide-dorado/20">
+      <tbody className="divide-y divide-linea">
         {bodegas.map((b) => (
           <FilaBodega key={b.id} bodega={b} />
         ))}

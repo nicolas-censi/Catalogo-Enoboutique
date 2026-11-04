@@ -19,7 +19,7 @@ export async function ConSesion({
   if (!sesion) redirect("/admin/ingresar");
   if (!sesion.rol || (soloEncargado && sesion.rol !== "encargado")) {
     return (
-      <main className="mx-auto max-w-md px-4 py-16 text-center">
+      <main className="tema-panel min-h-dvh px-4 py-16 text-center">
         <p className="text-lg">{textos.admin.sinAcceso}</p>
         <p className="mt-1 text-texto-suave">{textos.admin.sinAccesoAyuda}</p>
         <div className="mt-6 flex justify-center">

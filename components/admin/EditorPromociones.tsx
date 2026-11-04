@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useState, useTransition } from "react";
 import { borrarPromocion, cambiarVisibilidadPromocion, crearPromociones, ordenarPromociones } from "@/app/admin/acciones-promociones";
 import { ManijaOrdenable, Ordenable, useElementoOrdenable } from "@/components/admin/Ordenable";
+import { Confirmar } from "@/components/admin/ui/Confirmar";
+import { MenuAcciones } from "@/components/admin/ui/MenuAcciones";
 import { reducirFoto } from "@/lib/admin/fotos";
 import { rutaPromocion, validarArchivoPromocion } from "@/lib/admin/promociones";
 import { urlPromocion } from "@/lib/fotos";
@@ -12,7 +14,6 @@ import { textos } from "@/lib/textos";
 
 const t = textos.admin.promociones;
 const principal = "inline-flex min-h-11 cursor-pointer items-center rounded-md bg-boton px-5 font-semibold text-boton-texto";
-const secundario = "inline-flex min-h-11 items-center rounded-md border border-dorado/60 px-4 disabled:opacity-60";
 
 export type PromocionAdmin = { id: string; imagenPath: string; visible: boolean };
 type Mensaje = { error: string | null; aviso: string | null };
@@ -43,39 +44,29 @@ function FilaPromocion({ promocion, nombre }: { promocion: PromocionAdmin; nombr
           })
         }
         className={`inline-flex min-h-11 min-w-28 items-center justify-center rounded-full border px-4 font-semibold ${
-          visible ? "border-dorado bg-dorado text-boton-texto" : "border-dorado/60 text-texto-suave"
+          visible ? "border-texto bg-texto text-boton-texto" : "border-control text-texto-suave"
         }`}
       >
         {visible ? t.visible : t.oculta}
       </button>
-      {confirmando ? (
-        <span className="flex flex-wrap items-center gap-2">
-          <span>{t.confirmar}</span>
-          <button
-            type="button"
-            disabled={ocupado}
-            className={principal}
-            onClick={() =>
-              iniciar(async () => {
-                const r = await borrarPromocion(promocion.id);
-                setError(r.error);
-                if (r.error) setConfirmando(false);
-              })
-            }
-          >
-            {t.siBorrar}
-          </button>
-          <button type="button" onClick={() => setConfirmando(false)} className={secundario}>
-            {t.cancelar}
-          </button>
-        </span>
-      ) : (
-        <button type="button" aria-label={t.borrar(nombre)} onClick={() => setConfirmando(true)} className={secundario}>
-          {t.borrarCorto}
-        </button>
-      )}
+      <MenuAcciones etiqueta={textos.admin.ui.masAcciones(nombre)} acciones={[{ etiqueta: t.borrarCorto, peligro: true, alElegir: () => setConfirmando(true) }]} />
+      <Confirmar
+        abierto={confirmando}
+        titulo={t.confirmar}
+        detalle={nombre}
+        confirmar={t.siBorrar}
+        ocupado={ocupado}
+        alCancelar={() => setConfirmando(false)}
+        alConfirmar={() =>
+          iniciar(async () => {
+            const r = await borrarPromocion(promocion.id);
+            setError(r.error);
+            if (r.error) setConfirmando(false);
+          })
+        }
+      />
       {error && (
-        <span role="alert" className="basis-full text-sm text-destacado">
+        <span role="alert" className="basis-full text-sm text-error">
           {error}
         </span>
       )}
@@ -127,7 +118,7 @@ export function EditorPromociones({ promociones }: { promociones: PromocionAdmin
         <p className="text-sm text-texto-suave">{t.formatos}</p>
         {mensaje.aviso && <p role="status">{mensaje.aviso}</p>}
         {mensaje.error && (
-          <p role="alert" className="text-destacado">
+          <p role="alert" className="text-error">
             {mensaje.error}
           </p>
         )}
@@ -138,7 +129,7 @@ export function EditorPromociones({ promociones }: { promociones: PromocionAdmin
         ) : (
           <Ordenable items={items} onCambio={ordenarPromociones}>
             {(ordenadas) => (
-              <ul aria-label={t.lista} className="divide-y divide-dorado/20">
+              <ul aria-label={t.lista} className="divide-y divide-linea">
                 {ordenadas.map((p) => (
                   <FilaPromocion key={p.id} promocion={p} nombre={p.nombre} />
                 ))}

@@ -28,13 +28,13 @@ export function InterruptorIa({ activa }: { activa: boolean }) {
           })
         }
         className={`inline-flex min-h-11 min-w-32 items-center justify-center rounded-full border px-5 font-semibold disabled:opacity-60 ${
-          prendida ? "border-dorado bg-dorado text-boton-texto" : "border-dorado/60 text-texto-suave"
+          prendida ? "border-texto bg-texto text-boton-texto" : "border-control text-texto-suave"
         }`}
       >
         {prendida ? t.prendida : t.apagada}
       </button>
       {error && (
-        <p role="alert" className="text-destacado">
+        <p role="alert" className="text-error">
           {error}
         </p>
       )}
