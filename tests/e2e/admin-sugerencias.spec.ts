@@ -65,15 +65,26 @@ async function revisar(page: import("@playwright/test").Page) {
 
 const sugerencia = (page: import("@playwright/test").Page) => page.getByRole("article", { name: "Sugerencia de la IA" });
 
-test("CA-1: un vendedor pide la sugerencia, ve el aviso de espera y después la sugerencia con foto y fuentes", async ({ page }) => {
-  await abrir(page, `/admin/productos/${ids.producto}`);
-  // La IA de prueba responde al instante: se demora la respuesta para poder ver el aviso.
-  await page.route(`**/admin/productos/${ids.producto}`, async (ruta) => {
-    if (ruta.request().method() === "POST") await new Promise((listo) => setTimeout(listo, 1500));
-    await ruta.continue();
-  });
+/**
+ * Spec 015, CA-3 y CA-4: se pide, se busca en segundo plano y llega un aviso con
+ * Revisar, que lleva a la ficha con la sugerencia desplegada.
+ */
+async function pedirYRevisar(page: import("@playwright/test").Page, producto: string) {
+  const ficha = page.url();
   await page.getByRole("button", { name: "Sugerir con IA" }).click();
-  await expect(page.getByRole("status").filter({ hasText: "Buscando información… puede tardar hasta un minuto." })).toBeVisible();
+  const aviso = page.getByRole("status").filter({ hasText: `Llegó una sugerencia para ${producto}.` });
+  // Si llegaron varias juntas (de otros tests), el aviso las agrupa y lleva a Para revisar.
+  const agrupado = page.getByRole("status").filter({ hasText: /^Llegaron \d+ sugerencias para revisar\./ });
+  await expect(aviso.or(agrupado).first()).toBeVisible();
+  if (await aviso.isVisible()) await aviso.getByRole("link", { name: "Revisar" }).click();
+  else await abrir(page, `${ficha.split("?")[0]}?revisar=1`);
+  await expect(sugerencia(page)).toBeVisible();
+}
+
+test("CA-1 y spec 015: un vendedor pide la sugerencia, sigue en la ficha, le llega el aviso y la revisa con foto y fuentes", async ({ page }) => {
+  await abrir(page, `/admin/productos/${ids.producto}`);
+  await pedirYRevisar(page, nombre);
+  await expect(page).toHaveURL(/revisar=1/);
   const s = sugerencia(page);
   await expect(s).toBeVisible();
   await expect(s.getByRole("region", { name: "Descripción sugerida" })).toContainText(`${nombre}: un clásico de la casa`);
@@ -101,14 +112,15 @@ test("CA-1: con una sugerencia esperando revisión, no se pide otra (se muestra 
 
 test("CA-4: sin foto oficial, lo dice", async ({ page }) => {
   await abrir(page, `/admin/productos/${ids.sinFoto}`);
-  await page.getByRole("button", { name: "Sugerir con IA" }).click();
+  await pedirYRevisar(page, `Vino [sin foto] ${prefijo}`);
   await expect(sugerencia(page).getByRole("region", { name: "Foto sugerida" })).toContainText("No encontré una foto oficial.");
 });
 
 test("CA-1: si falla, avisa y la ficha queda como estaba (se puede volver a pedir)", async ({ page }) => {
   await abrir(page, `/admin/productos/${ids.falla}`);
   await page.getByRole("button", { name: "Sugerir con IA" }).click();
-  await expect(page.getByRole("alert").filter({ hasText: "No se pudo pedir" })).toHaveText("No se pudo pedir la sugerencia. Probá de nuevo más tarde.");
+  // Spec 015, CA-4: la falla llega como aviso.
+  await expect(page.getByRole("status").filter({ hasText: `No se pudo buscar la sugerencia de Vino [falla] ${prefijo}.` })).toBeVisible();
   await expect(sugerencia(page)).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Sugerir con IA" })).toBeEnabled();
   expect((await admin.from("sugerencias").select("estado").eq("producto_id", ids.falla).single()).data!.estado).toBe("fallo");
@@ -149,7 +161,7 @@ test("CA-5 y CA-6: corrige el texto y aprueba todo; se ve en la carta y queda re
 
 test("CA-5: aprueba solo la foto; la descripción queda como estaba", async ({ page }) => {
   await abrir(page, `/admin/productos/${ids.soloFoto}`);
-  await page.getByRole("button", { name: "Sugerir con IA" }).click();
+  await pedirYRevisar(page, `Catena Malbec ${prefijo}`);
   const s = sugerencia(page);
   await s.getByRole("checkbox", { name: "Usar la descripción" }).uncheck();
   await s.getByRole("button", { name: "Aprobar" }).click();
@@ -204,8 +216,7 @@ test.describe("CA-8: interruptor de la IA", () => {
   test("apagada, el vendedor ve el aviso y las sugerencias listas se siguen pudiendo revisar", async ({ page }) => {
     // Una sugerencia lista (llegó antes de apagar).
     await abrir(page, `/admin/productos/${ids.sinFoto}`);
-    await page.getByRole("button", { name: "Sugerir con IA" }).click();
-    await expect(sugerencia(page)).toBeVisible();
+    await pedirYRevisar(page, `Vino [sin foto] ${prefijo}`);
     await prenderIa(false);
 
     await abrir(page, `/admin/productos/${ids.falla}`);
@@ -364,8 +375,7 @@ test("T11: la ficha con una sugerencia y la bandeja, en el celular: accesibles, 
   const p = await admin.from("productos").insert({ tipo: "vino", nombre: `Accesible Malbec ${prefijo}` }).select().single();
   ids.accesible = p.data!.id;
   await abrir(page, `/admin/productos/${ids.accesible}`);
-  await page.getByRole("button", { name: "Sugerir con IA" }).click();
-  await expect(sugerencia(page)).toBeVisible();
+  await pedirYRevisar(page, `Accesible Malbec ${prefijo}`);
   for (const ruta of [`/admin/productos/${ids.accesible}?revisar=1`, "/admin/sugerencias"]) {
     await abrir(page, ruta);
     await expect(page.getByRole("article").first()).toBeVisible();
@@ -373,4 +383,39 @@ test("T11: la ficha con una sugerencia y la bandeja, en el celular: accesibles, 
     expect(await desborde(page), ruta).toBeLessThanOrEqual(0);
     expect(await tocablesChicos(page), ruta).toEqual([]);
   }
+});
+
+test.describe("spec 015: la IA en segundo plano", () => {
+  test("pide una sugerencia lenta, sigue trabajando en otra pantalla, el aviso llega ahí y el contador sube solo", async ({ page }) => {
+    const p = await admin.from("productos").insert({ tipo: "vino", nombre: `Vino [lenta] ${prefijo}` }).select().single();
+    ids.lenta = p.data!.id;
+    await abrir(page, `/admin/productos/${ids.lenta}`);
+    await page.getByRole("button", { name: "Sugerir con IA" }).click();
+    await expect(page.getByRole("status").filter({ hasText: "La IA está buscando… Te avisamos cuando esté lista. Podés seguir trabajando." })).toBeVisible();
+
+    // Mientras la IA busca (6 s), se puede ir a otra pantalla y hacer cosas.
+    const menu = page.getByRole("navigation", { name: "Panel" });
+    const contador = async () => Number(((await menu.getByRole("link", { name: /revisar/i }).textContent()) ?? "").match(/\d+/)?.[0] ?? 0);
+    const antes = await contador();
+    await menu.getByRole("link", { name: "Secciones" }).click();
+    await expect(page.getByRole("heading", { level: 1, name: "Secciones" })).toBeVisible();
+    expect((await admin.from("sugerencias").select("estado").eq("producto_id", ids.lenta).single()).data!.estado).toBe("procesando");
+
+    const aviso = page.getByRole("status").filter({ hasText: `Llegó una sugerencia para Vino [lenta] ${prefijo}.` });
+    await expect(aviso).toBeVisible({ timeout: 30_000 });
+    await expect.poll(contador).toBeGreaterThan(antes);
+    await aviso.getByRole("button", { name: "Cerrar aviso" }).click();
+    await expect(aviso).toHaveCount(0);
+  });
+
+  test("la cola avanza estando en Productos (no hace falta abrir Para revisar)", async ({ page }) => {
+    const p = await admin.from("productos").insert({ tipo: "vino", nombre: `Cola global ${prefijo}` }).select().single();
+    ids.colaGlobal = p.data!.id;
+    await admin.from("sugerencias").insert({ producto_id: p.data!.id });
+    await abrir(page, "/admin");
+    await expect
+      .poll(async () => (await admin.from("sugerencias").select("estado").eq("producto_id", ids.colaGlobal).single()).data!.estado, { timeout: 30_000 })
+      .toBe("lista");
+    await expect(page.getByRole("status").filter({ hasText: /Llegó una sugerencia para Cola global|Llegaron \d+ sugerencias/ })).toBeVisible({ timeout: 15_000 });
+  });
 });

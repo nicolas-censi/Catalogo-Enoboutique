@@ -1,13 +1,13 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 import { exigirPersonal } from "@/lib/admin/acceso";
 import { invalidarCarta } from "@/lib/admin/cache";
 import { rutaFoto } from "@/lib/admin/fotos";
 import { idsProductosAdmin, leerFiltros, type Filtros } from "@/lib/admin/productos";
 import { iaActiva } from "@/lib/ia/ajustes";
-import { candidatos, encolar, procesarTanda } from "@/lib/ia/cola-servidor";
-import type { ResultadoTanda } from "@/lib/ia/cola";
+import { candidatos, encolar } from "@/lib/ia/cola-servidor";
 import { estimarCosto } from "@/lib/ia/costo";
 import { resolverSugerencia } from "@/lib/ia/procesar";
 import { crearClienteServidor } from "@/lib/supabase/server";
@@ -16,8 +16,8 @@ import { textos } from "@/lib/textos";
 const t = textos.admin.sugerencias;
 
 /**
- * Spec 007, CA-1: pide una sugerencia para un producto y espera el resultado. Si ya hay
- * una lista, no pide otra; si había una en cola, la toma.
+ * Spec 007, CA-1 (y 015, CA-3): pide una sugerencia para un producto; se busca en
+ * segundo plano. Si ya hay una lista, no pide otra; si había una en cola, la toma.
  */
 export async function pedirSugerencia(productoId: string): Promise<{ error: string | null }> {
   await exigirPersonal();
@@ -54,9 +54,11 @@ export async function pedirSugerencia(productoId: string): Promise<{ error: stri
     id = nueva.data.id;
   }
 
-  const resultado = await resolverSugerencia(supabase, id, productoId);
+  // Spec 015, CA-3: se busca en segundo plano (después de responder), así el panel no
+  // queda esperando a la IA. Cuando termina, el aviso lo cuenta (AvisosSugerencias).
+  after(() => resolverSugerencia(supabase, id, productoId));
   revalidatePath(`/admin/productos/${productoId}`);
-  return { error: resultado === "lista" ? null : resultado === "apagada" ? t.apagada : t.errorPedir };
+  return { error: null };
 }
 
 /** Spec 007, CA-8: el encargado prende o apaga la IA. */
@@ -178,17 +180,6 @@ export async function pedirSugerencias(seleccion: Seleccion, incluirCompletos: b
   }
 }
 
-/** Spec 007, CA-3: procesa una tanda de la cola (la llama la bandeja mientras está abierta). */
-export async function procesarTandaCola(): Promise<ResultadoTanda | { error: string }> {
-  await exigirPersonal();
-  try {
-    const r = await procesarTanda(await crearClienteServidor());
-    if (r.listas || r.fallidas) revalidatePath("/admin/sugerencias");
-    return r;
-  } catch {
-    return { error: t.errorPedir };
-  }
-}
 
 /** Spec 007, CA-2: cuántos se van a pedir y cuánto costaría, antes de confirmar. */
 export async function estimarSugerencias(

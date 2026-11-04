@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { BotonReintentar } from "@/components/admin/BotonReintentar";
 import { ConSesion } from "@/components/admin/ConSesion";
-import { ProcesadorCola } from "@/components/admin/ProcesadorCola";
 import { TarjetaRevision } from "@/components/admin/SugerenciaProducto";
 import { ZonaSugerencia } from "@/components/admin/ZonaSugerencia";
 import { iaActiva } from "@/lib/ia/ajustes";
@@ -11,12 +10,11 @@ import { AJUSTE_REAL } from "@/lib/ia/costo";
 import { formatearDolares } from "@/lib/formato";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
+import { Cargando } from "@/components/admin/ui/Cargando";
 
 const t = textos.admin.paraRevisar;
 const POR_PAGINA = 20;
 
-// Cada tanda de la cola puede tardar cerca de un minuto.
-export const maxDuration = 300;
 
 async function Bandeja() {
   const supabase = await crearClienteServidor();
@@ -42,7 +40,12 @@ async function Bandeja() {
   return (
     <div className="flex flex-col gap-4">
       <p className="text-sm text-texto-suave">{t.gastado(formatearDolares(gastado))}</p>
-      <ProcesadorCola key={`${prendida}-${enCola > 0}`} enCola={enCola} iaActiva={prendida} />
+      {/* Spec 015: la cola avanza sola con el panel abierto (ActividadIA). */}
+      {enCola > 0 && (
+        <p role="status" className="rounded-lg border border-linea bg-superficie px-4 py-3">
+          {prendida ? t.buscando(enCola) : t.colaApagada(enCola)}
+        </p>
+      )}
       {cantidadFallidas > 0 && (
         <div className="flex flex-wrap items-center gap-3">
           <p>{t.fallidas(cantidadFallidas)}</p>
@@ -84,7 +87,7 @@ async function Bandeja() {
 
 export default function PaginaParaRevisar() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Cargando />}>
       <ConSesion>
         {() => (
           <>

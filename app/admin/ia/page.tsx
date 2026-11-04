@@ -4,6 +4,7 @@ import { InterruptorIa } from "@/components/admin/InterruptorIa";
 import { usuarios } from "@/lib/admin/personal-servidor";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
+import { Cargando } from "@/components/admin/ui/Cargando";
 
 const t = textos.admin.ia;
 const fecha = new Intl.DateTimeFormat("es-AR", { dateStyle: "short", timeStyle: "short", timeZone: "America/Argentina/Buenos_Aires" });
@@ -23,7 +24,7 @@ async function Ajustes() {
 
 export default function PaginaIa() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Cargando />}>
       <ConSesion soloEncargado>
         {() => (
           <>

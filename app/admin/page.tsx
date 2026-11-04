@@ -9,6 +9,7 @@ import { leerFiltros, listarProductosAdmin, listarSeccionesAdmin, POR_PAGINA } f
 import { iaActiva } from "@/lib/ia/ajustes";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
+import { Cargando } from "@/components/admin/ui/Cargando";
 
 type Parametros = Promise<Record<string, string | string[] | undefined>>;
 
@@ -50,7 +51,7 @@ async function ListaProductos({ searchParams }: { searchParams: Parametros }) {
 
 export default function PaginaPanel({ searchParams }: PageProps<"/admin">) {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Cargando />}>
       <ConSesion>
         {() => (
           <>

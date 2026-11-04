@@ -4,6 +4,7 @@ import { EditorMarca } from "@/components/admin/EditorMarca";
 import { leerMarca } from "@/lib/carta";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
+import { Cargando } from "@/components/admin/ui/Cargando";
 
 const t = textos.admin.marca;
 
@@ -14,7 +15,7 @@ async function Marca() {
 
 export default function PaginaMarca() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Cargando />}>
       <ConSesion soloEncargado>
         {() => (
           <>

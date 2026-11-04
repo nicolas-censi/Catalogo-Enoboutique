@@ -5,6 +5,7 @@ import { usuarios } from "@/lib/admin/personal-servidor";
 import type { Rol, SesionPanel } from "@/lib/admin/sesion";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
+import { Cargando } from "@/components/admin/ui/Cargando";
 
 async function Personal({ sesion }: { sesion: SesionPanel }) {
   const supabase = await crearClienteServidor();
@@ -22,7 +23,7 @@ async function Personal({ sesion }: { sesion: SesionPanel }) {
 
 export default function PaginaPersonal() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Cargando />}>
       <ConSesion soloEncargado>
         {(sesion) => (
           <>

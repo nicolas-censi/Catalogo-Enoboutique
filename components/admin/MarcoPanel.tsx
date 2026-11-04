@@ -1,9 +1,9 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
 import { salir } from "@/app/admin/acciones-sesion";
+import { ActividadIA } from "@/components/admin/ActividadIA";
 import { NavPanel } from "@/components/admin/NavPanel";
 import { claseBoton } from "@/components/admin/ui/boton";
-import type { SesionPanel } from "@/lib/admin/sesion";
+import { obtenerSesionPanel } from "@/lib/admin/sesion";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
 
@@ -35,14 +35,18 @@ export function CuentaPanel({ usuario }: { usuario: string }) {
   );
 }
 
-/** Spec 014, CA-1 y CA-2: el marco del panel, con su tema claro y el menú nuevo. */
-export async function MarcoPanel({ sesion, children }: { sesion: SesionPanel; children: ReactNode }) {
+/**
+ * Spec 014 y 015: el menú del panel, en el layout (no se vuelve a armar al navegar).
+ * Sin sesión o sin acceso (ingreso, "No tenés acceso"), no hay menú.
+ */
+export async function MenuPanel() {
+  const sesion = await obtenerSesionPanel();
+  if (!sesion?.rol) return null;
   const supabase = await crearClienteServidor();
   const { count } = await supabase.from("sugerencias").select("id", { count: "exact", head: true }).eq("estado", "lista");
   return (
-    <div className="tema-panel min-h-dvh md:flex">
-      <NavPanel esEncargado={sesion.rol === "encargado"} pendientes={count ?? 0} pie={<CuentaPanel usuario={sesion.usuario} />} />
-      <main className="mx-auto w-full max-w-6xl min-w-0 flex-1 px-4 pt-6 pb-28 md:px-10 md:pt-10 md:pb-12">{children}</main>
-    </div>
+    <ActividadIA pendientes={count ?? 0} desde={new Date().toISOString()}>
+      <NavPanel esEncargado={sesion.rol === "encargado"} pie={<CuentaPanel usuario={sesion.usuario} />} />
+    </ActividadIA>
   );
 }

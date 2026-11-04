@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
+import { usePendientes } from "@/components/admin/ActividadIA";
 import { textos } from "@/lib/textos";
 
 const t = textos.admin.nav;
@@ -25,8 +26,13 @@ type Item = { href: string; etiqueta: string; corta: string; icono: keyof typeof
  * Spec 014, CA-1: en la computadora, columna a la izquierda; en el celular, barra fija
  * abajo. Una sola navegación ("Panel"), marcada en la opción actual.
  */
-export function NavPanel({ esEncargado, pendientes, pie }: { esEncargado: boolean; pendientes: number; pie: ReactNode }) {
+export function NavPanel({ esEncargado, pie }: { esEncargado: boolean; pie: ReactNode }) {
+  // Spec 015, CA-4: el contador se actualiza solo (ActividadIA).
+  const pendientes = usePendientes();
   const ruta = usePathname();
+  // Spec 015, CA-2: la opción tocada se marca al instante, antes de que llegue la pantalla.
+  const [tocada, setTocada] = useState<{ href: string; desde: string } | null>(null);
+  const pendiente = tocada && tocada.desde === ruta ? tocada.href : null;
   const items: Item[] = [
     { href: "/admin", etiqueta: textos.admin.productos, corta: textos.admin.productos, icono: "productos", activo: (r) => r === "/admin" || r.startsWith("/admin/productos") },
     { href: "/admin/secciones", etiqueta: textos.admin.secciones, corta: textos.admin.secciones, icono: "secciones", activo: (r) => r.startsWith("/admin/secciones") },
@@ -48,12 +54,13 @@ export function NavPanel({ esEncargado, pendientes, pie }: { esEncargado: boolea
       <p className="hidden px-3 pt-2 pb-8 font-titulos text-xl md:block">{t.marca}</p>
       <ul className="flex md:flex-col md:gap-1">
         {items.map((item) => {
-          const activo = item.activo(ruta);
+          const activo = pendiente ? pendiente === item.href : item.activo(ruta);
           return (
             <li key={item.href} className="flex-1 md:flex-none">
               <Link
                 href={item.href}
-                aria-current={activo ? "page" : undefined}
+                aria-current={item.activo(ruta) ? "page" : undefined}
+                onClick={() => setTocada({ href: item.href, desde: ruta })}
                 className={`relative flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs md:min-h-11 md:flex-row md:justify-start md:gap-3 md:rounded-lg md:px-3 md:text-base ${
                   activo ? "font-semibold text-texto md:bg-superficie md:shadow-[inset_3px_0_0_var(--color-dorado)]" : "text-texto-suave md:text-texto"
                 }`}
