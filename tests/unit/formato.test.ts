@@ -27,3 +27,13 @@ describe("formatearPrecio", () => {
     expect(textos.consultarPrecio).toBe("Consultar precio");
   });
 });
+
+describe("formatearDolares", () => {
+  it("dos decimales al estilo argentino; lo chico no queda en cero", async () => {
+    const { formatearDolares } = await import("@/lib/formato");
+    expect(formatearDolares(12.4)).toBe("12,40");
+    expect(formatearDolares(1234.5)).toBe("1.234,50");
+    expect(formatearDolares(0.003)).toBe("0,01");
+    expect(formatearDolares(0)).toBe("0,00");
+  });
+});

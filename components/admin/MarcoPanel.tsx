@@ -1,43 +1,52 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
 import { salir } from "@/app/admin/acciones-sesion";
-import type { SesionPanel } from "@/lib/admin/sesion";
+import { ActividadIA } from "@/components/admin/ActividadIA";
+import { NavPanel } from "@/components/admin/NavPanel";
+import { claseBoton } from "@/components/admin/ui/boton";
+import { obtenerSesionPanel } from "@/lib/admin/sesion";
+import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
 
-const enlace = "inline-flex min-h-11 items-center px-3 text-destacado hover:underline";
-
-export function BotonSalir() {
+export function BotonSalir({ variante = "secundario" }: { variante?: "secundario" | "texto" }) {
   return (
     <form action={salir}>
-      <button type="submit" className="min-h-11 rounded-md border border-dorado/60 px-4 text-texto">
+      <button type="submit" className={claseBoton(variante)}>
         {textos.admin.salir}
       </button>
     </form>
   );
 }
 
-export function MarcoPanel({ sesion, children }: { sesion: SesionPanel; children: ReactNode }) {
+/** Ver la carta, usuario y Salir: al pie del menú (computadora) y en Ajustes/Cuenta. */
+export function CuentaPanel({ usuario }: { usuario: string }) {
   return (
-    <div className="min-h-dvh">
-      <header className="border-b border-dorado/30">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-2 px-4 py-2">
-          <span className="mr-4 font-titulos text-lg text-titulo">{textos.admin.titulo}</span>
-          <nav aria-label={textos.admin.titulo} className="flex flex-wrap">
-            <Link href="/admin" className={enlace}>{textos.admin.productos}</Link>
-            <Link href="/admin/secciones" className={enlace}>{textos.admin.secciones}</Link>
-            {sesion.rol === "encargado" && (
-              <>
-                <Link href="/admin/importar" className={enlace}>{textos.admin.importar.menu}</Link>
-                <Link href="/admin/personal" className={enlace}>{textos.admin.personal}</Link>
-              </>
-            )}
-            <Link href="/" className={enlace}>{textos.admin.verCarta}</Link>
-          </nav>
-          <span className="ml-auto text-sm text-texto-suave">{sesion.usuario}</span>
-          <BotonSalir />
-        </div>
-      </header>
-      <main className="mx-auto max-w-6xl px-4 py-6">{children}</main>
+    <div className="flex flex-col gap-1 text-sm">
+      <Link href="/" className={claseBoton("texto", "justify-start px-3")}>
+        {textos.admin.verCarta}
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M7 17 17 7M9 7h8v8" />
+        </svg>
+      </Link>
+      <div className="flex items-center justify-between gap-2 pl-3">
+        <span className="truncate text-texto-suave">{usuario}</span>
+        <BotonSalir variante="texto" />
+      </div>
     </div>
+  );
+}
+
+/**
+ * Spec 014 y 015: el menú del panel, en el layout (no se vuelve a armar al navegar).
+ * Sin sesión o sin acceso (ingreso, "No tenés acceso"), no hay menú.
+ */
+export async function MenuPanel() {
+  const sesion = await obtenerSesionPanel();
+  if (!sesion?.rol) return null;
+  const supabase = await crearClienteServidor();
+  const { count } = await supabase.from("sugerencias").select("id", { count: "exact", head: true }).eq("estado", "lista");
+  return (
+    <ActividadIA pendientes={count ?? 0} desde={new Date().toISOString()}>
+      <NavPanel esEncargado={sesion.rol === "encargado"} pie={<CuentaPanel usuario={sesion.usuario} />} />
+    </ActividadIA>
   );
 }

@@ -4,9 +4,9 @@ import { textos } from "@/lib/textos";
 
 export function ResultadosBusqueda({ busqueda, productos }: { busqueda: string; productos: Producto[] }) {
   return (
-    <section aria-label={textos.resultados} aria-live="polite" className="mt-6 flex flex-col gap-3">
+    <section aria-label={textos.resultados} aria-live="polite" className="mt-4 flex flex-col">
       {productos.length > 0 ? (
-        productos.map((producto) => <TarjetaProducto key={producto.id} producto={producto} />)
+        productos.map((producto, i) => <TarjetaProducto key={producto.id} producto={producto} posicion={i} />)
       ) : (
         <div className="py-6 text-center">
           <p className="text-lg">{textos.sinResultados(busqueda)}</p>

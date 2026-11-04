@@ -21,7 +21,7 @@ describe("tipos generados de la base", () => {
 
   it("incluyen las tablas del modelo", () => {
     expectTypeOf<keyof Publico["Tables"]>().toEqualTypeOf<
-      "secciones" | "bodegas" | "productos" | "anadas" | "codigos_barras" | "personal" | "abreviaturas" | "importaciones"
+      "secciones" | "bodegas" | "productos" | "anadas" | "codigos_barras" | "personal" | "abreviaturas" | "importaciones" | "marca" | "promociones" | "sugerencias" | "ajustes_ia"
     >();
   });
 });

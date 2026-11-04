@@ -12,12 +12,14 @@ async function SiYaIngreso() {
 
 export default function PaginaIngresar() {
   return (
-    <main className="mx-auto max-w-sm px-4 py-16">
-      <h1 className="font-titulos text-2xl text-titulo">{textos.admin.ingresar}</h1>
-      <Suspense fallback={null}>
-        <SiYaIngreso />
-      </Suspense>
-      <FormularioIngreso />
-    </main>
+    <div className="flex min-h-[70dvh] items-start justify-center py-8 md:items-center">
+      <div className="w-full max-w-sm rounded-xl border border-linea bg-superficie p-6 md:p-8">
+        <h1 className="font-titulos text-2xl">{textos.admin.ingresar}</h1>
+        <Suspense fallback={null}>
+          <SiYaIngreso />
+        </Suspense>
+        <FormularioIngreso />
+      </div>
+    </div>
   );
 }

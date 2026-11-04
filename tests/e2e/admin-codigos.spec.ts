@@ -34,7 +34,7 @@ const codigosEnBase = async (productoId: string) =>
   ((await admin.from("codigos_barras").select("codigo").eq("producto_id", productoId)).data ?? []).map((c) => c.codigo).sort();
 
 test("CA-6: agrega un código de barras (ignora espacios)", async ({ page }) => {
-  await page.goto(`/admin/productos/${ids.vino}`);
+  await page.goto(`/admin/productos/${ids.vino}?pestana=codigos`);
   await expect(lista(page).getByRole("listitem")).toHaveText([new RegExp(codigos.propio)]);
   await formulario(page).getByLabel("Código de barras", { exact: true }).fill(` ${codigos.nuevo.slice(0, 4)} ${codigos.nuevo.slice(4)} `);
   await formulario(page).getByRole("button", { name: "Agregar" }).click();
@@ -44,7 +44,7 @@ test("CA-6: agrega un código de barras (ignora espacios)", async ({ page }) => 
 });
 
 test("CA-6: avisa de qué producto es un código que ya está usado", async ({ page }) => {
-  await page.goto(`/admin/productos/${ids.vino}`);
+  await page.goto(`/admin/productos/${ids.vino}?pestana=codigos`);
   await formulario(page).getByLabel("Código de barras", { exact: true }).fill(codigos.ajeno);
   await formulario(page).getByRole("button", { name: "Agregar" }).click();
   await expect(formulario(page).getByRole("alert")).toHaveText(
@@ -54,7 +54,7 @@ test("CA-6: avisa de qué producto es un código que ya está usado", async ({ p
 });
 
 test("CA-6: rechaza un código con letras o con pocos números", async ({ page }) => {
-  await page.goto(`/admin/productos/${ids.vino}`);
+  await page.goto(`/admin/productos/${ids.vino}?pestana=codigos`);
   const campo = formulario(page).getByLabel("Código de barras", { exact: true });
   await campo.fill("12AB");
   await formulario(page).getByRole("button", { name: "Agregar" }).click();
@@ -62,7 +62,7 @@ test("CA-6: rechaza un código con letras o con pocos números", async ({ page }
 });
 
 test("CA-6: quita un código", async ({ page }) => {
-  await page.goto(`/admin/productos/${ids.vino}`);
+  await page.goto(`/admin/productos/${ids.vino}?pestana=codigos`);
   await lista(page).getByRole("button", { name: `Quitar ${codigos.propio}` }).click();
   await expect(lista(page).getByText(codigos.propio)).toHaveCount(0);
   expect(await codigosEnBase(ids.vino)).not.toContain(codigos.propio);

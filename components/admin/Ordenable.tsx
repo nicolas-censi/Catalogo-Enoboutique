@@ -113,7 +113,7 @@ export function Ordenable<T extends Item>({
         {aviso?.tipo === "ok" ? aviso.texto : ""}
       </p>
       {aviso?.tipo === "error" && (
-        <p role="alert" className="text-sm text-destacado">
+        <p role="alert" className="text-sm text-error">
           {aviso.texto}
         </p>
       )}
@@ -144,7 +144,7 @@ export function ManijaOrdenable({ manija }: { manija: { nombre: string; sortable
       {...attributes}
       {...listeners}
       aria-label={t.mover(manija.nombre)}
-      className="inline-flex min-h-11 min-w-11 cursor-grab touch-none items-center justify-center rounded-md border border-dorado/60 text-dorado active:cursor-grabbing"
+      className="inline-flex min-h-11 min-w-11 cursor-grab touch-none items-center justify-center rounded-md border border-control text-dorado-texto active:cursor-grabbing"
     >
       <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
         <circle cx="9" cy="6" r="1.6" />

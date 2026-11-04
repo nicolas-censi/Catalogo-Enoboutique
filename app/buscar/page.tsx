@@ -1,4 +1,5 @@
 import { Encabezado } from "@/components/Encabezado";
+import { TransicionCarta } from "@/components/TransicionCarta";
 import { FormularioBusqueda } from "@/components/FormularioBusqueda";
 import { ResultadosBusqueda } from "@/components/ResultadosBusqueda";
 import { Volver } from "@/components/Volver";
@@ -28,7 +29,7 @@ export const instant = false;
 
 export default function PaginaBuscar({ searchParams }: PageProps<"/buscar">) {
   return (
-    <>
+    <TransicionCarta>
       <Encabezado />
       <main className="mx-auto max-w-xl px-4 pb-10">
         <Volver />
@@ -36,6 +37,6 @@ export default function PaginaBuscar({ searchParams }: PageProps<"/buscar">) {
           <Resultados searchParams={searchParams} />
         </div>
       </main>
-    </>
+    </TransicionCarta>
   );
 }

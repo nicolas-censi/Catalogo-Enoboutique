@@ -6,6 +6,7 @@ import { EditorSecciones } from "@/components/admin/EditorSecciones";
 import { leerDestacados } from "@/lib/admin/destacados";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import { textos } from "@/lib/textos";
+import { Cargando } from "@/components/admin/ui/Cargando";
 
 const t = textos.admin.destacados;
 
@@ -54,7 +55,7 @@ async function Destacados({ params }: { params: Promise<{ id: string }> }) {
 
 export default function PaginaDestacados({ params }: PageProps<"/admin/secciones/[id]">) {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Cargando />}>
       <ConSesion>{() => <Destacados params={params} />}</ConSesion>
     </Suspense>
   );

@@ -142,3 +142,21 @@ export async function buscarEnCarta(cliente: Cliente, texto: string): Promise<Pr
   if (error) throw error;
   return agruparPorProducto(data);
 }
+
+export type MarcaCarta = { bienvenida: string | null; logoPath: string | null };
+
+/** Bienvenida y logo que el encargado cargó en el panel (spec 006). */
+export async function leerMarca(cliente: Cliente): Promise<MarcaCarta> {
+  const { data, error } = await cliente.from("marca").select("bienvenida, logo_path").eq("id", 1).maybeSingle();
+  if (error) throw error;
+  return { bienvenida: data?.bienvenida ?? null, logoPath: data?.logo_path ?? null };
+}
+
+export type Promocion = { id: string; imagenPath: string };
+
+/** Promociones visibles del inicio, en el orden que eligió el encargado (spec 013). */
+export async function leerPromociones(cliente: Cliente): Promise<Promocion[]> {
+  const { data, error } = await cliente.from("promociones").select("id, imagen_path").eq("visible", true).order("orden");
+  if (error) throw error;
+  return data.map((p) => ({ id: p.id, imagenPath: p.imagen_path }));
+}

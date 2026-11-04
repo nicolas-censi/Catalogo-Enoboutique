@@ -33,15 +33,24 @@ test.beforeEach(async ({ context }) => {
 });
 
 const seccionDe = async (clave: string) => (await admin.from("productos").select("seccion_id").eq("id", ids[clave]).single()).data!.seccion_id;
-const fila = (page: Page, nombre: string) => page.getByRole("table").getByRole("row").filter({ hasText: `Mover ${nombre} ${prefijo}` });
+const fila = (page: Page, nombre: string) => page.getByRole("list", { name: "Productos" }).getByRole("listitem").filter({ hasText: `Mover ${nombre} ${prefijo}` });
+// Spec 014, CA-5: para elegir varios se entra al modo "Elegir varios"; Mover abre una ventana.
+const acciones = (page: Page) => page.getByRole("region", { name: "Acciones con los elegidos" });
+const ventana = (page: Page) => page.getByRole("dialog", { name: /^Mover \d+ productos?$/ });
+async function abrir(page: Page, ruta: string) {
+  await page.goto(ruta);
+  await page.waitForLoadState("networkidle");
+  await page.getByRole("button", { name: "Elegir varios" }).click();
+}
 
 test("CA-12: tilda dos productos y los mueve juntos a otra sección", async ({ page }) => {
-  await page.goto(`/admin?q=${encodeURIComponent(`mover ${prefijo}`)}`);
+  await abrir(page, `/admin?q=${encodeURIComponent(`mover ${prefijo}`)}`);
   await fila(page, "Uno").getByRole("checkbox").check();
   await fila(page, "Dos").getByRole("checkbox").check();
-  await expect(page.getByText("2 seleccionados")).toBeVisible();
-  await page.getByLabel("Mover a la sección").selectOption({ label: n("Destino mover") });
-  await page.getByRole("button", { name: "Mover", exact: true }).click();
+  await expect(acciones(page)).toContainText("2 elegidos");
+  await acciones(page).getByRole("button", { name: "Mover", exact: true }).click();
+  await ventana(page).getByLabel("Mover a la sección").selectOption({ label: n("Destino mover") });
+  await ventana(page).getByRole("button", { name: "Mover", exact: true }).click();
   await expect(page.getByRole("status").filter({ hasText: "Se movieron" })).toHaveText(`Se movieron 2 productos a ${n("Destino mover")}.`);
   expect(await seccionDe("Uno")).toBe(ids.destino);
   expect(await seccionDe("Dos")).toBe(ids.destino);
@@ -50,13 +59,14 @@ test("CA-12: tilda dos productos y los mueve juntos a otra sección", async ({ p
 });
 
 test("CA-12: con un filtro, mueve todos los que coinciden; una sección con subsecciones no se elige", async ({ page }) => {
-  await page.goto(`/admin?q=${encodeURIComponent(`mover ${prefijo}`)}&seccion=${ids.origen}`);
-  await expect(page.getByRole("table").getByRole("row").filter({ has: page.getByRole("checkbox") }).filter({ hasText: "Mover" })).toHaveCount(2);
-  await page.getByRole("button", { name: "Seleccionar los 2 del filtro" }).click();
-  const selector = page.getByLabel("Mover a la sección");
+  await abrir(page, `/admin?q=${encodeURIComponent(`mover ${prefijo}`)}&seccion=${ids.origen}`);
+  await expect(page.getByRole("list", { name: "Productos" }).getByRole("listitem").filter({ has: page.getByRole("checkbox") }).filter({ hasText: "Mover" })).toHaveCount(2);
+  await acciones(page).getByRole("button", { name: "Elegir los 2 del filtro" }).click();
+  await acciones(page).getByRole("button", { name: "Mover", exact: true }).click();
+  const selector = ventana(page).getByLabel("Mover a la sección");
   await expect(selector.locator(`option[value="${ids.cava}"]`)).toHaveCount(0);
   await selector.selectOption({ label: `${n("Cava mover")} › ${n("Joyitas mover")}` });
-  await page.getByRole("button", { name: "Mover", exact: true }).click();
+  await ventana(page).getByRole("button", { name: "Mover", exact: true }).click();
   await expect(page.getByRole("status").filter({ hasText: "Se movieron" })).toHaveText(
     `Se movieron 2 productos a ${n("Cava mover")} › ${n("Joyitas mover")}.`,
   );

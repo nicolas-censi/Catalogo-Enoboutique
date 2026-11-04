@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ElegirArchivo } from "@/components/admin/ui/ElegirArchivo";
 import { useActionState, useState, useTransition } from "react";
 import { confirmarImportacion, prepararImportacion, type EstadoImportacion, type ImportacionPreparada } from "@/app/admin/acciones-importacion";
 import { formatearPrecio } from "@/lib/formato";
@@ -8,9 +9,9 @@ import { textos } from "@/lib/textos";
 
 const t = textos.admin.importar;
 const principal = "inline-flex min-h-11 items-center rounded-md bg-boton px-5 font-semibold text-boton-texto disabled:opacity-60";
-const secundario = "inline-flex min-h-11 items-center rounded-md border border-dorado/60 px-4 disabled:opacity-60";
+const secundario = "inline-flex min-h-11 items-center rounded-md border border-control px-4 disabled:opacity-60";
 const control =
-  "min-h-11 rounded-md border border-dorado/60 bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-dorado";
+  "min-h-11 rounded-md border border-control bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-texto";
 const enlace = "inline-flex min-h-11 items-center text-destacado underline-offset-4 hover:underline";
 
 const DATOS = ["productosNuevos", "anadasNuevas", "preciosCambian", "sinCambios", "sinSeccion", "noSeImportan"] as const;
@@ -77,7 +78,7 @@ function TablaNuevos({
               setSoloSinSeccion(e.target.checked);
               setPagina(1);
             }}
-            className="size-5 accent-dorado"
+            className="size-5 accent-texto"
           />
           <span>{t.soloSinSeccion}</span>
         </label>
@@ -85,7 +86,7 @@ function TablaNuevos({
           {t.seleccionarFiltro(visibles.length)}
         </button>
       </div>
-      <div className="mt-3 flex flex-wrap items-end gap-3 rounded-md border border-dorado/30 p-3">
+      <div className="mt-3 flex flex-wrap items-end gap-3 rounded-md border border-linea p-3">
         <span className="min-h-11 content-center">{t.seleccionados(seleccion.size)}</span>
         <div className="flex w-full min-w-0 flex-col gap-1 sm:w-auto">
           <label htmlFor="poner-en" className="text-sm text-texto-suave">{t.ponerEn}</label>
@@ -106,7 +107,7 @@ function TablaNuevos({
         </button>
       </div>
       <table aria-label={t.tablaNuevos} className="tabla-responsiva mt-3 w-full border-collapse text-left">
-        <thead className="border-b border-dorado/40 text-sm text-texto-suave">
+        <thead className="border-b border-linea text-sm text-texto-suave">
           <tr>
             <th scope="col" className="py-2 pr-2">
               <input
@@ -114,7 +115,7 @@ function TablaNuevos({
                 aria-label={t.elegirPagina}
                 checked={todaLaPagina}
                 onChange={(e) => alternar(enPagina, e.target.checked)}
-                className="size-5 accent-dorado"
+                className="size-5 accent-texto"
               />
             </th>
             <th scope="col" className="py-2 pr-4">{t.columnasNuevos.nombre}</th>
@@ -122,7 +123,7 @@ function TablaNuevos({
             <th scope="col" className="py-2 text-right">{t.columnasNuevos.anadas}</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-dorado/20">
+        <tbody className="divide-y divide-linea">
           {enPagina.map((i) => {
             const p = preparada.nuevos[i];
             return (
@@ -133,7 +134,7 @@ function TablaNuevos({
                     aria-label={t.elegir(p.nombre)}
                     checked={seleccion.has(i)}
                     onChange={(e) => alternar([i], e.target.checked)}
-                    className="size-5 accent-dorado"
+                    className="size-5 accent-texto"
                   />
                 </td>
                 <td className="py-1 pr-4">{p.nombre}</td>
@@ -200,14 +201,14 @@ function Resumen({ preparada, elecciones, cambiar }: { preparada: ImportacionPre
         <>
           <h3 className="mt-6 font-semibold text-destacado">{t.tablaPrecios}</h3>
           <table aria-label={t.tablaPrecios} className="tabla-responsiva mt-2 w-full max-w-xl border-collapse text-left">
-            <thead className="border-b border-dorado/40 text-sm text-texto-suave">
+            <thead className="border-b border-linea text-sm text-texto-suave">
               <tr>
                 <th scope="col" className="py-2 pr-4">{t.columnasPrecios.codigo}</th>
                 <th scope="col" className="py-2 pr-4 text-right">{t.columnasPrecios.anterior}</th>
                 <th scope="col" className="py-2 text-right">{t.columnasPrecios.nuevo}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-dorado/20">
+            <tbody className="divide-y divide-linea">
               {preparada.precios.map((p) => (
                 <tr key={p.codigo}>
                   <td className="py-1 pr-4">{p.codigo}</td>
@@ -241,22 +242,13 @@ export function ImportarTango() {
   return (
     <>
       <form action={accion} className="flex flex-wrap items-end gap-3">
-        <div className="flex w-full min-w-0 flex-col gap-1 sm:w-auto">
-          <label htmlFor="archivo-tango" className="text-sm text-texto-suave">{t.archivo}</label>
-          <input
-            id="archivo-tango"
-            name="archivo"
-            type="file"
-            accept=".xlsx,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"
-            className="min-h-11 w-full min-w-0 text-base file:mr-3 file:min-h-11 file:rounded-md file:border file:border-dorado/60 file:bg-superficie file:px-4 file:text-texto"
-          />
-        </div>
+        <ElegirArchivo id="archivo-tango" name="archivo" etiqueta={t.archivo} accept=".xlsx,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv" />
         <button type="submit" disabled={leyendo} className={principal}>
           {leyendo ? t.leyendo : t.verCambios}
         </button>
       </form>
       {estado.error && (
-        <p role="alert" className="mt-3 text-destacado">
+        <p role="alert" className="mt-3 text-error">
           {estado.error}
         </p>
       )}
@@ -294,7 +286,7 @@ export function ImportarTango() {
       )}
 
       {resultado.error && (
-        <p role="alert" className="mt-4 text-destacado">
+        <p role="alert" className="mt-4 text-error">
           {resultado.error}
         </p>
       )}

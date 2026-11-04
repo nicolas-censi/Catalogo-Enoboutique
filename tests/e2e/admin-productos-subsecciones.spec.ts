@@ -32,12 +32,17 @@ test.beforeEach(async ({ context }) => {
   await entrarComo(context, "vendedor");
 });
 
-const nombresEnLista = async (page: Page) =>
-  (await page.getByRole("table").getByRole("link").allTextContents()).filter((t) => t.includes(prefijo));
+// Spec 015: la lista llega en streaming después del menú; se espera a que esté.
+const nombresEnLista = async (page: Page) => {
+  await expect(page.getByRole("list", { name: "Productos" })).toBeVisible();
+  await page.waitForLoadState("networkidle");
+  return (await page.getByRole("list", { name: "Productos" }).getByRole("listitem").getByRole("link").locator("> span:first-child").allTextContents()).filter((t) => t.includes(prefijo));
+};
 
 test("CA-2: en la ficha se elige una subsección; la sección que las tiene no se puede elegir", async ({ page }) => {
   await page.goto(`/admin/productos/${ids.enSuelta}`);
   const selector = page.getByRole("combobox", { name: "Sección" });
+  await expect(selector).toBeVisible();
   const opciones = await selector.locator("option").allTextContents();
   expect(opciones).toContain(n("Tintos filtro"));
   expect(opciones).toContain(`${n("Cava filtro")} › ${n("Joyitas filtro")}`);
@@ -58,9 +63,9 @@ test("CA-2: en la ficha se elige una subsección; la sección que las tiene no s
 test("CA-6: filtrar por la sección trae también sus subsecciones, y se puede filtrar por una", async ({ page }) => {
   await page.goto(`/admin?q=${encodeURIComponent(`filtro ${prefijo}`)}&seccion=${ids.padre}`);
   expect((await nombresEnLista(page)).sort()).toEqual([`Filtro Añada ${prefijo}`, `Filtro Joya ${prefijo}`]);
-  await expect(page.getByRole("row").filter({ hasText: `Filtro Joya ${prefijo}` })).toContainText(`${n("Cava filtro")} › ${n("Joyitas filtro")}`);
+  await expect(page.getByRole("list", { name: "Productos" }).getByRole("listitem").filter({ hasText: `Filtro Joya ${prefijo}` })).toContainText(`${n("Cava filtro")} › ${n("Joyitas filtro")}`);
 
+  await page.waitForLoadState("networkidle");
   await page.getByLabel("Sección", { exact: true }).selectOption({ label: `${n("Cava filtro")} › ${n("Joyitas filtro")}` });
-  await page.getByRole("button", { name: "Filtrar" }).click();
   await expect.poll(() => nombresEnLista(page)).toEqual([`Filtro Joya ${prefijo}`]);
 });

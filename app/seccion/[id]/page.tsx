@@ -1,4 +1,5 @@
 import { Encabezado } from "@/components/Encabezado";
+import { TransicionCarta } from "@/components/TransicionCarta";
 import { TarjetaProducto } from "@/components/TarjetaProducto";
 import { Volver } from "@/components/Volver";
 import { seccionCarta } from "@/lib/carta-cache";
@@ -14,40 +15,48 @@ async function ContenidoSeccion({ params }: { params: Promise<{ id: string }> })
 
   return (
     <>
-      <h1 className="mt-2 font-titulos text-2xl text-titulo">{seccion.nombre}</h1>
-      {seccion.subsecciones.length === 0 ? (
-        <div className="mt-4 flex flex-col gap-3">
-          {seccion.productos.map((producto) => (
-            <TarjetaProducto key={producto.id} producto={producto} />
-          ))}
-        </div>
-      ) : (
-        <>
-          {/* Accesos a cada subsección: enlaces a anclas, funcionan sin JavaScript. */}
-          <nav aria-label={textos.subsecciones} className="mt-3 flex flex-wrap gap-2">
+      {/* Encabezado de sección (spec 013, propuesta C): nombre grande y centrado, línea
+          dorada y las subsecciones como enlaces. */}
+      <div className="mt-3 flex flex-col items-center text-center">
+        <h1 className="font-titulos text-[2.5rem] leading-snug text-titulo">{seccion.nombre}</h1>
+        <span aria-hidden="true" className="my-3 h-px w-10 bg-dorado" />
+        {seccion.subsecciones.length > 0 && (
+          // Enlaces a anclas: funcionan sin JavaScript.
+          <nav aria-label={textos.subsecciones} className="flex flex-wrap justify-center gap-x-5">
             {seccion.subsecciones.map((sub) => (
               <a
                 key={sub.id}
                 href={`#subseccion-${sub.id}`}
-                className="inline-flex min-h-11 items-center rounded-full border border-dorado/60 px-4 text-titulo"
+                className="tocable inline-flex min-h-11 items-center border-b border-dorado/50 text-[0.9375rem] text-texto hover:border-dorado"
               >
                 {sub.nombre}
               </a>
             ))}
           </nav>
-          {seccion.subsecciones.map((sub) => (
-            <section key={sub.id} id={`subseccion-${sub.id}`} aria-labelledby={`titulo-${sub.id}`} className="mt-8 scroll-mt-4">
+        )}
+      </div>
+      {seccion.subsecciones.length === 0 ? (
+        <div className="mt-4 flex flex-col">
+          {seccion.productos.map((producto, i) => (
+            <TarjetaProducto key={producto.id} producto={producto} posicion={i} />
+          ))}
+        </div>
+      ) : (
+        seccion.subsecciones.map((sub) => (
+          <section key={sub.id} id={`subseccion-${sub.id}`} aria-labelledby={`titulo-${sub.id}`} className="mt-8 scroll-mt-4">
+            <div className="flex items-center gap-3">
               <h2 id={`titulo-${sub.id}`} className="font-titulos text-xl text-titulo">
                 {sub.nombre}
               </h2>
-              <div className="mt-3 flex flex-col gap-3">
-                {sub.productos.map((producto) => (
-                  <TarjetaProducto key={producto.id} producto={producto} nivel={3} />
-                ))}
-              </div>
-            </section>
-          ))}
-        </>
+              <span aria-hidden="true" className="h-px flex-1 bg-dorado/35" />
+            </div>
+            <div className="mt-1 flex flex-col">
+              {sub.productos.map((producto, i) => (
+                <TarjetaProducto key={producto.id} producto={producto} nivel={3} posicion={i} />
+              ))}
+            </div>
+          </section>
+        ))
       )}
     </>
   );
@@ -59,12 +68,12 @@ export const instant = false;
 
 export default function PaginaSeccion({ params }: PageProps<"/seccion/[id]">) {
   return (
-    <>
+    <TransicionCarta>
       <Encabezado />
       <main className="mx-auto max-w-xl px-4 pb-10">
         <Volver />
         <ContenidoSeccion params={params} />
       </main>
-    </>
+    </TransicionCarta>
   );
 }

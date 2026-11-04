@@ -27,8 +27,14 @@ test.beforeEach(async ({ context }) => {
   await entrarComo(context, "vendedor");
 });
 
-const tabla = (page: Page) => page.getByRole("table", { name: "Subsecciones" });
-const fila = (page: Page, nombre: string) => tabla(page).getByRole("row").filter({ hasText: nombre });
+const tabla = (page: Page) => page.getByRole("list", { name: "Subsecciones" });
+const fila = (page: Page, nombre: string) => tabla(page).getByRole("listitem").filter({ hasText: nombre });
+/** Spec 014, CA-7: Renombrar y Borrar están en el menú ⋯ de cada fila. */
+async function accion(page: Page, nombre: string, cual: "Renombrar" | "Borrar") {
+  await page.getByRole("button", { name: `Más acciones para ${nombre}` }).click();
+  await page.getByRole("menuitem", { name: cual }).click();
+}
+
 const hijas = async () =>
   ((await admin.from("secciones").select("nombre, visible").eq("seccion_padre_id", ids.cava).order("orden")).data ?? []).map((s) => [
     s.nombre.replace(`${prefijo} `, ""),
@@ -88,17 +94,18 @@ test("CA-5: ordena las subsecciones arrastrando con el teclado", async ({ page }
 
 test("CA-5: oculta, renombra y borra una subsección vacía", async ({ page }) => {
   await page.goto(`/admin/secciones/${ids.cava}`);
+  await page.waitForLoadState("networkidle");
   await fila(page, n("Añadas")).getByRole("switch").click();
   await expect(fila(page, n("Añadas")).getByRole("switch")).toHaveAttribute("aria-checked", "false");
   await expect.poll(hijas).toContainEqual(["Añadas", false]);
 
-  await fila(page, n("Experiencias")).getByRole("button", { name: "Renombrar" }).click();
+  await accion(page, n("Experiencias"), "Renombrar");
   await tabla(page).getByLabel("Nombre", { exact: true }).fill(n("Experiencias únicas"));
   await tabla(page).getByRole("button", { name: "Guardar" }).click();
   await expect(fila(page, n("Experiencias únicas"))).toHaveCount(1);
 
-  await fila(page, n("Añadas")).getByRole("button", { name: "Borrar" }).click();
-  await fila(page, n("Añadas")).getByRole("button", { name: "Sí, borrar" }).click();
+  await accion(page, n("Añadas"), "Borrar");
+  await page.getByRole("dialog").getByRole("button", { name: "Sí, borrar" }).click();
   await expect(fila(page, n("Añadas"))).toHaveCount(0);
 });
 
@@ -116,9 +123,10 @@ test("CA-4: cada subsección tiene sus destacados y vuelve a su sección", async
 
 test("CA-5: Secciones lista solo las de primer nivel y no deja borrar una con subsecciones", async ({ page }) => {
   await page.goto("/admin/secciones");
-  const filaCava = page.getByRole("table", { name: "Secciones" }).getByRole("row").filter({ hasText: n("Cava panel") });
+  const filaCava = page.getByRole("list", { name: "Secciones" }).getByRole("listitem").filter({ hasText: n("Cava panel") });
   await expect(filaCava).toContainText("2 subsecciones");
-  await expect(page.getByRole("table", { name: "Secciones" }).getByText(n("Joyitas"))).toHaveCount(0);
-  await filaCava.getByRole("button", { name: "Borrar" }).click();
+  await expect(page.getByRole("list", { name: "Secciones" }).getByText(n("Joyitas"))).toHaveCount(0);
+  await page.waitForLoadState("networkidle");
+  await accion(page, n("Cava panel"), "Borrar");
   await expect(filaCava.getByRole("alert")).toHaveText("Tiene 2 subsecciones: no se puede borrar. Podés ocultarla.");
 });

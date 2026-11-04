@@ -8,8 +8,8 @@ import { textos } from "@/lib/textos";
 
 const t = textos.admin.destacados;
 const control =
-  "min-h-11 rounded-md border border-dorado/60 bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-dorado";
-const secundario = "inline-flex min-h-11 items-center rounded-md border border-dorado/60 px-4 disabled:opacity-60";
+  "min-h-11 rounded-md border border-control bg-superficie px-3 text-base text-texto focus:outline-2 focus:outline-texto";
+const secundario = "inline-flex min-h-11 items-center rounded-md border border-control px-4 disabled:opacity-60";
 const principal = "inline-flex min-h-11 items-center rounded-md bg-boton px-5 font-semibold text-boton-texto disabled:opacity-60";
 
 function Datos({ producto }: { producto: ProductoDestacable }) {
@@ -64,7 +64,7 @@ export function EditorDestacados({
       ) : (
         <Ordenable items={destacados} onCambio={(nuevos) => guardarDestacados(seccion.id, nuevos)}>
           {(ordenados) => (
-            <ul aria-label={t.lista} className="divide-y divide-dorado/20">
+            <ul aria-label={t.lista} className="divide-y divide-linea">
               {ordenados.map((p) => (
                 <FilaDestacado key={p.id} producto={p} ocupado={ocupado} onQuitar={() => guardar(ids.filter((id) => id !== p.id))} />
               ))}
@@ -73,7 +73,7 @@ export function EditorDestacados({
         </Ordenable>
       )}
       {error && (
-        <p role="alert" className="mt-2 text-destacado">
+        <p role="alert" className="mt-2 text-error">
           {error}
         </p>
       )}
@@ -101,7 +101,7 @@ export function EditorDestacados({
       </form>
       {resultados && resultados.length === 0 && <p className="mt-3 text-texto-suave">{t.sinResultados}</p>}
       {resultados && resultados.length > 0 && (
-        <ul aria-label={t.resultados} className="mt-3 divide-y divide-dorado/20">
+        <ul aria-label={t.resultados} className="mt-3 divide-y divide-linea">
           {resultados.map((p) => (
             <li key={p.id} className="flex items-center gap-3 py-2">
               <Datos producto={p} />

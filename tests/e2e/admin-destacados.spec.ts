@@ -42,8 +42,12 @@ test.beforeEach(async ({ context }) => {
 });
 
 const lista = (page: Page) => page.getByRole("list", { name: "Destacados" });
-const destacados = async (page: Page) =>
-  (await lista(page).getByRole("listitem").getByRole("heading").allTextContents()).map((t) => t.replace(`${prefijo} `, ""));
+// Spec 015: el contenido llega en streaming después del menú; se espera a que esté.
+const destacados = async (page: Page) => {
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await page.waitForLoadState("networkidle");
+  return (await lista(page).getByRole("listitem").getByRole("heading").allTextContents()).map((t) => t.replace(`${prefijo} `, ""));
+};
 const enCarta = async (page: Page) => {
   await page.goto(`/seccion/${ids.seccion}`);
   return (await page.getByRole("article").getByRole("heading").allTextContents()).map((t) => t.replace(`${prefijo} `, ""));
