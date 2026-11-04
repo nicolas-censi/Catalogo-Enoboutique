@@ -13,10 +13,20 @@ export const proyecto = elegirProyecto({ argv: process.argv, env: process.env })
  * @returns {Promise<any[]>}
  */
 export async function ejecutarSql(query) {
+  return ejecutarSqlEn(proyecto.ref, query);
+}
+
+/**
+ * SQL en un proyecto dado (lo usa la copia a producción, que lee de uno y escribe en otro).
+ * @param {string} ref
+ * @param {string} query
+ * @returns {Promise<any[]>}
+ */
+export async function ejecutarSqlEn(ref, query) {
   const { SUPABASE_ACCESS_TOKEN } = process.env;
   if (!SUPABASE_ACCESS_TOKEN) throw new Error("Falta SUPABASE_ACCESS_TOKEN (ver .env.example).");
   const respuesta = await fetch(
-    `https://api.supabase.com/v1/projects/${proyecto.ref}/database/query`,
+    `https://api.supabase.com/v1/projects/${ref}/database/query`,
     {
       method: "POST",
       headers: {
