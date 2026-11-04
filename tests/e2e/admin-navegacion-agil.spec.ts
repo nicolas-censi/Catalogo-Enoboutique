@@ -45,7 +45,8 @@ for (const tamano of [
       // Si el panel ya la había precargado, llega directo; si no, se ve "Cargando…".
       await expect(page.getByRole("status").filter({ hasText: "Cargando…" }).or(page.getByRole("heading", { level: 1, name: "Secciones" }))).toBeVisible();
       const centro = { x: tamano.viewport.width / 2, y: tamano.viewport.height / 2 };
-      expect(await fondoEn(page, centro.x, centro.y)).toBe("rgb(246, 242, 233)");
+      // Fondo del panel (crema) o una tarjeta del panel (blanca): nunca el negro de la carta.
+      expect(["rgb(246, 242, 233)", "rgb(255, 255, 255)"]).toContain(await fondoEn(page, centro.x, centro.y));
 
       await expect(page.getByRole("heading", { level: 1, name: "Secciones" })).toBeVisible();
       await expect(menu).toHaveAttribute("data-prueba", "el-mismo");
