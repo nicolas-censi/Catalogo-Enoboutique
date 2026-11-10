@@ -18,7 +18,7 @@ export function BotonEscanear() {
       href="/escanear"
       aria-label={textos.escaner.boton}
       title={textos.escaner.boton}
-      className="tocable inline-flex size-11 shrink-0 items-center justify-center rounded-full text-destacado hover:bg-superficie focus:outline-2 focus:outline-dorado"
+      className="tocable inline-flex size-11 shrink-0 items-center justify-center rounded-full text-destacado hover:bg-superficie focus:outline-2 focus:outline-texto"
     >
       <IconoEscaner />
     </Link>

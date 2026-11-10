@@ -24,7 +24,7 @@ function IngresoManual() {
           inputMode="numeric"
           autoComplete="off"
           pattern="[0-9 ]*"
-          className="min-h-11 flex-1 rounded-full border border-dorado bg-superficie px-4 text-base text-texto focus:outline-2 focus:outline-dorado"
+          className="min-h-11 flex-1 rounded-full border border-control bg-superficie px-4 text-base text-texto focus:outline-2 focus:outline-texto"
         />
         <button type="submit" className="min-h-11 rounded-full bg-boton px-5 font-semibold text-boton-texto">
           {t.buscar}

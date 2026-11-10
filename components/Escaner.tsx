@@ -157,7 +157,7 @@ export function Escaner() {
           </button>
         )}
         {estado.tipo === "no-encontrado" && (
-          <Link href="/" className="inline-flex min-h-11 items-center rounded-full border border-dorado px-5">
+          <Link href="/" className="inline-flex min-h-11 items-center rounded-full border border-control px-5">
             {t.buscarPorNombre}
           </Link>
         )}
@@ -167,7 +167,7 @@ export function Escaner() {
             apagarCamara();
             router.push("/");
           }}
-          className="min-h-11 rounded-full border border-dorado px-5"
+          className="min-h-11 rounded-full border border-control px-5"
         >
           {t.cerrar}
         </button>

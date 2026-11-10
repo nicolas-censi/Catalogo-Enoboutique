@@ -16,8 +16,8 @@ export function FormularioBusqueda({
   accesorio?: ReactNode;
 }) {
   return (
-    <form role="search" action="/buscar" method="get" className="flex items-center gap-1 border-b border-dorado/50 focus-within:border-dorado">
-      <button type="submit" aria-label={textos.buscadorBoton} className="tocable inline-flex size-11 shrink-0 items-center justify-center text-dorado">
+    <form role="search" action="/buscar" method="get" className="flex items-center gap-1 border-b border-dorado/50 focus-within:border-texto">
+      <button type="submit" aria-label={textos.buscadorBoton} className="tocable inline-flex size-11 shrink-0 items-center justify-center text-texto">
         <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
           <circle cx="11" cy="11" r="7" />
           <path d="m20 20-3.5-3.5" />
