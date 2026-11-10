@@ -55,6 +55,11 @@ async function insertar(esquema, tabla, filas) {
   }
 }
 
+// 0b. Destino limpio: las migraciones cargan bodegas y abreviaturas de Tango (que se
+// reemplazan por las de desarrollo, que el personal pudo haber corregido) y, si una
+// copia anterior se cortó, quedan restos. Producción no tiene productos todavía.
+for (const tabla of [...TABLAS_A_COPIAR].reverse()) await enProd(`delete from public.${tabla}`);
+
 // 1. Usuarios del personal (no los de los tests), con el hash de la contraseña.
 const personal = await leer(enDev, "public.personal");
 const ids = personal.map((p) => p.user_id);
@@ -63,6 +68,7 @@ const usuarios = ids.length
   : [];
 const reales = new Set(usuarios.map((u) => u.id));
 const identidades = reales.size ? await leer(enDev, "auth.identities", `where user_id in (${[...reales].map(literal).join(", ")})`) : [];
+if (reales.size) await enProd(`delete from auth.users where id in (${[...reales].map(literal).join(", ")})`);
 await insertar("auth", "users", usuarios);
 await insertar("auth", "identities", identidades);
 console.log(`Usuarios: ${usuarios.length}`);
@@ -71,7 +77,6 @@ console.log(`Usuarios: ${usuarios.length}`);
 const datos = {};
 for (const tabla of TABLAS_A_COPIAR) datos[tabla] = await leer(enDev, `public.${tabla}`);
 const plan = planCopia(datos, reales);
-await enProd("delete from public.marca");
 for (const tabla of TABLAS_A_COPIAR) {
   await insertar("public", tabla, plan[tabla]);
   console.log(`${tabla}: ${plan[tabla].length}`);
