@@ -57,3 +57,6 @@ next-env.d.ts
 
 # Spec 009: copias de seguridad (datos reales: nunca al repositorio)
 /respaldos/
+
+# Ajustes locales de Claude Code
+.claude/settings.local.json
