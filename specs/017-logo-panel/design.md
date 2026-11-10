@@ -11,11 +11,12 @@
 
 ## Recorte automático del logo (CA-3)
 - `lib/admin/logo.ts` (servidor): `recortarLogo(datos)` con `sharp`: `trim()` (toma como
-  fondo el color de la esquina; sirve para transparente o liso), deja un margen de 1 %
-  transparente y guarda en el mismo formato (PNG o WebP). Límite de píxeles como en
+  fondo el color de la esquina; sirve para transparente o liso), deja un margen transparente
+  del 1 % del lado mayor del dibujo y guarda en el mismo formato (PNG o WebP). Límite de píxeles como en
   `lib/ia/foto.ts`.
-- `guardarLogo(ruta)` baja el archivo recién subido, lo recorta y lo vuelve a subir en la
-  misma ruta antes de guardarlo en `marca`. Si el recorte falla, se usa tal cual.
+- `guardarLogo(ruta)` baja el archivo recién subido, lo recorta, lo sube como archivo
+  nuevo (el bucket no deja reemplazar: solo subir y borrar) y borra el que subió el
+  navegador, antes de guardarlo en `marca`. Si el recorte falla, se usa tal cual.
 - El logo que ya está subido no se toca: alcanza con volver a subirlo.
 - `LogoMarca` suma `max-w-full` para que un logo muy ancho no se salga en el celular.
 
@@ -24,7 +25,7 @@ Sin cambios: `marca.logo_path` (spec 006). `marcaCarta()` ya se invalida al camb
 
 ## Tests
 - Unit: `recortarLogo` saca el margen transparente (1920×1080 con dibujo de 1900×556 →
-  ≈ 1938×568), no cambia uno sin margen y mantiene el formato.
+  1938×594), no cambia uno sin margen y mantiene el formato.
 - E2E: en la computadora el menú muestra la imagen "Lehonor Enoboutique" y no el texto
   "Lehonor"; en el celular la barra no la muestra; con un logo subido, el menú usa ese
   archivo.

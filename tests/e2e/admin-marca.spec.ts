@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import sharp from "sharp";
 import { clienteAdmin, limpiarUsuarios, prefijo } from "../db/ayudante";
 import { entrarComo } from "./ayudante-admin";
 
@@ -83,13 +84,11 @@ test("CA-2: sube un logo con vista previa, la carta lo muestra y se puede volver
   await expect(logoDeLaCarta(page)).toHaveAttribute("src", new RegExp(ruta.replace(/[/.]/g, "\\$&")));
 
   // Spec 017, CA-2: el menú del panel (en la computadora) usa el mismo logo.
-  await page.setViewportSize({ width: 1366, height: 768 });
   await page.goto("/admin");
   await expect(page.getByRole("navigation", { name: "Panel" }).getByRole("img", { name: "Lehonor Enoboutique" })).toHaveAttribute(
     "src",
     new RegExp(ruta.replace(/[/.]/g, "\\$&")),
   );
-  await page.setViewportSize({ width: 390, height: 844 });
 
   await page.goto("/admin/marca");
   await page.getByRole("button", { name: "Volver al logo de la marca" }).click();
@@ -99,4 +98,27 @@ test("CA-2: sube un logo con vista previa, la carta lo muestra y se puede volver
   expect((await admin.storage.from("marca").list("logos")).data!.map((o) => `logos/${o.name}`)).not.toContain(ruta);
   await page.goto("/");
   await expect(logoDeLaCarta(page)).toHaveAttribute("src", /logo-enoboutique/);
+});
+
+test("spec 017, CA-3: un logo con margen transparente se guarda recortado al dibujo", async ({ page, context }) => {
+  await entrarComo(context, "encargado");
+  await page.goto("/admin/marca");
+  const antes = new Set(((await admin.storage.from("marca").list("logos")).data ?? []).map((o) => o.name));
+  // 1920 × 1080 con el dibujo en 1900 × 556, como el logo nuevo de la marca.
+  const dibujo = await sharp({ create: { width: 1900, height: 556, channels: 4, background: { r: 27, g: 26, b: 23, alpha: 1 } } }).png().toBuffer();
+  const conMargen = await sharp({ create: { width: 1920, height: 1080, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
+    .composite([{ input: dibujo, left: 10, top: 253 }])
+    .png()
+    .toBuffer();
+  await page.getByLabel("Logo nuevo", { exact: true }).setInputFiles({ name: "logo.png", mimeType: "image/png", buffer: conMargen });
+  await page.getByRole("button", { name: "Usar este logo" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Logo cambiado" })).toBeVisible();
+
+  const ruta = (await admin.from("marca").select("logo_path").eq("id", 1).single()).data!.logo_path!;
+  const { data } = await admin.storage.from("marca").download(ruta);
+  const m = await sharp(Buffer.from(await data!.arrayBuffer())).metadata();
+  expect([m.width, m.height]).toEqual([1938, 594]);
+  // Del archivo sin recortar no queda nada: solo el recortado es nuevo.
+  const nuevos = ((await admin.storage.from("marca").list("logos")).data ?? []).map((o) => o.name).filter((n) => !antes.has(n));
+  expect(nuevos.map((n) => `logos/${n}`)).toEqual([ruta]);
 });
