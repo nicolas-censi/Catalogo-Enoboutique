@@ -18,7 +18,8 @@
 | `components/CarruselPromociones.tsx` | flechas y botón de cerrar en `text-texto` |
 | `components/BotonEscanear.tsx` | contorno de foco en `outline-texto` |
 | `app/escanear`, `components/Escaner.tsx` | íconos y textos en tokens claros; el visor de la cámara sigue oscuro (es la imagen de la cámara) |
-| `components/admin/EditorMarca.tsx`, `TarjetaQr.tsx` | ya usan `carta-fondo` / `carta-texto`: cambian solos |
+| `components/admin/EditorMarca.tsx` | ya usa `carta-fondo`: cambia solo |
+| `components/admin/TarjetaQr.tsx` | QR casi negro sobre blanco (con los tokens nuevos quedaba invertido, y algunas cámaras no leen QR invertidos); "Escaneá…" en casi negro con una línea dorada arriba |
 
 Las líneas doradas (`bg-dorado`, `border-dorado/…`) no cambian.
 
