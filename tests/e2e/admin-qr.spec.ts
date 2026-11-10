@@ -41,6 +41,20 @@ test.describe("en la computadora", () => {
   });
 });
 
+test("spec 016, CA-4: colores de la carta, QR negro sobre blanco (no invertido) y el dorado solo como detalle", async ({ page, context }) => {
+  await entrarComo(context, "encargado");
+  await page.goto("/admin/qr");
+  const tarjeta = page.getByRole("article", { name: "Tarjeta de mesa" });
+  await expect(tarjeta).toHaveCSS("background-color", "rgb(246, 242, 233)");
+  await expect(tarjeta).toHaveCSS("color", "rgb(27, 26, 23)");
+  const qr = tarjeta.getByRole("img", { name: /Código QR/ });
+  await expect(qr.locator("path")).toHaveCSS("fill", "rgb(27, 26, 23)");
+  // Lo que queda detrás del QR es blanco.
+  await expect(qr.locator("xpath=..")).toHaveCSS("background-color", "rgb(255, 255, 255)");
+  await expect(tarjeta.getByText("Escaneá para ver la carta")).toHaveCSS("color", "rgb(27, 26, 23)");
+  await expect(tarjeta.locator("[data-detalle-dorado]")).toHaveCSS("background-color", "rgb(177, 151, 80)");
+});
+
 test("en el celular: sin scroll horizontal de la página", async ({ page, context }) => {
   await entrarComo(context, "encargado");
   await page.goto("/admin/qr");

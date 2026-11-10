@@ -33,6 +33,13 @@ test("CA-3: un vendedor no tiene acceso a Marca", async ({ page, context }) => {
   await expect(page.getByText("No tenés acceso al panel.")).toBeVisible();
 });
 
+test("spec 016, CA-3: el logo actual se muestra sobre el fondo crema de la carta", async ({ page, context }) => {
+  await entrarComo(context, "encargado");
+  await page.goto("/admin/marca");
+  const logo = page.getByRole("img", { name: "Logo actual" });
+  await expect(logo.locator("xpath=..")).toHaveCSS("background-color", "rgb(246, 242, 233)");
+});
+
 test("CA-1: la bienvenida se ve en el inicio, y vacía no se muestra", async ({ page, context }) => {
   await entrarComo(context, "encargado");
   await page.goto("/admin");

@@ -24,12 +24,14 @@ export function TarjetaQr({ url, logoPath }: { url: string; logoPath: string | n
         <Image src={logoOriginal} alt={textos.nombreCarta} className="h-[18mm] w-auto" />
       )}
       <div className="flex flex-col items-center gap-[5mm]">
-        <div className="rounded-lg bg-carta-texto p-[3mm] text-carta-fondo">
+        {/* QR oscuro sobre blanco: algunas cámaras no leen los QR invertidos (spec 016, CA-4). */}
+        <div className="rounded-lg bg-superficie p-[3mm] text-carta-texto">
           <svg role="img" aria-label={t.qr(urlVisible(url))} viewBox={`0 0 ${lado} ${lado}`} className="block size-[56mm]" shapeRendering="crispEdges">
             <path d={d} fill="currentColor" />
           </svg>
         </div>
-        <p className="text-center font-titulos text-[5.5mm] leading-tight text-dorado">{t.escanea}</p>
+        <span aria-hidden="true" data-detalle-dorado className="h-px w-[12mm] bg-dorado" />
+        <p className="text-center font-titulos text-[5.5mm] leading-tight">{t.escanea}</p>
       </div>
       <p className="text-[3.5mm] tracking-wide">{urlVisible(url)}</p>
     </article>
