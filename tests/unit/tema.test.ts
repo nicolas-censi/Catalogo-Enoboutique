@@ -2,12 +2,13 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
-// Spec 014, CA-2: el tema del panel (colores de la carta invertidos) cumple WCAG AA.
+// Spec 014 (CA-2) y spec 016 (CA-1): un solo tema claro para la carta y el panel, con
+// contraste WCAG AA.
 const css = readFileSync(join(__dirname, "..", "..", "app", "globals.css"), "utf8");
-const bloque = css.match(/\.tema-panel\s*\{([\s\S]*?)\n\}/)?.[1] ?? "";
+const bloque = css.match(/@theme\s*\{([\s\S]*?)\n\}/)?.[1] ?? "";
 const color = (token: string) => {
   const valor = bloque.match(new RegExp(`--color-${token}:\\s*(#[0-9A-Fa-f]{6});`))?.[1];
-  if (!valor) throw new Error(`Falta --color-${token} en .tema-panel`);
+  if (!valor) throw new Error(`Falta --color-${token} en @theme`);
   return valor;
 };
 
@@ -20,10 +21,19 @@ function contraste(a: string, b: string) {
   return (x + 0.05) / (y + 0.05);
 }
 
-describe("tema del panel", () => {
-  it("es claro: fondo crema y texto casi negro (la carta invertida)", () => {
-    expect(luminancia(color("fondo"))).toBeGreaterThan(0.8);
-    expect(luminancia(color("texto"))).toBeLessThan(0.05);
+describe("tema de la carta y del panel", () => {
+  it("son los colores del panel: crema, casi negro y gris cálido (spec 016, CA-1)", () => {
+    expect(color("fondo")).toBe("#F6F2E9");
+    expect(color("superficie")).toBe("#FFFFFF");
+    for (const t of ["texto", "destacado", "titulo"]) expect(color(t)).toBe("#1B1A17");
+    expect(color("texto-suave")).toBe("#5E584C");
+    expect(color("carta-fondo")).toBe("#F6F2E9");
+    expect(color("carta-texto")).toBe("#1B1A17");
+  });
+
+  it("el panel ya no tiene colores propios", () => {
+    const panel = css.match(/\.tema-panel\s*\{([\s\S]*?)\n\}/)?.[1] ?? "";
+    expect(panel).not.toMatch(/^\s*--color-/m);
   });
 
   it.each([
@@ -32,7 +42,9 @@ describe("tema del panel", () => {
     ["texto-suave", "fondo"],
     ["texto-suave", "superficie"],
     ["titulo", "fondo"],
+    ["destacado", "fondo"],
     ["destacado", "superficie"],
+    ["carta-texto", "carta-fondo"],
     ["boton-texto", "boton"],
     ["error", "fondo"],
     ["error", "superficie"],

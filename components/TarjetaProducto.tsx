@@ -21,7 +21,7 @@ export function TarjetaProducto({ producto, nivel = 2, posicion = 0 }: { product
           {producto.nombre}
         </Link>
       </Titulo>
-      {subtitulo && <p className="text-sm text-texto-suave/80">{subtitulo}</p>}
+      {subtitulo && <p className="text-sm text-texto-suave">{subtitulo}</p>}
       <ListaAnadas anadas={producto.anadas} />
     </article>
   );

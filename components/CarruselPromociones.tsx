@@ -114,7 +114,7 @@ export function CarruselPromociones({ imagenes }: { imagenes: string[] }) {
               onClick={() => setPausado((p) => !p)}
               aria-label={pausado ? t.reanudar : t.pausar}
               aria-pressed={pausado}
-              className="tocable inline-flex size-11 items-center justify-center text-dorado"
+              className="tocable inline-flex size-11 items-center justify-center text-texto"
             >
               <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
                 {pausado ? <path d="M8 5v14l11-7z" /> : <path d="M7 5h4v14H7zM13 5h4v14h-4z" />}
@@ -133,7 +133,7 @@ export function CarruselPromociones({ imagenes }: { imagenes: string[] }) {
         {ampliada !== null && (
           <div className="flex h-full flex-col">
             <div className="flex justify-end p-2">
-              <button type="button" onClick={() => dialogo.current?.close()} className="tocable inline-flex min-h-11 items-center gap-2 rounded-full border border-dorado/60 px-4 text-titulo">
+              <button type="button" onClick={() => dialogo.current?.close()} className="tocable inline-flex min-h-11 items-center gap-2 rounded-full border border-control px-4 text-titulo">
                 <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                   <path d="M6 6l12 12M18 6 6 18" />
                 </svg>
