@@ -1,6 +1,6 @@
 # 017 – Logo en el panel y tamaño automático
 
-**Estado:** En revisión
+**Estado:** Aprobada (2026-11-10)
 
 ## Objetivo
 Que el panel muestre el logo de la marca arriba del menú, donde hoy dice "Lehonor", igual

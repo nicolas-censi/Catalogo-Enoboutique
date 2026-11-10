@@ -2,6 +2,7 @@ import Link from "next/link";
 import { salir } from "@/app/admin/acciones-sesion";
 import { ActividadIA } from "@/components/admin/ActividadIA";
 import { NavPanel } from "@/components/admin/NavPanel";
+import { LogoMarca } from "@/components/LogoMarca";
 import { claseBoton } from "@/components/admin/ui/boton";
 import { obtenerSesionPanel } from "@/lib/admin/sesion";
 import { crearClienteServidor } from "@/lib/supabase/server";
@@ -46,7 +47,7 @@ export async function MenuPanel() {
   const { count } = await supabase.from("sugerencias").select("id", { count: "exact", head: true }).eq("estado", "lista");
   return (
     <ActividadIA pendientes={count ?? 0} desde={new Date().toISOString()}>
-      <NavPanel esEncargado={sesion.rol === "encargado"} pie={<CuentaPanel usuario={sesion.usuario} />} />
+      <NavPanel esEncargado={sesion.rol === "encargado"} marca={<LogoMarca clase="h-10 w-auto" />} pie={<CuentaPanel usuario={sesion.usuario} />} />
     </ActividadIA>
   );
 }

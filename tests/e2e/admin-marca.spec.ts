@@ -82,6 +82,15 @@ test("CA-2: sube un logo con vista previa, la carta lo muestra y se puede volver
   await page.goto("/seccion/5eed0000-0000-4000-8000-000000000101");
   await expect(logoDeLaCarta(page)).toHaveAttribute("src", new RegExp(ruta.replace(/[/.]/g, "\\$&")));
 
+  // Spec 017, CA-2: el menú del panel (en la computadora) usa el mismo logo.
+  await page.setViewportSize({ width: 1366, height: 768 });
+  await page.goto("/admin");
+  await expect(page.getByRole("navigation", { name: "Panel" }).getByRole("img", { name: "Lehonor Enoboutique" })).toHaveAttribute(
+    "src",
+    new RegExp(ruta.replace(/[/.]/g, "\\$&")),
+  );
+  await page.setViewportSize({ width: 390, height: 844 });
+
   await page.goto("/admin/marca");
   await page.getByRole("button", { name: "Volver al logo de la marca" }).click();
   await expect(page.getByRole("status").filter({ hasText: "logo de la marca" })).toBeVisible();

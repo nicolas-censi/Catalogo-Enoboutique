@@ -26,7 +26,7 @@ type Item = { href: string; etiqueta: string; corta: string; icono: keyof typeof
  * Spec 014, CA-1: en la computadora, columna a la izquierda; en el celular, barra fija
  * abajo. Una sola navegación ("Panel"), marcada en la opción actual.
  */
-export function NavPanel({ esEncargado, pie }: { esEncargado: boolean; pie: ReactNode }) {
+export function NavPanel({ esEncargado, marca, pie }: { esEncargado: boolean; marca: ReactNode; pie: ReactNode }) {
   // Spec 015, CA-4: el contador se actualiza solo (ActividadIA).
   const pendientes = usePendientes();
   const ruta = usePathname();
@@ -51,7 +51,8 @@ export function NavPanel({ esEncargado, pie }: { esEncargado: boolean; pie: Reac
       aria-label={textos.admin.titulo}
       className="fixed inset-x-0 bottom-0 z-20 border-t border-linea bg-superficie pb-[env(safe-area-inset-bottom)] md:sticky md:top-0 md:flex md:h-dvh md:w-60 md:shrink-0 md:flex-col md:border-t-0 md:border-r md:bg-fondo md:p-4"
     >
-      <p className="hidden px-3 pt-2 pb-8 font-titulos text-xl md:block">{t.marca}</p>
+      {/* Spec 017: el logo de la marca, solo en la computadora. */}
+      <div className="hidden px-3 pt-2 pb-8 md:block">{marca}</div>
       <ul className="flex md:flex-col md:gap-1">
         {items.map((item) => {
           const activo = pendiente ? pendiente === item.href : item.activo(ruta);

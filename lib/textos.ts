@@ -91,7 +91,6 @@ export const textos = {
       ningunArchivo: "Ningún archivo elegido",
     },
     nav: {
-      marca: "Lehonor",
       paraRevisar: "Para revisar",
       paraRevisarCorto: "Revisar",
       pendientes: (n: number) => `${n} ${n === 1 ? "pendiente" : "pendientes"}`,
