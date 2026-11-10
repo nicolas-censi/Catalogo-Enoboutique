@@ -4,8 +4,10 @@
 - **Gemini API** con el SDK oficial `@google/genai` (dependencia nueva), solo en el
   servidor (`lib/ia/` con `import "server-only"`). Clave en `GEMINI_API_KEY`
   (`.env.local` y Vercel; la carga el usuario, nunca por chat ni en el código).
-- Modelo: **`gemini-3.8-flash`** (decidido el 2026-11-02; el id va en una constante
-  `MODELO_IA` y se puede cambiar por variable de entorno `IA_MODELO`).
+- Modelo: **`gemini-3.1-pro-preview`** (Gemini 3.1 Pro; decidido el 2026-11-10 después de
+  la prueba de 20 productos; antes `gemini-3.8-flash`). El id va en la constante
+  `MODELO_POR_DEFECTO` y se puede cambiar por variable de entorno `IA_MODELO`. El costo
+  se calcula con los precios del modelo que se usa.
 - Herramientas de Gemini: **Grounding with Google Search** (`googleSearch`) para buscar y
   **URL context** (`urlContext`) para leer la página de la bodega o del distribuidor.
 - Respuesta estructurada en JSON:
@@ -106,7 +108,15 @@
   esté abierta; muestra "Buscando… faltan N".
 - Enlace "Para revisar (N)" en `MarcoPanel` para todo el personal.
 
-## Costos (Gemini 3.8 Flash)
+## Costos (Gemini 3.1 Pro, desde el 2026-11-10)
+Precios de lista por millón de tokens (pedidos de menos de 200 mil tokens): US$ 2
+entrada / 12 salida (incluye el razonamiento). Búsquedas en Google: las mismas condiciones
+de abajo. En la prueba de 20 productos el costo calculado fue ≈ US$ 0,02 por producto
+(usó menos búsquedas que Flash); con el uso típico de la tabla de abajo, ≈ US$ 0,05 de
+tokens + búsquedas. Riesgo: es un modelo en *preview*; si Google lo retira, se cambia
+`IA_MODELO` (o la constante) sin tocar lo demás.
+
+## Costos (Gemini 3.8 Flash, modelo anterior)
 Precios de lista por millón de tokens: US$ 0,75 entrada / 3,75 salida hasta el
 31/12/2026 y US$ 1,50 / 7,50 desde 2027. Búsquedas en Google: 5.000 gratis por mes
 (compartidas entre los modelos Gemini 3 y posteriores), después US$ 14 cada 1.000; tope
@@ -128,8 +138,7 @@ en el mes. Conviene fijar un tope de gasto en Google AI Studio / Cloud Billing.
 | gemini-3.1-pro-preview | 20/20 | 14/20 | 0 | 44 s | US$ 0,020 |
 
 Facturado en total: US$ 1,55. Pro respondió mejor, pero muchas veces sin mostrar fuentes
-(parece no buscar). La elección final del modelo queda pendiente de presupuesto; el
-modelo se cambia con `IA_MODELO`, sin tocar código.
+(parece no buscar). **Decisión (2026-11-10): Gemini 3.1 Pro** (pedido del usuario).
 
 ## Decisiones y alternativas descartadas
 - **Gemini 3.8 Flash** (pedido del usuario: Gemini; elegido por calidad/precio el

@@ -1,7 +1,7 @@
 import { ApiError, type GenerateContentParameters, type GenerateContentResponse } from "@google/genai";
 import { describe, expect, it } from "vitest";
-import { costoUsd, preciosGemini } from "@/lib/ia/costo";
-import { fuentesDe, SugeridorGemini, usoDe } from "@/lib/ia/gemini";
+import { costoUsd, modeloIA, preciosGemini } from "@/lib/ia/costo";
+import { fuentesDe, MODELO_POR_DEFECTO, SugeridorGemini, usoDe } from "@/lib/ia/gemini";
 import { INSTRUCCIONES } from "@/lib/ia/pedido";
 import type { ProductoParaSugerir } from "@/lib/ia/tipos";
 
@@ -101,12 +101,25 @@ describe("usoDe y fuentesDe", () => {
   });
 });
 
+describe("modelo (spec 007, T13)", () => {
+  it("por defecto es Gemini 3.1 Pro; IA_MODELO lo cambia", () => {
+    expect(MODELO_POR_DEFECTO).toBe("gemini-3.1-pro-preview");
+    expect(modeloIA({})).toBe("gemini-3.1-pro-preview");
+    expect(modeloIA({ IA_MODELO: "gemini-3.8-flash" })).toBe("gemini-3.8-flash");
+    expect(modeloIA({ IA_MODELO: "" })).toBe("gemini-3.1-pro-preview");
+  });
+});
+
 describe("costoUsd (CA-7)", () => {
-  it("usa los precios promocionales de 3.8 Flash en 2026 y los nuevos desde 2027", () => {
-    const uso = { tokensEntrada: 15000, tokensSalida: 2000, busquedas: 3 };
-    expect(costoUsd(uso, new Date("2026-11-02T12:00:00Z"))).toBeCloseTo(0.01125 + 0.0075 + 0.042, 5);
-    expect(costoUsd(uso, new Date("2027-01-02T12:00:00Z"))).toBeCloseTo(0.0225 + 0.015 + 0.042, 5);
-    expect(preciosGemini(new Date("2027-01-01T02:59:00Z")).entradaPorMillon).toBe(0.75);
+  const uso = { tokensEntrada: 15000, tokensSalida: 2000, busquedas: 3 };
+  it("con Pro usa US$ 2 y 12 por millón, sin cambio en 2027", () => {
+    expect(costoUsd(uso, new Date("2026-11-02T12:00:00Z"), "gemini-3.1-pro-preview")).toBeCloseTo(0.03 + 0.024 + 0.042, 5);
+    expect(costoUsd(uso, new Date("2027-02-02T12:00:00Z"), "gemini-3.1-pro-preview")).toBeCloseTo(0.03 + 0.024 + 0.042, 5);
+  });
+  it("con 3.8 Flash usa los precios promocionales en 2026 y los nuevos desde 2027", () => {
+    expect(costoUsd(uso, new Date("2026-11-02T12:00:00Z"), "gemini-3.8-flash")).toBeCloseTo(0.01125 + 0.0075 + 0.042, 5);
+    expect(costoUsd(uso, new Date("2027-01-02T12:00:00Z"), "gemini-3.8-flash")).toBeCloseTo(0.0225 + 0.015 + 0.042, 5);
+    expect(preciosGemini(new Date("2027-01-01T02:59:00Z"), "gemini-3.8-flash").entradaPorMillon).toBe(0.75);
   });
 });
 
@@ -116,9 +129,10 @@ describe("estimarCosto (CA-2)", () => {
     const fecha = new Date("2026-11-03T12:00:00Z");
     const uso = { tokensEntrada: 15000, tokensSalida: 2000, busquedas: 3 };
     // 100 productos, búsquedas todas gratis: solo tokens.
-    expect(estimarCosto({ cantidad: 100, promedio: uso, busquedasDelMes: 0, fecha })).toBeCloseTo(100 * (0.01125 + 0.0075) * AJUSTE_REAL, 4);
+    const modelo = "gemini-3.1-pro-preview";
+    expect(estimarCosto({ cantidad: 100, promedio: uso, busquedasDelMes: 0, fecha, modelo })).toBeCloseTo(100 * (0.03 + 0.024) * AJUSTE_REAL, 4);
     // Sin búsquedas gratis restantes: se pagan las 300.
-    expect(estimarCosto({ cantidad: 100, promedio: uso, busquedasDelMes: BUSQUEDAS_GRATIS_MES, fecha })).toBeCloseTo(100 * (0.01125 + 0.0075 + 0.042) * AJUSTE_REAL, 4);
+    expect(estimarCosto({ cantidad: 100, promedio: uso, busquedasDelMes: BUSQUEDAS_GRATIS_MES, fecha, modelo })).toBeCloseTo(100 * (0.03 + 0.024 + 0.042) * AJUSTE_REAL, 4);
     // Sin datos todavía: el uso típico.
     expect(estimarCosto({ cantidad: 10, promedio: null, busquedasDelMes: BUSQUEDAS_GRATIS_MES, fecha })).toBeGreaterThan(0);
   });

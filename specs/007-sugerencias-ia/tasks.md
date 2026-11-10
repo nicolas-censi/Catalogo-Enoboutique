@@ -14,3 +14,4 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T10 — Costo del mes (`resumen_ia_mes`) en la bandeja; DB + e2e (CA-7)
 - [x] T11 — Accesibilidad (axe) y 390 px de ficha y bandeja; revisión contra los CA (todos)
 - [x] T12 — Interruptor de la IA: `ajustes_ia` + `cambiar_ia`, chequeo en `resolverSugerencia` y en `pedirSugerencia`, página `/admin/ia` (solo encargado), aviso en la ficha; DB + e2e (CA-8)
+- [x] T13 — Modelo por defecto **Gemini 3.1 Pro** (`gemini-3.1-pro-preview`) y costo según el modelo (Pro: US$ 2 / 12 por millón; Flash: precios de 3.8 Flash); unit (CA-2, CA-7)

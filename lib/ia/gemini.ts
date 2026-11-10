@@ -1,11 +1,12 @@
 // Spec 007, T3: sugerencias con Gemini (búsqueda en Google + lectura de páginas).
 // Se usa solo en el servidor (desde sugeridor.ts). Recibe el cliente para poder probarlo.
 import { ApiError, type GenerateContentConfig, type GenerateContentResponse, type GoogleGenAI } from "@google/genai";
+import { MODELO_POR_DEFECTO } from "./costo";
 import { esquemaJsonRespuesta, leerRespuesta } from "./esquema";
 import { armarPedido, INSTRUCCIONES } from "./pedido";
 import type { Fuente, ProductoParaSugerir, SugerenciaIA, Sugeridor, UsoIA } from "./tipos";
 
-export const MODELO_POR_DEFECTO = "gemini-3.8-flash";
+export { MODELO_POR_DEFECTO };
 const ESPERA_MS = 120_000;
 
 type Modelos = Pick<GoogleGenAI["models"], "generateContent">;
