@@ -32,7 +32,7 @@ export function FormularioBusqueda({
         placeholder={textos.buscadorAyuda}
         autoComplete="off"
         enterKeyHint="search"
-        className="min-h-12 min-w-0 flex-1 bg-transparent text-[1.0625rem] text-texto placeholder:text-texto-suave/70 focus:outline-none"
+        className="min-h-12 min-w-0 flex-1 bg-transparent text-[1.0625rem] text-texto placeholder:text-texto-suave focus:outline-none"
       />
       {accesorio}
     </form>

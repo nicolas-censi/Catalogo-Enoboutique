@@ -1,6 +1,6 @@
 # 016 – Carta en colores claros
 
-**Estado:** En revisión
+**Estado:** Aprobada (2026-11-10)
 
 ## Objetivo
 Que la carta pública tenga los mismos colores que el panel: fondo crema, letras casi

@@ -38,7 +38,7 @@ async function DetalleProducto({ params }: { params: Promise<{ id: string }> }) 
           />
         )}
         <h1 className="mt-4 font-titulos text-[1.75rem] leading-snug text-titulo">{producto.nombre}</h1>
-        {subtitulo && <p className="mt-1 text-sm tracking-wide text-texto-suave/80">{subtitulo}</p>}
+        {subtitulo && <p className="mt-1 text-sm tracking-wide text-texto-suave">{subtitulo}</p>}
         <span aria-hidden="true" className="my-4 block h-px w-10 bg-dorado" />
         {producto.descripcion && <p className="mb-4 leading-relaxed">{producto.descripcion}</p>}
         <ListaAnadas anadas={producto.anadas} />
