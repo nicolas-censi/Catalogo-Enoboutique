@@ -62,8 +62,9 @@ No hace falta Docker: el desarrollo y los tests usan el proyecto de Supabase en 
 | `npm run test:e2e:produccion` | Tests que necesitan la app armada como en producción (ej.: caché de 1 minuto de la carta). Tardan un par de minutos. |
 | `npm run lint` | Revisa el código con ESLint. |
 | `npm run typecheck` | Verifica los tipos de TypeScript. |
-| `npm run db:migrar` | Aplica las migraciones pendientes de `supabase/migrations/`. |
-| `npm run db:seed` | Carga `supabase/seed.sql` (datos de ejemplo). |
+| `npm run db:migrar` | Aplica las migraciones pendientes de `supabase/migrations/` (desarrollo). Con `-- --produccion`, en producción: usa `SUPABASE_PROJECT_REF_PRODUCCION` y pide escribir "produccion" para seguir. |
+| `npm run db:respaldo` | Copia de seguridad de producción: un JSON por tabla en `respaldos/AAAA-MM-DD/` (carpeta fuera del repositorio). Conviene correrlo cada tanto (el plan gratis no hace copias). |
+| `npm run db:seed` | Carga `supabase/seed.sql` (datos de ejemplo). Solo desarrollo: con `--produccion` se niega. |
 | `npm run db:tipos` | Regenera `lib/tipos-db.ts` desde la base. Correrlo después de cada migración. |
 | `npm run db:encargado -- <usuario>` | Crea un encargado con ese usuario (pide la contraseña). Para el primer encargado de un proyecto nuevo. |
 | `npm run db:usuarios` | Muestra cómo pasar las cuentas del personal que entraban con email a usuario; con `-- --aplicar`, lo hace. |

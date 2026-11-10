@@ -25,6 +25,7 @@
   --color-error: #E8A08F; /* mensajes de error */
   --color-dorado-texto: #B19750; /* dorado para texto chico */
   --color-carta-fondo: #000000; /* fondo de la carta, también dentro del panel (vista previa del logo) */
+  --color-carta-texto: #F3EDE0; /* crema de la carta, también dentro del panel (tarjeta QR) */
 }
 
 @theme inline {
@@ -157,5 +158,32 @@
   ::view-transition-new(root) {
     animation: none !important;
     transition: none !important;
+  }
+}
+
+/*
+ * Tarjeta de mesa (spec 009, CA-4): al imprimir sale sola, de 10 × 15 cm y con sus
+ * colores (sin el panel alrededor).
+ */
+@page tarjeta {
+  size: 100mm 150mm;
+  margin: 0;
+}
+@media print {
+  body:has(.tarjeta-qr) * {
+    visibility: hidden;
+  }
+  body:has(.tarjeta-qr) .tarjeta-qr,
+  body:has(.tarjeta-qr) .tarjeta-qr * {
+    visibility: visible;
+  }
+  .tarjeta-qr {
+    page: tarjeta;
+    position: fixed;
+    inset: 0;
+    margin: 0;
+    border-radius: 0;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
   }
 }

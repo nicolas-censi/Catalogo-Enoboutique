@@ -42,7 +42,7 @@ export function NavPanel({ esEncargado, pie }: { esEncargado: boolean; pie: Reac
       etiqueta: esEncargado ? t.ajustes : t.cuenta,
       corta: esEncargado ? t.ajustes : t.cuenta,
       icono: "ajustes",
-      activo: (r) => ["/admin/ajustes", "/admin/importar", "/admin/promociones", "/admin/marca", "/admin/ia", "/admin/personal"].some((p) => r.startsWith(p)),
+      activo: (r) => ["/admin/ajustes", "/admin/importar", "/admin/promociones", "/admin/marca", "/admin/ia", "/admin/personal", "/admin/qr"].some((p) => r.startsWith(p)),
     },
   ];
 

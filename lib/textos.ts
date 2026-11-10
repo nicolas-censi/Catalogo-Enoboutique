@@ -109,6 +109,7 @@ export const textos = {
         { href: "/admin/marca", titulo: "Marca", detalle: "La bienvenida y el logo de la carta." },
         { href: "/admin/ia", titulo: "IA", detalle: "Prender o apagar las sugerencias de descripción y foto." },
         { href: "/admin/personal", titulo: "Personal", detalle: "Quién entra al panel, con qué usuario y qué rol." },
+        { href: "/admin/qr", titulo: "Tarjeta QR", detalle: "La tarjeta de mesa para imprimir, con el QR de la carta." },
       ],
     },
     sinAcceso: "No tenés acceso al panel.",
@@ -215,6 +216,14 @@ export const textos = {
       sugerenciaPara: (nombre: string) => `Sugerencia para ${nombre}`,
       gastado: (monto: string) => `Gastado este mes (estimado): US$ ${monto}.`,
       error: "No se pudo seguir con la cola. Probá de nuevo más tarde.",
+    },
+    qr: {
+      titulo: "Tarjeta QR",
+      ayuda: "Tarjeta de mesa de 10 × 15 cm. Al imprimir sale sola, del tamaño justo; también la podés guardar como PDF desde la ventana de impresión.",
+      imprimir: "Imprimir",
+      escanea: "Escaneá para ver la carta",
+      tarjeta: "Tarjeta de mesa",
+      qr: (url: string) => `Código QR que abre ${url}`,
     },
     ia: {
       menu: "IA",
