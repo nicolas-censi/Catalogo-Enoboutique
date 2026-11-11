@@ -9,13 +9,23 @@ const ORIGEN = join(raiz, "assets", "marca", "isotipo.png");
 const TRANSPARENTE = { r: 0, g: 0, b: 0, alpha: 0 };
 const CREMA = { r: 0xf6, g: 0xf2, b: 0xe9, alpha: 1 };
 
-/** El isotipo recortado a su dibujo y centrado en un cuadrado de `lado`, con `margen` (0–1). */
+const CASI_NEGRO = "#1B1A17";
+
+/**
+ * El isotipo (recortado a su dibujo) al 80 % de un círculo casi negro, así el dorado se
+ * lee en pestañas claras y oscuras. El círculo ocupa el cuadrado de `lado` menos `margen`
+ * (0–1) de cada lado; alrededor, `fondo`.
+ */
 async function cuadrado(lado, { fondo = TRANSPARENTE, margen = 0 } = {}) {
+  const diametro = Math.round(lado * (1 - 2 * margen));
   const dibujo = await sharp(ORIGEN).trim({ threshold: 10 }).toBuffer();
-  const interior = Math.round(lado * (1 - 2 * margen));
+  const interior = Math.round(diametro * 0.8);
   const ajustado = await sharp(dibujo).resize(interior, interior, { fit: "contain", background: TRANSPARENTE }).toBuffer();
+  const r = diametro / 2;
+  const circulo = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${diametro}" height="${diametro}"><circle cx="${r}" cy="${r}" r="${r}" fill="${CASI_NEGRO}"/></svg>`);
+  const disco = await sharp(circulo).composite([{ input: ajustado, gravity: "center" }]).png().toBuffer();
   return sharp({ create: { width: lado, height: lado, channels: 4, background: fondo } })
-    .composite([{ input: ajustado, gravity: "center" }])
+    .composite([{ input: disco, gravity: "center" }])
     .png({ palette: true, quality: 90, compressionLevel: 9, effort: 10 })
     .toBuffer();
 }
@@ -43,5 +53,5 @@ function ico(pngs) {
 const pestana = await Promise.all([16, 32, 48].map(async (lado) => ({ lado, datos: await cuadrado(lado) })));
 writeFileSync(join(raiz, "app", "favicon.ico"), ico(pestana));
 writeFileSync(join(raiz, "app", "icon.png"), await cuadrado(512));
-writeFileSync(join(raiz, "app", "apple-icon.png"), await sharp(await cuadrado(180, { fondo: CREMA, margen: 0.1 })).flatten({ background: CREMA }).png({ palette: true, quality: 90, compressionLevel: 9 }).toBuffer());
+writeFileSync(join(raiz, "app", "apple-icon.png"), await sharp(await cuadrado(180, { fondo: CREMA, margen: 0.06 })).flatten({ background: CREMA }).png({ palette: true, quality: 90, compressionLevel: 9 }).toBuffer());
 console.log("Listo: app/favicon.ico, app/icon.png y app/apple-icon.png");
