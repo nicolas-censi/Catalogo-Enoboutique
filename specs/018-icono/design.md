@@ -4,11 +4,15 @@
 - `app/favicon.ico`: se reemplaza (hoy es el de Next.js) por uno con 16, 32 y 48 px.
 - `app/icon.png` (512 px) y `app/apple-icon.png` (180 px): Next.js agrega solo las
   etiquetas `<link rel="icon">` y `<link rel="apple-touch-icon">`.
-- Se generan con `scripts/icono.mjs` (sharp) a partir de la "L" del logo de la marca
-  (`public/logo-enoboutique.png` no sirve: es dorado; se usa el logo negro), centrada al
-  64 % del alto sobre crema. Los PNG quedan en el repositorio.
+- Se generan con `npm run icono` (`scripts/icono.mjs`, sharp) a partir del isotipo
+  `assets/marca/isotipo.png` (PNG transparente, 1200 px): recortado a su dibujo y
+  centrado en un cuadrado. Pestaña e `icon.png`: fondo transparente. `apple-icon.png`:
+  sobre crema (#F6F2E9) con margen del 10 % (iOS rellena la transparencia de negro).
+  Los archivos generados quedan en el repositorio.
 
 ## Riesgos
+- El isotipo es un dibujo de líneas finas: a 16 px se ve como un círculo dorado (se
+  reconoce por la forma y el color, no por el detalle).
 - Los navegadores guardan el ícono mucho tiempo: después de publicar puede tardar en
   cambiar (se ve al abrir en una ventana privada o borrando el historial del sitio).
 

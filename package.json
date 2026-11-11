@@ -19,7 +19,8 @@
     "db:usuarios": "node scripts/usuarios.mjs",
     "db:encargado": "node scripts/crear-encargado.mjs",
     "ia:piloto": "vitest run --config vitest.piloto.config.ts",
-    "db:respaldo": "node scripts/respaldo.mjs --produccion"
+    "db:respaldo": "node scripts/respaldo.mjs --produccion",
+    "icono": "node scripts/icono.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

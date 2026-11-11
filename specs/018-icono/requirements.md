@@ -1,6 +1,6 @@
 # 018 – Ícono de la web
 
-**Estado:** En revisión
+**Estado:** Aprobada (2026-11-11)
 
 ## Objetivo
 Que la pestaña del navegador, los favoritos y el acceso directo del celular muestren el
@@ -14,16 +14,17 @@ Que la pestaña del navegador, los favoritos y el acceso directo del celular mue
 ### CA-1: Ícono de la marca
 - **Dado** la carta o el panel abiertos en el navegador
 - **Cuando** se mira la pestaña
-- **Entonces** se ve la "L" del logo en casi negro (#1B1A17) sobre crema (#F6F2E9), la
-  misma de la marca, y no el triángulo de Vercel.
-- Y se ve nítido en 16 y 32 px (pestaña), 180 px (iPhone, "Agregar a inicio") y 512 px
-  (Android).
+- **Entonces** se ve el isotipo de Lehonor (el rostro con hojas y uvas, en dorado) y no
+  el triángulo de Vercel.
+- Y hay versiones de 16, 32 y 48 px (pestaña, fondo transparente), 180 px (iPhone,
+  "Agregar a inicio", sobre crema porque iOS no admite transparencia) y 512 px (Android).
 
 ## Fuera de alcance
 - Cambiar el ícono desde el panel (por ahora es un archivo fijo de la marca).
 
 ## Preguntas abiertas
-- [ ] ¿Sirve la "L" del logo, o la marca tiene un isotipo propio para usar?
+- [x] ¿Sirve la "L" del logo, o la marca tiene un isotipo propio? → Isotipo propio, lo
+  pasó el usuario el 2026-11-11 (`assets/marca/isotipo.png`).
 
 ## Ideas para más adelante
 - Que el encargado pueda subir el ícono desde Ajustes → Marca.
