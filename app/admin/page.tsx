@@ -34,6 +34,14 @@ async function ListaProductos({ searchParams }: { searchParams: Parametros }) {
           {textos.admin.productoBorrado(borrado)}
         </p>
       )}
+      {filtros.codigo && (
+        <div role="status" className="mb-4 flex items-start justify-between gap-3 rounded-md border border-control bg-superficie px-4 py-3">
+          <p>{textos.admin.escanear.sinProducto(filtros.codigo)}</p>
+          <Link href={enlaceLista(filtros, { codigo: "" })} className="inline-flex min-h-11 shrink-0 items-center px-2 text-sm underline">
+            {textos.admin.escanear.cerrarAviso}
+          </Link>
+        </div>
+      )}
       <FiltrosProductos filtros={filtros} secciones={secciones} />
       <div className="mt-5">
         <TablaProductos productos={productos} total={total} filtros={filtros} secciones={secciones} iaActiva={iaPrendida} />

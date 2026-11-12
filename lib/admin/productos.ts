@@ -1,4 +1,5 @@
 import "server-only";
+import { leerCodigoPendiente } from "@/lib/admin/enlaces";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/tipos-db";
 
@@ -11,7 +12,8 @@ export const POR_PAGINA = 50;
 // Ids por pedido cuando se buscan productos encontrados (la dirección tiene un largo máximo).
 const TANDA = 200;
 
-export type Filtros = { q: string; seccion: string; estado: EstadoFiltro | ""; pagina: number };
+/** `codigo`: código de barras escaneado que nadie tiene, para asignarlo (spec 019, CA-2). */
+export type Filtros = { q: string; seccion: string; estado: EstadoFiltro | ""; pagina: number; codigo: string };
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -26,6 +28,7 @@ export function leerFiltros(parametros: Record<string, string | string[] | undef
     seccion: UUID.test(seccion) ? seccion : "",
     estado: ESTADOS.includes(estado) ? estado : "",
     pagina: Number.isFinite(pagina) && pagina > 0 ? pagina : 1,
+    codigo: leerCodigoPendiente(parametros.codigo),
   };
 }
 

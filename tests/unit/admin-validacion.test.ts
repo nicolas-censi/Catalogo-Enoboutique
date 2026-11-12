@@ -92,3 +92,16 @@ describe("enlaceLista (spec 014)", () => {
     expect(enlaceLista(f, { pagina: 3 })).toBe("/admin?q=malbec+rutini&pagina=3");
   });
 });
+
+describe("código pendiente de asignar (spec 019, CA-2)", () => {
+  it("se acepta solo un código de barras (8 a 14 números) y enlaceLista lo conserva", async () => {
+    const { enlaceLista, leerCodigoPendiente } = await import("@/lib/admin/enlaces");
+    expect(leerCodigoPendiente("7790000000017")).toBe("7790000000017");
+    expect(leerCodigoPendiente(["7790000000017", "1"])).toBe("7790000000017");
+    expect(leerCodigoPendiente("abc")).toBe("");
+    expect(leerCodigoPendiente(undefined)).toBe("");
+    const f = { q: "", seccion: "", estado: "" as const, codigo: "7790000000017" };
+    expect(enlaceLista(f, { q: "rutini" })).toBe("/admin?q=rutini&codigo=7790000000017");
+    expect(enlaceLista(f, { codigo: "" })).toBe("/admin");
+  });
+});
