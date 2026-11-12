@@ -1,6 +1,6 @@
 # 019 – Escanear códigos de barras desde el panel
 
-**Estado:** En revisión
+**Estado:** Aprobada (2026-11-12)
 
 ## Objetivo
 Que el personal cargue el código de barras de un producto apuntando la cámara del celular
@@ -52,8 +52,8 @@ barras de un producto").
 - Leer el código de Tango o códigos QR.
 
 ## Preguntas abiertas
-- [ ] ¿Sumamos también el escaneo desde la lista de productos (CA-2), o alcanza con el de
-  la ficha (CA-1)? Propuesta: los dos; el de la lista sirve para recorrer la cava.
+- [x] ¿Sumamos también el escaneo desde la lista de productos (CA-2), o alcanza con el de
+  la ficha (CA-1)? → Los dos (aprobado el 2026-11-12).
 
 ## Ideas para más adelante
 - Modo "recorrer la cava": escanear una botella tras otra y asignar las que no tienen
