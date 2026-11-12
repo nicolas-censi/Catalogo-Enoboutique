@@ -1,0 +1,410 @@
+<title>Manual del panel para el encargado</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;700&family=Inknut+Antiqua:wght@600&display=swap">
+<style>
+:root {
+  /* Manual impreso y en pantalla con los colores de la marca: crema, casi negro y el
+     dorado solo en detalles. El rojo ladrillo es el de las marcas de las capturas. */
+  --papel: #F6F2E9;
+  --hoja: #FFFFFF;
+  --tinta: #1B1A17;
+  --tinta-suave: #5E584C;
+  --linea: #E3DBCB;
+  --dorado: #B19750;
+  --dorado-texto: #7A6428;
+  --marca: #C2410C;
+  --marca-fondo: #FBEDE6;
+  --titulos: "Inknut Antiqua", Georgia, "Times New Roman", serif;
+  --texto: "Cabin", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--papel); color: var(--tinta); font: 16px/1.6 var(--texto); }
+.hoja { max-width: 64rem; margin: 0 auto; padding-block: 2.5rem 4rem;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header.portada { display: grid; gap: .75rem; padding-bottom: 2rem; border-bottom: 1px solid var(--linea); }
+.isotipo { width: 64px; height: 64px; }
+.rol { justify-self: start; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--dorado-texto);
+  border: 1px solid var(--dorado); border-radius: 999px; padding: .15rem .7rem; }
+h1 { font: 600 clamp(1.8rem, 4vw, 2.6rem)/1.25 var(--titulos); margin: 0; text-wrap: balance; }
+.bajada { margin: 0; font-size: 1.1rem; color: var(--tinta-suave); max-width: 46rem; }
+.meta { margin: 0; font-size: .9rem; color: var(--tinta-suave); }
+.leyenda { display: flex; gap: .75rem; align-items: center; margin-top: .5rem; font-size: .95rem; color: var(--tinta-suave); }
+.ejemplo { flex: none; display: inline-grid; place-items: center; min-width: 1.6rem; height: 1.6rem; border-radius: 999px; background: var(--marca); color: #fff; font: 700 .85rem/1 var(--texto); }
+nav.indice { margin-block: 2rem; }
+nav.indice h2 { font: 600 1rem var(--texto); letter-spacing: .08em; text-transform: uppercase; color: var(--tinta-suave); margin: 0 0 .75rem; }
+nav.indice ol { margin: 0; padding: 0; list-style: none; columns: 2 18rem; column-gap: 2rem; counter-reset: cap; }
+nav.indice li { counter-increment: cap; break-inside: avoid; padding-block: .3rem; border-bottom: 1px solid var(--linea); }
+nav.indice li::before { content: counter(cap) "."; display: inline-block; width: 2rem; color: var(--dorado-texto); font-variant-numeric: tabular-nums; }
+nav.indice a { color: var(--tinta); text-decoration: none; }
+nav.indice a:hover, nav.indice a:focus-visible { text-decoration: underline; }
+section.capitulo { padding-top: 2.5rem; counter-increment: capitulo; }
+main { counter-reset: capitulo; }
+section.capitulo > h2 { font: 600 1.7rem/1.3 var(--titulos); margin: 0 0 .5rem; text-wrap: balance; }
+section.capitulo > h2::before { content: counter(capitulo); display: block; font: 600 .8rem var(--texto); letter-spacing: .12em; color: var(--dorado-texto); }
+section.capitulo > h2::after { content: ""; display: block; width: 2.5rem; height: 1px; background: var(--dorado); margin-top: .6rem; }
+.intro { max-width: 46rem; color: var(--tinta-suave); margin: .75rem 0 1rem; }
+.bloque { margin-top: 1.75rem; }
+h3 { font: 700 1.15rem/1.35 var(--texto); margin: 0 0 .5rem; }
+.texto { margin: 0 0 .75rem; max-width: 46rem; }
+.cuerpo { display: grid; gap: 1rem; }
+.con-celular .cuerpo { grid-template-columns: minmax(0, 300px) minmax(0, 1fr); align-items: start; }
+.captura { margin: 0; }
+.captura img { display: block; width: 100%; margin-inline: auto; max-width: 100%; height: auto; border: 1px solid var(--linea); border-radius: 10px; background: var(--hoja); box-shadow: 0 1px 2px rgba(27,26,23,.06); }
+.celular img { border-radius: 18px; }
+.explicacion { min-width: 0; display: grid; gap: .75rem; align-content: start; }
+ol.pasos { margin: 0; padding: 0; list-style: none; counter-reset: paso; display: grid; gap: .55rem; max-width: 52rem; }
+ol.pasos li { counter-increment: paso; display: grid; grid-template-columns: 1.8rem minmax(0, 1fr); gap: .6rem; align-items: start; }
+ol.pasos li::before { content: counter(paso); display: grid; place-items: center; width: 1.6rem; height: 1.6rem; margin-top: .05rem; border-radius: 999px; background: var(--marca); color: #fff; font: 700 .85rem/1 var(--texto); }
+ol.pasos.uno li::before { content: "→"; background: var(--tinta); }
+.aviso { margin: 0; padding: .75rem 1rem; border-radius: 10px; max-width: 52rem; background: var(--hoja); border: 1px solid var(--linea); }
+.aviso span { display: block; font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; margin-bottom: .15rem; }
+.aviso.nota span { color: var(--tinta-suave); }
+.aviso.consejo { background: var(--marca-fondo); border-color: #F3D2C2; }
+.aviso.consejo span { color: var(--marca); }
+footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--linea); font-size: .85rem; color: var(--tinta-suave); }
+@media (max-width: 640px) { .con-celular .cuerpo { grid-template-columns: 1fr; } .celular { max-width: 300px; } }
+@media print {
+  body { background: #fff; font-size: 11pt; }
+  .hoja { max-width: none; padding: 0; }
+  section.capitulo { break-before: page; padding-top: 0; }
+  .bloque, .aviso, ol.pasos li, .captura { break-inside: avoid; }
+  .bloque > h3, .bloque > .texto { break-after: avoid; }
+  .captura img { box-shadow: none; }
+  nav.indice a { color: var(--tinta); }
+  a[href^="#"] { text-decoration: none; }
+}
+</style>
+<div class="hoja">
+  <header class="portada">
+    <img class="isotipo" src="capturas/isotipo.png" alt="">
+    <span class="rol">Para el encargado</span>
+    <h1>Manual del panel para el encargado</h1>
+    <p class="bajada">Todo lo que hace el vendedor, más la importación desde Tango, las promociones, la marca, la IA, el personal y la tarjeta QR.</p>
+    <p class="meta">Lehonor Enoboutique · Panel de la carta (cava.lehonor.com/admin) · noviembre de 2026</p>
+    <p class="leyenda"><span class="ejemplo">1</span><span>En cada captura, los números marcan dónde tocar. La lista de abajo explica cada uno en el mismo orden.</span></p>
+  </header>
+  <nav class="indice" aria-labelledby="titulo-indice"><h2 id="titulo-indice">Contenido</h2><ol><li><a href="#que-es">Qué es y dónde se entra</a></li><li><a href="#productos">Productos</a></li><li><a href="#ficha">La ficha de un producto</a></li><li><a href="#nuevo">Cargar un producto nuevo</a></li><li><a href="#varios">Trabajar con varios productos a la vez</a></li><li><a href="#ia">Sugerencias de la IA (descripción y foto)</a></li><li><a href="#secciones">Secciones</a></li><li><a href="#ajustes">Ajustes</a></li><li><a href="#importar">Importar precios y productos desde Tango</a></li><li><a href="#promociones">Promociones</a></li><li><a href="#marca">Marca: bienvenida y logo</a></li><li><a href="#ia-ajuste">IA: prender o apagar</a></li><li><a href="#personal">Personal: quién entra al panel</a></li><li><a href="#qr">Tarjeta QR para las mesas</a></li><li><a href="#carta">Cómo ve la carta el cliente</a></li></ol></nav>
+  <main><section class="capitulo" id="que-es">
+  <h2>Qué es y dónde se entra</h2>
+  <p class="intro">La carta es la página que ven los clientes al escanear el QR de la mesa (cava.lehonor.com). El panel es la parte privada desde donde el personal la mantiene: productos, precios, disponibilidad, fotos y secciones. Todo lo que cambiás en el panel se ve en la carta apenas lo guardás.</p>
+  <div class="bloque">
+    <h3>Entrar al panel</h3>
+    <p class="texto">Abrí cava.lehonor.com/admin en la computadora o en el celular.</p>
+    <div class="cuerpo"><figure class="captura"><img src="capturas/e-ingresar.jpg" style="max-width:min(100%, 366px)" alt="Captura: Entrar al panel" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>Escribí tu usuario (te lo da el encargado).</span></li><li><span>Escribí tu contraseña.</span></li><li><span>Tocá Ingresar.</span></li></ol>
+    <p class="aviso nota"><span>Tené en cuenta</span>¿Te olvidaste la contraseña? El encargado te la cambia desde Ajustes → Personal.</p>
+    </div></div>
+  </div>
+<div class="bloque">
+    <h3>El menú</h3>
+    <p class="texto">En la computadora el menú está a la izquierda; en el celular, en una barra fija abajo.</p>
+    <div class="cuerpo"><figure class="captura"><img src="capturas/e-menu.jpg" style="max-width:min(100%, 1366px)" alt="Captura: El menú" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span><strong>Productos:</strong> la lista de todo lo que hay en la carta. Es donde vas a trabajar casi siempre.</span></li><li><span><strong>Secciones:</strong> las partes de la carta (Tintos, Blancos, Espumantes…), su orden y sus destacados.</span></li><li><span><strong>Para revisar:</strong> las sugerencias de la IA que esperan tu aprobación. El número indica cuántas hay.</span></li><li><span><strong>Ajustes:</strong> lo que se usa de vez en cuando (importar, promociones, marca, IA, personal y tarjeta QR).</span></li><li><span><strong>Ver la carta:</strong> abre la carta tal como la ve el cliente, en otra pestaña.</span></li><li><span><strong>Salir:</strong> cierra tu sesión. Usalo siempre si la computadora es compartida.</span></li></ol>
+    
+    </div></div>
+  </div>
+<div class="bloque con-celular">
+    <h3>En el celular</h3>
+    <p class="texto">El panel funciona igual en el celular. Las opciones del menú quedan en la barra de abajo, siempre a mano.</p>
+    <div class="cuerpo"><figure class="captura celular"><img src="capturas/celular-panel.jpg" style="max-width:min(100%, 390px)" alt="Captura: En el celular" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>Productos.</span></li><li><span>Secciones.</span></li><li><span>Revisar (Para revisar).</span></li><li><span>Ajustes (a los vendedores les aparece Cuenta, como en la imagen).</span></li></ol>
+    
+    </div></div>
+  </div>
+</section>
+<section class="capitulo" id="productos">
+  <h2>Productos</h2>
+  <p class="intro">Cada producto es una etiqueta (por ejemplo, Rutini Malbec) con una o varias añadas. Cada añada tiene su código de Tango, su precio y si está disponible o no.</p>
+  <div class="bloque">
+    <h3>La lista de productos</h3>
+    
+    <div class="cuerpo"><figure class="captura"><img src="capturas/productos-lista.jpg" style="max-width:min(100%, 1366px)" alt="Captura: La lista de productos" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span><strong>Buscador:</strong> escribí parte del nombre, la bodega, el código de Tango o el código de barras.</span></li><li><span><strong>Filtros rápidos:</strong> Sin sección, Sin foto, A revisar, Ocultos y Sin stock. Sirven para encontrar lo que falta completar.</span></li><li><span><strong>Sección:</strong> muestra solo los productos de una sección.</span></li><li><span><strong>Nuevo producto:</strong> para cargar uno a mano.</span></li><li><span><strong>Elegir varios:</strong> para mover o pedir sugerencias de varios productos juntos.</span></li><li><span>Tocá un producto para abrir su ficha.</span></li></ol>
+    <p class="aviso nota"><span>Tené en cuenta</span>Las etiquetas a la derecha te avisan qué le falta a cada producto: Sin foto, A revisar (añadas sin año definido) o Sugerencia para revisar.</p>
+    </div></div>
+  </div>
+<div class="bloque">
+    <h3>Buscar un producto</h3>
+    <p class="texto">La lista se filtra mientras escribís. Por ejemplo, con «malbec» aparecen todos los Malbec.</p>
+    <div class="cuerpo"><figure class="captura"><img src="capturas/productos-buscar.jpg" style="max-width:min(100%, 1366px)" alt="Captura: Buscar un producto" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>Escribí en el buscador. Para volver a ver todo, borrá lo escrito.</span></li></ol>
+    
+    </div></div>
+  </div>
+</section>
+<section class="capitulo" id="ficha">
+  <h2>La ficha de un producto</h2>
+  <p class="intro">La ficha tiene tres pestañas: Datos, Añadas y precios, y Códigos de barras.</p>
+  <div class="bloque">
+    <h3>Datos y foto</h3>
+    
+    <div class="cuerpo"><figure class="captura"><img src="capturas/ficha-datos.jpg" style="max-width:min(100%, 1366px)" alt="Captura: Datos y foto" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span><strong>Visible en la carta:</strong> apagalo para esconder el producto sin borrarlo.</span></li><li><span><strong>Datos:</strong> tipo, nombre, bodega, varietal, sección y descripción.</span></li><li><span><strong>Añadas y precios:</strong> cada añada con su precio y disponibilidad.</span></li><li><span><strong>Códigos de barras:</strong> los códigos que sirven para escanear la botella.</span></li><li><span><strong>Descripción:</strong> el texto que ve el cliente en la carta.</span></li><li><span><strong>Guardar:</strong> guarda los cambios de esta pestaña. Hasta que no lo tocás, no se guarda nada.</span></li><li><span><strong>Foto:</strong> Subir foto o Reemplazar foto (JPG, PNG, WebP o HEIC, hasta 10 MB; se achica sola). Quitar foto la saca.</span></li><li><span><strong>Más acciones (···):</strong> para borrar el producto.</span></li></ol>
+    
+    <p class="aviso consejo"><span>Consejo</span>Si un producto queda sin sección, no aparece en la carta. Revisá el filtro «Sin sección» de vez en cuando.</p></div></div>
+  </div>
+<div class="bloque">
+    <h3>Borrar un producto</h3>
+    
+    <div class="cuerpo"><figure class="captura"><img src="capturas/ficha-borrar.jpg" style="max-width:min(100%, 1366px)" alt="Captura: Borrar un producto" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>En la ficha, tocá ··· y después Borrar producto. Te pide confirmación: se borra con todas sus añadas y no se puede deshacer.</span></li></ol>
+    <p class="aviso nota"><span>Tené en cuenta</span>Si solo querés que no se vea por un tiempo, mejor apagá «Visible en la carta».</p>
+    </div></div>
+  </div>
+<div class="bloque">
+    <h3>Añadas, precios y disponibilidad</h3>
+    
+    <div class="cuerpo"><figure class="captura"><img src="capturas/ficha-anadas.jpg" style="max-width:min(100%, 1366px)" alt="Captura: Añadas, precios y disponibilidad" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span><strong>Disponible / Sin stock:</strong> tocalo para cambiarlo. Las añadas sin stock no se ven en la carta; si ninguna tiene stock, se esconde el vino entero.</span></li><li><span><strong>··· de cada añada:</strong> para editarla o borrarla.</span></li><li><span><strong>Agregar añada:</strong> completá tipo de añada, año, código de Tango, precio y tocá Agregar.</span></li></ol>
+    <p class="aviso nota"><span>Tené en cuenta</span>Si dejás el precio vacío, la carta muestra «Consultar precio». El tipo «Sin año (a revisar)» marca las añadas que la importación no pudo identificar: corregí el año cuando lo sepas.</p>
+    </div></div>
+  </div>
+<div class="bloque">
+    <h3>Cambiar el precio o el año de una añada</h3>
+    
+    <div class="cuerpo"><figure class="captura"><img src="capturas/anada-menu.jpg" style="max-width:min(100%, 1366px)" alt="Captura: Cambiar el precio o el año de una añada" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>Tocá ··· en la añada y elegí Editar (o Borrar para sacarla).</span></li><li><span>Cambiá el precio (o el año) y tocá Guardar.</span></li></ol>
+    
+    </div></div>
+  </div>
+<div class="bloque">
+    
+    
+    <div class="cuerpo"><figure class="captura"><img src="capturas/anada-editar.jpg" style="max-width:min(100%, 1366px)" alt="Captura: anada-editar" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>Precio de la añada.</span></li><li><span>Guardar.</span></li></ol>
+    <p class="aviso nota"><span>Tené en cuenta</span>Ojo: cuando importás el reporte de Tango, el precio de Tango reemplaza al que se cargó a mano.</p>
+    </div></div>
+  </div>
+<div class="bloque">
+    <h3>Códigos de barras</h3>
+    <p class="texto">El código de barras se asocia al vino (no a una añada). Al escanearlo, el cliente ve el vino con todas sus añadas disponibles.</p>
+    <div class="cuerpo"><figure class="captura"><img src="capturas/ficha-codigos.jpg" style="max-width:min(100%, 1366px)" alt="Captura: Códigos de barras" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>Escribí el número del código de barras.</span></li><li><span>Tocá Agregar. Para sacar uno, tocá Quitar al lado del código.</span></li></ol>
+    
+    </div></div>
+  </div>
+</section>
+<section class="capitulo" id="nuevo">
+  <h2>Cargar un producto nuevo</h2>
+  <p class="intro">Lo habitual es que los productos lleguen desde Tango. Si necesitás cargar uno a mano:</p>
+  <div class="bloque">
+    
+    
+    <div class="cuerpo"><figure class="captura"><img src="capturas/nuevo-producto.jpg" style="max-width:min(100%, 1366px)" alt="Captura: nuevo-producto" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span><strong>Elegí el tipo:</strong> Vino, Destilado, Aceite o Almacén. Solo los vinos tienen añadas.</span></li><li><span>Escribí el nombre como se tiene que ver en la carta (por ejemplo, «Catena Zapata Malbec»).</span></li><li><span>Elegí la sección. Sin sección no aparece en la carta.</span></li><li><span>Tocá el botón para crearlo. Después, en su ficha, agregá las añadas, la foto y el código de barras.</span></li></ol>
+    
+    </div></div>
+  </div>
+</section>
+<section class="capitulo" id="varios">
+  <h2>Trabajar con varios productos a la vez</h2>
+  
+  <div class="bloque">
+    
+    
+    <div class="cuerpo"><figure class="captura"><img src="capturas/elegir-varios.jpg" style="max-width:min(100%, 1366px)" alt="Captura: elegir-varios" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>En Productos, tocá Elegir varios y tildá los productos. También podés elegir todos los del filtro o de la página.</span></li><li><span><strong>Mover:</strong> los pasa a otra sección.</span></li><li><span><strong>Sugerir con IA:</strong> pide descripción y foto para todos los elegidos.</span></li></ol>
+    <p class="aviso nota"><span>Tené en cuenta</span>Cuando termines, tocá Listo para salir del modo «Elegir varios».</p>
+    </div></div>
+  </div>
+<div class="bloque">
+    <h3>Mover a otra sección</h3>
+    
+    <div class="cuerpo"><figure class="captura"><img src="capturas/mover-dialogo.jpg" style="max-width:min(100%, 1366px)" alt="Captura: Mover a otra sección" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>Elegí la sección de destino.</span></li><li><span>Tocá Mover.</span></li></ol>
+    
+    </div></div>
+  </div>
+<div class="bloque">
+    <h3>Pedir sugerencias para varios</h3>
+    
+    <div class="cuerpo"><figure class="captura"><img src="capturas/sugerir-varios.jpg" style="max-width:min(100%, 1366px)" alt="Captura: Pedir sugerencias para varios" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>Antes de pedir, el panel te muestra cuántas sugerencias vas a pedir y el costo estimado.</span></li><li><span>Tocá Sí, pedir para confirmar (o Cancelar). Se pueden pedir hasta 1.000 por vez y se procesan hasta 400 por día.</span></li></ol>
+    <p class="aviso nota"><span>Tené en cuenta</span>Por defecto se piden solo para los productos sin descripción o sin foto. Las sugerencias van llegando a Para revisar mientras el panel esté abierto.</p>
+    </div></div>
+  </div>
+</section>
+<section class="capitulo" id="ia">
+  <h2>Sugerencias de la IA (descripción y foto)</h2>
+  <p class="intro">La IA busca en internet la descripción y la foto oficial de un producto (en la página de la bodega o del distribuidor). Nada de lo que sugiere se ve en la carta hasta que alguien del personal lo aprueba.</p>
+  <div class="bloque">
+    <h3>Pedir una sugerencia desde la ficha</h3>
+    
+    <div class="cuerpo"><figure class="captura"><img src="capturas/ficha-sugerir.jpg" style="max-width:min(100%, 1366px)" alt="Captura: Pedir una sugerencia desde la ficha" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>Abrí la ficha del producto y tocá Sugerir con IA. Podés seguir trabajando: el panel te avisa cuando está lista.</span></li></ol>
+    <p class="aviso nota"><span>Tené en cuenta</span>Si dice «Las sugerencias por IA están apagadas», prendelas desde Ajustes → IA.</p>
+    </div></div>
+  </div>
+<div class="bloque">
+    <h3>Cuando llega una sugerencia</h3>
+    <p class="texto">La ficha del producto muestra un aviso y el menú suma uno en Para revisar.</p>
+    <div class="cuerpo"><figure class="captura"><img src="capturas/ficha-aviso-ia.jpg" style="max-width:min(100%, 1366px)" alt="Captura: Cuando llega una sugerencia" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>Tocá Revisar para verla.</span></li></ol>
+    
+    </div></div>
+  </div>
+<div class="bloque">
+    <h3>Revisar, corregir y aprobar</h3>
+    <p class="texto">En Para revisar está, para cada producto, lo actual al lado de lo sugerido.</p>
+    <div class="cuerpo"><figure class="captura"><img src="capturas/para-revisar.jpg" style="max-width:min(100%, 1366px)" alt="Captura: Revisar, corregir y aprobar" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span><strong>Descripción sugerida:</strong> leela y corregila si hace falta (es un campo editable).</span></li><li><span><strong>De dónde salió:</strong> las páginas que usó la IA. Abrilas si tenés dudas.</span></li><li><span><strong>Usar la descripción:</strong> destildalo si no querés usarla.</span></li><li><span><strong>Usar la foto:</strong> destildalo si la foto no es la correcta (por ejemplo, otra añada u otro vino).</span></li><li><span><strong>Aprobar:</strong> lo elegido pasa a la carta en el momento.</span></li><li><span><strong>Descartar:</strong> la sugerencia se borra y no cambia nada.</span></li></ol>
+    
+    <p class="aviso consejo"><span>Consejo</span>Revisá siempre que la foto sea de ese vino y que el texto no tenga datos inventados. La IA ayuda, pero la última palabra es tuya.</p></div></div>
+  </div>
+</section>
+<section class="capitulo" id="secciones">
+  <h2>Secciones</h2>
+  <p class="intro">Las secciones son las partes de la carta. Se muestran en el mismo orden que en esta lista.</p>
+  <div class="bloque">
+    
+    
+    <div class="cuerpo"><figure class="captura"><img src="capturas/secciones.jpg" style="max-width:min(100%, 1366px)" alt="Captura: secciones" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span><strong>Manija:</strong> arrastrala para cambiar el orden de la carta.</span></li><li><span><strong>Visible / Oculta:</strong> tocalo para mostrar u ocultar la sección entera.</span></li><li><span><strong>··· :</strong> para renombrar o borrar la sección.</span></li><li><span>Nombre de la sección nueva.</span></li><li><span><strong>Crear sección:</strong> la nueva queda al final.</span></li><li><span>Tocá el nombre para ver sus subsecciones y destacados.</span></li></ol>
+    
+    </div></div>
+  </div>
+<div class="bloque">
+    <h3>Renombrar o borrar</h3>
+    
+    <div class="cuerpo"><figure class="captura"><img src="capturas/seccion-menu.jpg" style="max-width:min(100%, 1366px)" alt="Captura: Renombrar o borrar" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>Renombrar.</span></li><li><span><strong>Borrar:</strong> solo se puede si la sección está vacía (sin productos ni subsecciones). Si no, ocultala.</span></li></ol>
+    
+    </div></div>
+  </div>
+<div class="bloque">
+    <h3>Subsecciones y destacados</h3>
+    <p class="texto">Las subsecciones dividen una sección (por ejemplo, Cava → Joyitas y Experiencias). Los destacados aparecen primeros en la sección, en el orden que elijas; el resto se ordena solo, por bodega y del más caro al más barato.</p>
+    <div class="cuerpo"><figure class="captura"><img src="capturas/seccion-detalle.jpg" style="max-width:min(100%, 1366px)" alt="Captura: Subsecciones y destacados" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>Nombre de la subsección nueva.</span></li><li><span>Crear subsección. Al crear la primera, todos los productos de la sección pasan a ella; después los podés mover.</span></li><li><span>Para destacar, buscá un producto de la sección.</span></li><li><span>Tocá Agregar al lado del producto. Los destacados se ordenan arrastrando y se sacan con Quitar.</span></li></ol>
+    
+    </div></div>
+  </div>
+</section>
+<section class="capitulo" id="ajustes">
+  <h2>Ajustes</h2>
+  <p class="intro">Ajustes reúne lo que se usa de vez en cuando. Solo lo ve el encargado.</p>
+  <div class="bloque">
+    
+    
+    <div class="cuerpo"><figure class="captura"><img src="capturas/e-ajustes.jpg" style="max-width:min(100%, 1366px)" alt="Captura: e-ajustes" loading="lazy"></figure><div class="explicacion">
+    
+    </div></div>
+  </div>
+</section>
+<section class="capitulo" id="importar">
+  <h2>Importar precios y productos desde Tango</h2>
+  <p class="intro">Se sube el reporte «Precios por artículo» de Tango (Excel o CSV). Antes de aplicar, el panel muestra qué va a cambiar; recién al tocar Importar se aplica todo junto.</p>
+  <div class="bloque">
+    <h3>Subir el reporte</h3>
+    
+    <div class="cuerpo"><figure class="captura"><img src="capturas/importar.jpg" style="max-width:min(100%, 1366px)" alt="Captura: Subir el reporte" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span><strong>Elegir archivo:</strong> el reporte exportado de Tango.</span></li><li><span><strong>Ver qué cambia:</strong> lee el archivo y arma el resumen. Todavía no cambia nada.</span></li><li><span><strong>Diccionario de abreviaturas:</strong> cómo se escriben completos los nombres (MAL → Malbec).</span></li><li><span><strong>Bodegas de Tango:</strong> el nombre de cada bodega según su código.</span></li></ol>
+    
+    </div></div>
+  </div>
+<div class="bloque">
+    <h3>Revisar el resumen e importar</h3>
+    
+    <div class="cuerpo"><figure class="captura"><img src="capturas/importar-resumen.jpg" style="max-width:min(100%, 1366px)" alt="Captura: Revisar el resumen e importar" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span><strong>Resumen:</strong> productos y añadas nuevas, precios que cambian y lo que no se importa (carnes, comidas, gift cards y otros).</span></li><li><span><strong>Precios que cambian:</strong> el precio anterior y el nuevo de cada código.</span></li><li><span><strong>Productos nuevos:</strong> revisá la sección de cada uno. Podés cambiarla de a uno o tildar varios y ponerlos juntos en una sección.</span></li><li><span><strong>Importar:</strong> aplica todo. Si algo no te cierra, tocá Cancelar y no cambia nada.</span></li></ol>
+    <p class="aviso nota"><span>Tené en cuenta</span>Los productos nuevos entran ocultos (y las añadas nuevas de vinos que ya existen, sin stock) para que los revises antes de publicarlos. Al terminar, el panel te deja enlaces a «Productos sin sección», «Productos ocultos» y «Añadas sin especificar». Los precios de Tango reemplazan a los cargados a mano.</p>
+    </div></div>
+  </div>
+<div class="bloque">
+    <h3>Diccionario de abreviaturas</h3>
+    <p class="texto">Tango abrevia los nombres (MAL, CAB SAUV, RVA). La importación los escribe completos con este diccionario. Los cambios valen para las próximas importaciones.</p>
+    <div class="cuerpo"><figure class="captura"><img src="capturas/abreviaturas.jpg" style="max-width:min(100%, 1366px)" alt="Captura: Diccionario de abreviaturas" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>Abreviatura, como figura en Tango.</span></li><li><span>Qué significa.</span></li><li><span>Guardar abreviatura.</span></li></ol>
+    
+    </div></div>
+  </div>
+<div class="bloque">
+    <h3>Bodegas de Tango</h3>
+    <p class="texto">En Tango, las letras 3 a 5 del código de cada vino indican la bodega (VIrut… es Rutini). Revisá que los nombres estén bien: se ven en la carta.</p>
+    <div class="cuerpo"><figure class="captura"><img src="capturas/bodegas.jpg" style="max-width:min(100%, 1366px)" alt="Captura: Bodegas de Tango" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>Corregí el nombre y tocá Guardar.</span></li></ol>
+    
+    </div></div>
+  </div>
+</section>
+<section class="capitulo" id="promociones">
+  <h2>Promociones</h2>
+  <p class="intro">Las promociones son imágenes que se ven al final del inicio de la carta, en un carrusel. Al tocarlas, el cliente las ve en grande.</p>
+  <div class="bloque">
+    
+    
+    <div class="cuerpo"><figure class="captura"><img src="capturas/promociones.jpg" style="max-width:min(100%, 1366px)" alt="Captura: promociones" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span><strong>Subir imágenes:</strong> JPG, PNG o WebP, hasta 5 MB cada una (se achican solas). Podés subir varias juntas.</span></li><li><span><strong>Manija:</strong> arrastrala para cambiar el orden.</span></li><li><span><strong>Visible / Oculta:</strong> para sacarla de la carta sin borrarla.</span></li><li><span><strong>··· :</strong> para borrarla.</span></li></ol>
+    
+    </div></div>
+  </div>
+</section>
+<section class="capitulo" id="marca">
+  <h2>Marca: bienvenida y logo</h2>
+  
+  <div class="bloque">
+    
+    
+    <div class="cuerpo"><figure class="captura"><img src="capturas/marca.jpg" style="max-width:min(100%, 1366px)" alt="Captura: marca" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span><strong>Bienvenida:</strong> el texto debajo del logo en el inicio de la carta (hasta 200 caracteres). Si lo dejás vacío, no se muestra.</span></li><li><span>Guardar bienvenida.</span></li><li><span><strong>Logo nuevo:</strong> PNG o WebP de hasta 2 MB, mejor con fondo transparente. Vas a ver una vista previa; tocá Usar este logo para aplicarlo.</span></li></ol>
+    <p class="aviso nota"><span>Tené en cuenta</span>El margen vacío alrededor del logo se recorta solo, para que se vea del tamaño correcto. «Volver al logo de la marca» deja el logo original.</p>
+    </div></div>
+  </div>
+</section>
+<section class="capitulo" id="ia-ajuste">
+  <h2>IA: prender o apagar</h2>
+  <p class="intro">Con la IA apagada no se hace ningún pedido, así que no hay gasto. Las sugerencias que ya llegaron se pueden seguir revisando.</p>
+  <div class="bloque">
+    
+    
+    <div class="cuerpo"><figure class="captura"><img src="capturas/ia.jpg" style="max-width:min(100%, 1366px)" alt="Captura: ia" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>Interruptor de las sugerencias por IA. El cambio vale para todo el personal.</span></li></ol>
+    <p class="aviso nota"><span>Tené en cuenta</span>El gasto estimado del mes se ve arriba de todo en Para revisar.</p>
+    </div></div>
+  </div>
+</section>
+<section class="capitulo" id="personal">
+  <h2>Personal: quién entra al panel</h2>
+  <p class="intro">Cada persona entra con su usuario y contraseña. Vos los creás y se los pasás.</p>
+  <div class="bloque">
+    
+    
+    <div class="cuerpo"><figure class="captura"><img src="capturas/personal.jpg" style="max-width:min(100%, 1366px)" alt="Captura: personal" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span><strong>Rol:</strong> Vendedor o Encargado. Se cambia en el momento.</span></li><li><span><strong>··· :</strong> para cambiarle la contraseña o darlo de baja.</span></li><li><span>Usuario nuevo (sin espacios, por ejemplo «martin»).</span></li><li><span>Contraseña inicial.</span></li><li><span>Rol.</span></li><li><span>Dar de alta. La persona ya puede entrar.</span></li></ol>
+    <p class="aviso nota"><span>Tené en cuenta</span>El vendedor maneja productos, secciones y sugerencias. El encargado, además, todo lo de Ajustes.</p>
+    </div></div>
+  </div>
+<div class="bloque">
+    <h3>Cambiar una contraseña o dar de baja</h3>
+    
+    <div class="cuerpo"><figure class="captura"><img src="capturas/personal-menu.jpg" style="max-width:min(100%, 1366px)" alt="Captura: Cambiar una contraseña o dar de baja" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span><strong>Cambiar contraseña:</strong> escribís la nueva y se la pasás a la persona.</span></li><li><span><strong>Dar de baja:</strong> la persona no puede entrar más. No podés darte de baja a vos mismo.</span></li></ol>
+    
+    </div></div>
+  </div>
+</section>
+<section class="capitulo" id="qr">
+  <h2>Tarjeta QR para las mesas</h2>
+  
+  <div class="bloque">
+    
+    <p class="texto">Tarjeta de 10 × 15 cm con el logo y el QR que abre la carta.</p>
+    <div class="cuerpo"><figure class="captura"><img src="capturas/qr.jpg" style="max-width:min(100%, 1366px)" alt="Captura: qr" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span><strong>Imprimir:</strong> sale sola y del tamaño justo. En la ventana de impresión también la podés guardar como PDF para mandarla a una imprenta.</span></li></ol>
+    
+    </div></div>
+  </div>
+</section>
+<section class="capitulo" id="carta">
+  <h2>Cómo ve la carta el cliente</h2>
+  <p class="intro">Así se ve en el celular lo que cargás en el panel. Conviene mirarlo después de cambios grandes (con Ver la carta, en el menú).</p>
+  <div class="bloque con-celular">
+    <h3>Inicio</h3>
+    
+    <div class="cuerpo"><figure class="captura celular"><img src="capturas/carta-inicio.jpg" style="max-width:min(100%, 390px)" alt="Captura: Inicio" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span><strong>Buscador:</strong> por vino, bodega, varietal o código.</span></li><li><span><strong>Escanear:</strong> abre la cámara para leer el código de barras de una botella.</span></li><li><span>Secciones de la carta, en el orden del panel. Las promociones aparecen al final.</span></li></ol>
+    
+    </div></div>
+  </div>
+<div class="bloque con-celular">
+    <h3>Una sección</h3>
+    
+    <div class="cuerpo"><figure class="captura celular"><img src="capturas/carta-seccion.jpg" style="max-width:min(100%, 390px)" alt="Captura: Una sección" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>Cada vino con sus añadas y precios. Tocalo para ver el detalle.</span></li></ol>
+    
+    </div></div>
+  </div>
+<div class="bloque con-celular">
+    <h3>El detalle de un vino</h3>
+    <p class="texto">Foto, descripción, y las añadas disponibles con su precio.</p>
+    <div class="cuerpo"><figure class="captura celular"><img src="capturas/carta-vino.jpg" style="max-width:min(100%, 390px)" alt="Captura: El detalle de un vino" loading="lazy"></figure><div class="explicacion">
+    
+    </div></div>
+  </div>
+<div class="bloque con-celular">
+    <h3>Buscar</h3>
+    <p class="texto">Los resultados aparecen mientras el cliente escribe.</p>
+    <div class="cuerpo"><figure class="captura celular"><img src="capturas/carta-buscar.jpg" style="max-width:min(100%, 390px)" alt="Captura: Buscar" loading="lazy"></figure><div class="explicacion">
+    
+    </div></div>
+  </div>
+<div class="bloque con-celular">
+    <h3>Escanear</h3>
+    <p class="texto">Con la cámara, el cliente apunta al código de barras y llega directo al vino. Si no puede usar la cámara, escribe el número.</p>
+    <div class="cuerpo"><figure class="captura celular"><img src="capturas/carta-escanear.jpg" style="max-width:min(100%, 390px)" alt="Captura: Escanear" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>Número del código de barras (cuando no se puede escanear).</span></li></ol>
+    
+    </div></div>
+  </div>
+</section></main>
+  <footer>Las capturas son del sistema de prueba, con productos de ejemplo. En el sistema real vas a ver la carta completa, pero los botones y los pasos son los mismos.</footer>
+</div>

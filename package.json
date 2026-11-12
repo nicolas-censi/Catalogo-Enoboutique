@@ -20,7 +20,9 @@
     "db:encargado": "node scripts/crear-encargado.mjs",
     "ia:piloto": "vitest run --config vitest.piloto.config.ts",
     "db:respaldo": "node scripts/respaldo.mjs --produccion",
-    "icono": "node scripts/icono.mjs"
+    "icono": "node scripts/icono.mjs",
+    "manual:capturas": "playwright test --config docs/manual/playwright.config.ts",
+    "manual": "node docs/manual/generar.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

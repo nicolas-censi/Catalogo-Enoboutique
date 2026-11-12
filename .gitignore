@@ -60,3 +60,6 @@ next-env.d.ts
 
 # Ajustes locales de Claude Code
 .claude/settings.local.json
+
+# Archivos temporales del generador de manuales
+docs/manual/salida/.*-pdf.html
