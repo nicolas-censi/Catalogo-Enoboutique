@@ -2,7 +2,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { clienteAdmin, limpiarDatos, limpiarUsuarios, prefijo } from "../db/ayudante";
 import { entrarComo } from "./ayudante-admin";
 import { camaraSimulada } from "./video-codigo";
-import { erroresGraves } from "./chequeos-celular";
+import { desborde, erroresGraves, tocablesChicos } from "./chequeos-celular";
 
 // Spec 019: escanear códigos de barras desde el panel, con la cámara del celular.
 // Cámara simulada (Chromium) y lector simulado: devuelve el código que diga el test.
@@ -136,10 +136,19 @@ test.describe("CA-2: desde la lista de productos", () => {
     expect(await codigosEnBase(ids.vino)).toContain(nuevo);
   });
 
-  test("CA-4: en el celular, sin errores graves de accesibilidad", async ({ page }) => {
+  test("CA-4: en el celular (390 px), sin errores graves, sin scroll horizontal y con botones de 44 px", async ({ page }) => {
     await page.goto("/admin");
+    expect(await tocablesChicos(page)).toEqual([]);
     await page.getByRole("button", { name: "Escanear un código de barras" }).click();
-    await expect(page.getByRole("dialog", { name: "Escanear código de barras" }).locator("video")).toBeVisible();
+    const dialogo = page.getByRole("dialog", { name: "Escanear código de barras" });
+    await expect(dialogo.locator("video")).toBeVisible();
+    expect(await erroresGraves(page)).toEqual([]);
+    expect(await desborde(page)).toBeLessThanOrEqual(0);
+    await dialogo.getByRole("button", { name: "Cerrar" }).click();
+
+    await page.goto(`/admin/productos/${ids.vino}?pestana=codigos`);
+    expect(await desborde(page)).toBeLessThanOrEqual(0);
+    expect(await tocablesChicos(page)).toEqual([]);
     expect(await erroresGraves(page)).toEqual([]);
   });
 });

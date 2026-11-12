@@ -1,6 +1,6 @@
 # 019 – Escanear códigos de barras desde el panel
 
-**Estado:** Aprobada (2026-11-12)
+**Estado:** Implementada (2026-11-12)
 
 ## Objetivo
 Que el personal cargue el código de barras de un producto apuntando la cámara del celular
