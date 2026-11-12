@@ -1,3 +1,4 @@
+import { leerCodigoPendiente } from "@/lib/admin/enlaces";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -110,7 +111,9 @@ async function Ficha({ params, searchParams, esEncargado }: { params: Promise<{ 
           </div>
         )}
         {pestana === "anadas" && <EditorAnadas productoId={producto.id} esVino={producto.tipo === "vino"} anadas={producto.anadas} />}
-        {pestana === "codigos" && <EditorCodigos productoId={producto.id} codigos={producto.codigos_barras.map((c) => c.codigo)} />}
+        {pestana === "codigos" && (
+          <EditorCodigos productoId={producto.id} codigos={producto.codigos_barras.map((c) => c.codigo)} sugerido={leerCodigoPendiente(parametros.codigo) || null} />
+        )}
       </div>
     </>
   );

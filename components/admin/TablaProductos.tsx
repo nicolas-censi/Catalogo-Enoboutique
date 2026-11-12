@@ -137,7 +137,7 @@ export function TablaProductos({
               ) : (
                 <span aria-hidden="true" className="h-12 w-9 shrink-0 rounded bg-fondo" />
               )}
-              <Link href={`/admin/productos/${p.id}`} className="group flex min-h-11 min-w-0 flex-1 flex-col justify-center">
+              <Link href={filtros.codigo ? `/admin/productos/${p.id}?pestana=codigos&codigo=${filtros.codigo}` : `/admin/productos/${p.id}`} className="group flex min-h-11 min-w-0 flex-1 flex-col justify-center">
                 <span className="block truncate font-semibold group-hover:underline">{p.nombre}</span>
                 <span className="block truncate text-sm text-texto-suave">
                   {[p.bodega_nombre, seccion(p), l.anadas(p.cantidad_anadas ?? 0)].filter(Boolean).join(" · ")}

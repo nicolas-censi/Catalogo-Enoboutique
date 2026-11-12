@@ -112,3 +112,34 @@ test("CA-3: sin permiso de cámara, explica cómo habilitarlo y se puede escribi
   await expect(dialogo).toBeHidden();
   await expect(page.getByLabel("Código de barras", { exact: true })).toBeVisible();
 });
+
+test.describe("CA-2: desde la lista de productos", () => {
+  test("un código cargado abre la ficha del producto, en Códigos de barras", async ({ page }) => {
+    await page.goto("/admin");
+    await page.getByRole("button", { name: "Escanear un código de barras" }).click();
+    await leer(page, codigos.ajeno);
+    await expect(page).toHaveURL(new RegExp(`/admin/productos/${ids.otro}\\?pestana=codigos`));
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(`Angélica Zapata Malbec ${prefijo}`);
+  });
+
+  test("un código nuevo: avisa, se busca el producto por nombre y en su ficha se agrega con un toque", async ({ page }) => {
+    const nuevo = ean13(`2994${base}`);
+    await page.goto("/admin");
+    await page.getByRole("button", { name: "Escanear un código de barras" }).click();
+    await leer(page, nuevo);
+    await expect(page.getByRole("status").filter({ hasText: "Ningún producto" })).toContainText(`Ningún producto tiene el código ${nuevo}.`);
+    await page.getByRole("searchbox", { name: "Buscar productos" }).fill(`Catena Alta Malbec ${prefijo}`);
+    await page.getByRole("link", { name: new RegExp(`^Catena Alta Malbec ${prefijo}`) }).click();
+    await expect(page).toHaveURL(/pestana=codigos/);
+    await page.getByRole("button", { name: `Agregar ${nuevo}` }).click();
+    await expect(page.getByRole("status").filter({ hasText: "Se agregó" })).toHaveText(`Se agregó el código ${nuevo}.`);
+    expect(await codigosEnBase(ids.vino)).toContain(nuevo);
+  });
+
+  test("CA-4: en el celular, sin errores graves de accesibilidad", async ({ page }) => {
+    await page.goto("/admin");
+    await page.getByRole("button", { name: "Escanear un código de barras" }).click();
+    await expect(page.getByRole("dialog", { name: "Escanear código de barras" }).locator("video")).toBeVisible();
+    expect(await erroresGraves(page)).toEqual([]);
+  });
+});
