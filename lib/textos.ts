@@ -220,7 +220,8 @@ export const textos = {
       titulo: "Tarjeta QR",
       ayuda: "Tarjeta de mesa de 10 × 15 cm. Al imprimir sale sola, del tamaño justo; también la podés guardar como PDF desde la ventana de impresión.",
       imprimir: "Imprimir",
-      escanea: "Conocé nuestro catálogo de vinos",
+      // El salto de línea es a propósito: "catálogo" arranca en el segundo renglón.
+      escanea: "Conocé nuestro\ncatálogo de vinos",
       tarjeta: "Tarjeta de mesa",
       qr: (url: string) => `Código QR que abre ${url}`,
     },
