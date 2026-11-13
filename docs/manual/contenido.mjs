@@ -142,8 +142,53 @@ export const SECCIONES = [
       {
         subtitulo: "Códigos de barras",
         texto: "El código de barras se asocia al vino (no a una añada). Al escanearlo, el cliente ve el vino con todas sus añadas disponibles.",
-        pasos: ["Escribí el número del código de barras.", "Tocá Agregar. Para sacar uno, tocá Quitar al lado del código."],
+        pasos: [
+          "Escribí el número del código de barras…",
+          "…y tocá Agregar. Para sacar uno, tocá Quitar al lado del código.",
+          "Escanear con la cámara: en el celular es lo más rápido. Apuntás a la botella y el código se carga solo.",
+        ],
         img: "ficha-codigos",
+      },
+      {
+        subtitulo: "Escanear el código con la cámara",
+        texto:
+          "Apuntá la cámara al código de barras de la botella, dentro del recuadro. Cuando lo lee, el celular vibra, la cámara se cierra y aparece «Se agregó el código …». Si la botella tiene otro código, tocá Escanear otro.",
+        pasos: ["Cerrar: apaga la cámara sin cargar nada."],
+        img: "escanear-camara",
+        celular: true,
+        nota: "Si el código ya es de otro producto, no se agrega y te dice de cuál. La primera vez, el celular te pide permiso para usar la cámara: tocá Permitir. Si lo rechazaste, habilitalo desde el candado al lado de la dirección del navegador.",
+      },
+    ],
+  },
+  {
+    para: ["v", "e"],
+    id: "recorrer-cava",
+    titulo: "Cargar códigos recorriendo la cava",
+    intro:
+      "Para cargar códigos botella por botella, escaneá desde la lista de Productos: si el código ya está cargado, te lleva a su producto; si no, te ayuda a asignárselo.",
+    bloques: [
+      {
+        subtitulo: "Escanear desde la lista",
+        pasos: ["Tocá el botón de escanear del buscador y apuntá a la botella. Si el código ya está cargado, se abre la ficha de ese producto."],
+        img: "escanear-lista",
+        celular: true,
+      },
+      {
+        subtitulo: "Si el código no es de ningún producto",
+        pasos: [
+          "El panel avisa qué código leyó y que ningún producto lo tiene.",
+          "Buscá el vino por nombre.",
+          "Tocá el producto para abrir su ficha.",
+        ],
+        img: "escanear-sin-producto",
+        celular: true,
+      },
+      {
+        subtitulo: "Asignarle el código con un toque",
+        pasos: ["Agregar 779…: carga el código que escaneaste en este producto."],
+        img: "escanear-agregar",
+        celular: true,
+        consejo: "Antes de tocar Agregar, fijate que sea el vino correcto (y la presentación: 750 cc, magnum…).",
       },
     ],
   },

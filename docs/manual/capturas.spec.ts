@@ -218,8 +218,30 @@ async function panelComun(page: Page, p: "v" | "e") {
     await page.waitForTimeout(800);
     await captura(page, "ficha-codigos", [
       { en: page.getByLabel("Código de barras", { exact: true }), n: 1 },
-      { en: page.getByRole("button", { name: /^Agregar/ }).last(), n: 2 },
+      { en: page.getByRole("button", { name: "Agregar", exact: true }), n: 2 },
+      { en: page.getByRole("button", { name: "Escanear con la cámara" }), n: 3 },
     ]);
+
+    // Spec 019: escanear con la cámara (en el celular).
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.reload();
+    await page.getByRole("button", { name: "Escanear con la cámara" }).click();
+    await expect(page.getByRole("dialog", { name: "Escanear código de barras" }).locator("video")).toBeVisible();
+    await page.waitForTimeout(1500);
+    await captura(page, "escanear-camara", [{ en: page.getByRole("dialog").getByRole("button", { name: "Cerrar" }), n: 1 }]);
+    await page.getByRole("dialog").getByRole("button", { name: "Cerrar" }).click();
+    await page.goto("/admin");
+    await captura(page, "escanear-lista", [{ en: page.getByRole("button", { name: "Escanear un código de barras" }), n: 1 }]);
+    await page.goto("/admin?codigo=7790000000017");
+    await captura(page, "escanear-sin-producto", [
+      { en: page.getByRole("status").filter({ hasText: "Ningún producto" }), n: 1 },
+      { en: page.getByRole("searchbox", { name: "Buscar productos" }), n: 2 },
+      { en: page.getByRole("link", { name: /^Salentein Brut Nature/ }), n: 3 },
+    ]);
+    await page.getByRole("link", { name: /^Salentein Brut Nature/ }).click();
+    await page.waitForURL(/codigo=/);
+    await captura(page, "escanear-agregar", [{ en: page.getByRole("button", { name: "Agregar 7790000000017" }), n: 1 }]);
+    await page.setViewportSize({ width: 1366, height: 768 });
 
     // Sugerencia pendiente en la ficha.
     await page.goto("/admin");
@@ -457,6 +479,18 @@ async function carta(page: Page) {
 test.use({ viewport: { width: 1366, height: 768 }, deviceScaleFactor: 2 });
 
 test("capturas de los manuales", async ({ page, context }) => {
+  // Lector de códigos simulado que nunca lee nada: la captura muestra la cámara buscando
+  // y no se carga ningún código de verdad.
+  await page.addInitScript(() => {
+    (window as unknown as Record<string, unknown>).BarcodeDetector = class {
+      static async getSupportedFormats() {
+        return ["ean_13", "ean_8", "upc_a", "upc_e"];
+      }
+      async detect() {
+        return [];
+      }
+    };
+  });
   await preparar();
   try {
     await panelComun(page, "v");

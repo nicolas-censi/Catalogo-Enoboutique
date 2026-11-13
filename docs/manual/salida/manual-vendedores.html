@@ -86,7 +86,7 @@ footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--linea)
     <p class="meta">Lehonor Enoboutique · Panel de la carta (cava.lehonor.com/admin) · noviembre de 2026</p>
     <p class="leyenda"><span class="ejemplo">1</span><span>En cada captura, los números marcan dónde tocar. La lista de abajo explica cada uno en el mismo orden.</span></p>
   </header>
-  <nav class="indice" aria-labelledby="titulo-indice"><h2 id="titulo-indice">Contenido</h2><ol><li><a href="#que-es">Qué es y dónde se entra</a></li><li><a href="#productos">Productos</a></li><li><a href="#ficha">La ficha de un producto</a></li><li><a href="#nuevo">Cargar un producto nuevo</a></li><li><a href="#varios">Trabajar con varios productos a la vez</a></li><li><a href="#ia">Sugerencias de la IA (descripción y foto)</a></li><li><a href="#secciones">Secciones</a></li><li><a href="#cuenta">Tu cuenta</a></li><li><a href="#carta">Cómo ve la carta el cliente</a></li></ol></nav>
+  <nav class="indice" aria-labelledby="titulo-indice"><h2 id="titulo-indice">Contenido</h2><ol><li><a href="#que-es">Qué es y dónde se entra</a></li><li><a href="#productos">Productos</a></li><li><a href="#ficha">La ficha de un producto</a></li><li><a href="#recorrer-cava">Cargar códigos recorriendo la cava</a></li><li><a href="#nuevo">Cargar un producto nuevo</a></li><li><a href="#varios">Trabajar con varios productos a la vez</a></li><li><a href="#ia">Sugerencias de la IA (descripción y foto)</a></li><li><a href="#secciones">Secciones</a></li><li><a href="#cuenta">Tu cuenta</a></li><li><a href="#carta">Cómo ve la carta el cliente</a></li></ol></nav>
   <main><section class="capitulo" id="que-es">
   <h2>Qué es y dónde se entra</h2>
   <p class="intro">La carta es la página que ven los clientes al escanear el QR de la mesa (cava.lehonor.com). El panel es la parte privada desde donde el personal la mantiene: productos, precios, disponibilidad, fotos y secciones. Todo lo que cambiás en el panel se ve en la carta apenas lo guardás.</p>
@@ -171,9 +171,41 @@ footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--linea)
 <div class="bloque">
     <h3>Códigos de barras</h3>
     <p class="texto">El código de barras se asocia al vino (no a una añada). Al escanearlo, el cliente ve el vino con todas sus añadas disponibles.</p>
-    <div class="cuerpo"><figure class="captura"><img src="capturas/ficha-codigos.jpg" style="max-width:min(100%, 1366px)" alt="Captura: Códigos de barras" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>Escribí el número del código de barras.</span></li><li><span>Tocá Agregar. Para sacar uno, tocá Quitar al lado del código.</span></li></ol>
+    <div class="cuerpo"><figure class="captura"><img src="capturas/ficha-codigos.jpg" style="max-width:min(100%, 1366px)" alt="Captura: Códigos de barras" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>Escribí el número del código de barras…</span></li><li><span>…y tocá Agregar. Para sacar uno, tocá Quitar al lado del código.</span></li><li><span><strong>Escanear con la cámara:</strong> en el celular es lo más rápido. Apuntás a la botella y el código se carga solo.</span></li></ol>
     
     </div></div>
+  </div>
+<div class="bloque con-celular">
+    <h3>Escanear el código con la cámara</h3>
+    <p class="texto">Apuntá la cámara al código de barras de la botella, dentro del recuadro. Cuando lo lee, el celular vibra, la cámara se cierra y aparece «Se agregó el código …». Si la botella tiene otro código, tocá Escanear otro.</p>
+    <div class="cuerpo"><figure class="captura celular"><img src="capturas/escanear-camara.jpg" style="max-width:min(100%, 390px)" alt="Captura: Escanear el código con la cámara" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span><strong>Cerrar:</strong> apaga la cámara sin cargar nada.</span></li></ol>
+    <p class="aviso nota"><span>Tené en cuenta</span>Si el código ya es de otro producto, no se agrega y te dice de cuál. La primera vez, el celular te pide permiso para usar la cámara: tocá Permitir. Si lo rechazaste, habilitalo desde el candado al lado de la dirección del navegador.</p>
+    </div></div>
+  </div>
+</section>
+<section class="capitulo" id="recorrer-cava">
+  <h2>Cargar códigos recorriendo la cava</h2>
+  <p class="intro">Para cargar códigos botella por botella, escaneá desde la lista de Productos: si el código ya está cargado, te lleva a su producto; si no, te ayuda a asignárselo.</p>
+  <div class="bloque con-celular">
+    <h3>Escanear desde la lista</h3>
+    
+    <div class="cuerpo"><figure class="captura celular"><img src="capturas/escanear-lista.jpg" style="max-width:min(100%, 390px)" alt="Captura: Escanear desde la lista" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>Tocá el botón de escanear del buscador y apuntá a la botella. Si el código ya está cargado, se abre la ficha de ese producto.</span></li></ol>
+    
+    </div></div>
+  </div>
+<div class="bloque con-celular">
+    <h3>Si el código no es de ningún producto</h3>
+    
+    <div class="cuerpo"><figure class="captura celular"><img src="capturas/escanear-sin-producto.jpg" style="max-width:min(100%, 390px)" alt="Captura: Si el código no es de ningún producto" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span>El panel avisa qué código leyó y que ningún producto lo tiene.</span></li><li><span>Buscá el vino por nombre.</span></li><li><span>Tocá el producto para abrir su ficha.</span></li></ol>
+    
+    </div></div>
+  </div>
+<div class="bloque con-celular">
+    <h3>Asignarle el código con un toque</h3>
+    
+    <div class="cuerpo"><figure class="captura celular"><img src="capturas/escanear-agregar.jpg" style="max-width:min(100%, 390px)" alt="Captura: Asignarle el código con un toque" loading="lazy"></figure><div class="explicacion"><ol class="pasos"><li><span><strong>Agregar 779…:</strong> carga el código que escaneaste en este producto.</span></li></ol>
+    
+    <p class="aviso consejo"><span>Consejo</span>Antes de tocar Agregar, fijate que sea el vino correcto (y la presentación: 750 cc, magnum…).</p></div></div>
   </div>
 </section>
 <section class="capitulo" id="nuevo">
