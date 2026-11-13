@@ -31,7 +31,7 @@ export function TarjetaQr({ url, logoPath }: { url: string; logoPath: string | n
           </svg>
         </div>
         <span aria-hidden="true" data-detalle-dorado className="h-px w-[12mm] bg-dorado" />
-        <p className="text-center font-titulos text-[5.5mm] leading-tight">{t.escanea}</p>
+        <p className="text-center font-titulos text-[5.5mm] leading-tight whitespace-pre-line">{t.escanea}</p>
       </div>
       <p className="text-[3.5mm] tracking-wide">{urlVisible(url)}</p>
     </article>

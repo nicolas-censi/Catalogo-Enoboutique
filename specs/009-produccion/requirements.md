@@ -44,7 +44,7 @@ publicada y los tests comparten la misma base: cada corrida de tests toca datos 
 - **Dado** el encargado en el panel
 - **Cuando** abre **Tarjeta QR**
 - **Entonces** ve una tarjeta de **10 × 15 cm** lista para imprimir: el logo, el QR que
-  lleva a `https://cava.lehonor.com` y el texto "Escaneá para ver la carta".
+  lleva a `https://cava.lehonor.com` y el texto "Conocé nuestro catálogo de vinos" (cambiado el 2026-11-13; antes "Escaneá para ver la carta").
 - Y con **Imprimir** sale del tamaño justo, sin el resto del panel (también se puede
   guardar como PDF desde la ventana de impresión).
 

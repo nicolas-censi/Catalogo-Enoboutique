@@ -23,7 +23,7 @@ test.describe("en la computadora", () => {
     const tarjeta = page.getByRole("article", { name: "Tarjeta de mesa" });
     await expect(tarjeta.getByRole("img", { name: "Código QR que abre cava.lehonor.com" })).toBeVisible();
     await expect(tarjeta.getByRole("img", { name: "Lehonor Enoboutique" })).toBeVisible();
-    await expect(tarjeta).toContainText("Escaneá para ver la carta");
+    await expect(tarjeta).toContainText("Conocé nuestro catálogo de vinos");
     await expect(tarjeta).toContainText("cava.lehonor.com");
     await expect(page.getByRole("button", { name: "Imprimir" })).toBeVisible();
     expect(await erroresGraves(page)).toEqual([]);
@@ -51,7 +51,7 @@ test("spec 016, CA-4: colores de la carta, QR negro sobre blanco (no invertido) 
   await expect(qr.locator("path")).toHaveCSS("fill", "rgb(27, 26, 23)");
   // Lo que queda detrás del QR es blanco.
   await expect(qr.locator("xpath=..")).toHaveCSS("background-color", "rgb(255, 255, 255)");
-  await expect(tarjeta.getByText("Escaneá para ver la carta")).toHaveCSS("color", "rgb(27, 26, 23)");
+  await expect(tarjeta.getByText("Conocé nuestro catálogo de vinos")).toHaveCSS("color", "rgb(27, 26, 23)");
   await expect(tarjeta.locator("[data-detalle-dorado]")).toHaveCSS("background-color", "rgb(177, 151, 80)");
 });
 
