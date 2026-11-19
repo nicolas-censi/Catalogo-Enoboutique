@@ -60,3 +60,14 @@ Luego `npm run db:seed -- --solo-ejemplo` deja desarrollo con los datos de ejemp
 - Plan gratis: sin copias automáticas; el cron evita la pausa pero no reemplaza un
   respaldo. Se documenta correr `db:respaldo` cada tanto.
 - Mientras se copia, conviene no editar el panel (unos minutos).
+
+## Desarrollo sin pausa (CA-5, agregado el 2026-11-19)
+- `.github/workflows/mantener-desarrollo.yml`: los lunes y jueves (y a mano, con
+  "Run workflow") hace una consulta de lectura a la API pública del proyecto de
+  desarrollo (`marca`, una fila) con la clave publicable. Si no responde 200, el
+  workflow falla y GitHub avisa por mail.
+- La URL y la clave van como **secrets del repositorio** (`SUPABASE_URL_DESARROLLO` y
+  `SUPABASE_PUBLISHABLE_KEY_DESARROLLO`), cargados por el usuario; nunca en el código.
+- Riesgo: en repositorios públicos, GitHub desactiva las tareas programadas después de
+  60 días sin cambios en el repositorio (avisa por mail antes; se reactiva con un clic en
+  Actions).

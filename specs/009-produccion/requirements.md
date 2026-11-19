@@ -53,6 +53,9 @@ publicada y los tests comparten la misma base: cada corrida de tests toca datos 
 - **Cuando** pasa un día
 - **Entonces** el sitio hace una consulta automática a la base de producción, para que
   no se pause aunque nadie abra la carta (por ejemplo, en vacaciones).
+- Y el proyecto de **desarrollo** tampoco se pausa aunque pasen semanas sin mejoras: una
+  tarea programada de GitHub lo consulta dos veces por semana (agregado el 2026-11-19, a
+  pedido del usuario, después de un aviso de pausa de Supabase).
 
 ### CA-6: La IA en producción
 - **Dado** producción
