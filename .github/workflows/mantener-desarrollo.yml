@@ -1,0 +1,33 @@
+# Spec 009, CA-5: el plan gratis de Supabase pausa los proyectos que pasan 7 días sin
+# uso. Producción lo evita con el cron diario de Vercel (/api/salud); este workflow hace
+# lo mismo con el proyecto de DESARROLLO, que solo se usa cuando se trabaja en mejoras.
+# La URL y la clave publicable van como secrets del repositorio (Settings → Secrets and
+# variables → Actions): SUPABASE_URL_DESARROLLO y SUPABASE_PUBLISHABLE_KEY_DESARROLLO.
+name: Mantener activo el proyecto de desarrollo
+
+on:
+  schedule:
+    # Lunes y jueves a las 10:17 de Argentina (13:17 UTC): nunca pasan más de 4 días.
+    - cron: "17 13 * * 1,4"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  consultar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Consulta de lectura a la base de desarrollo
+        env:
+          URL: ${{ secrets.SUPABASE_URL_DESARROLLO }}
+          CLAVE: ${{ secrets.SUPABASE_PUBLISHABLE_KEY_DESARROLLO }}
+        run: |
+          if [ -z "$URL" ] || [ -z "$CLAVE" ]; then
+            echo "::error::Faltan los secrets SUPABASE_URL_DESARROLLO y SUPABASE_PUBLISHABLE_KEY_DESARROLLO."
+            exit 1
+          fi
+          curl --fail --silent --show-error --retry 3 --retry-delay 20 --max-time 30 \
+            -H "apikey: $CLAVE" \
+            "$URL/rest/v1/marca?select=id&limit=1" > /dev/null
+          echo "El proyecto de desarrollo respondió."

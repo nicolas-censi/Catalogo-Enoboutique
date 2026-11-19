@@ -13,3 +13,4 @@ Cada tarea: máximo 30 minutos, verificable con un test, referenciada a un crite
 - [x] T6 — `npm run db:respaldo`; test de que descarga todas las tablas. (CA-7)
 - [x] T7 — `/admin/qr`: tarjeta de mesa 10 × 15 imprimible; e2e. (CA-4)
 - [x] T8 — Desarrollo vuelve a tener solo datos de ejemplo. (CA-2)
+- [x] T9 — Tarea programada de GitHub que consulta el proyecto de desarrollo dos veces por semana; unit. (CA-5)
